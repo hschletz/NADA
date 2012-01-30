@@ -52,6 +52,29 @@ class Nada_Link_Mdb2 extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function query($statement, $params)
+    {
+        $statement = $this->_link->prepare($statement, null, MDB2_PREPARE_RESULT);
+        if (PEAR::isError($statement)) {
+            throw new RuntimeException($statement->getMessage());
+        }
+        $result = $statement->execute($params);
+        if (PEAR::isError($result)) {
+            throw new RuntimeException($result->getMessage());
+        }
+
+        // Don't use fetchAll() because keys must be turned lowercase
+        $rowset = array();
+        while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+            foreach ($row as $column => $value) {
+                $output[strtolower($column)] = $value;
+            }
+            $rowset[] = $output;
+        }
+        return $rowset;
+    }
+
+    /** {@inheritdoc} */
     public function exec($statement, $params)
     {
         $statement = $this->_link->prepare($statement, null, MDB2_PREPARE_MANIP);

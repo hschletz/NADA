@@ -52,6 +52,29 @@ class Nada_Link_Pdo extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function query($statement, $params)
+    {
+        $statement = $this->_link->prepare($statement);
+        if ($statement === false) {
+            $this->_throw($this->_link);
+        }
+
+        if ($statement->execute($params) === false) {
+            $this->_throw($statement);
+        }
+
+        // Don't use fetchAll() because keys must be turned lowercase
+        $rowset = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            foreach ($row as $column => $value) {
+                $output[strtolower($column)] = $value;
+            }
+            $rowset[] = $output;
+        }
+        return $rowset;
+    }
+
+    /** {@inheritdoc} */
     public function exec($statement, $params)
     {
         $statement = $this->_link->prepare($statement);

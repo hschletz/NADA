@@ -74,6 +74,24 @@ abstract class Nada_Link
     abstract public function getDbmsSuffix();
 
     /**
+     * Run database query and return complete result set
+     *
+     * This method is intended for SELECT and similar commands that return a
+     * result set. The result is returned as a 2-dimensional array. The outer
+     * array is numeric and contains the rows. The rows are associative arrays
+     * with lowercase column identifiers as keys.
+     *
+     * Implementations must ensure that an exception gets thrown upon errors,
+     * either by the implementation itself or by the underlying database access
+     * method.
+     * @param string $statement SQL statement with optional placeholders
+     * @param array $params Values to substitute for placeholders
+     * @return array Array of all rows
+     * @throws Exception if execution fails
+     */
+    abstract public function query($statement, $params);
+
+    /**
      * Execute a database statement that does not return a result set
      *
      * SQL commands like UPDATE, INSERT, DELETE, SET etc. don't return a result

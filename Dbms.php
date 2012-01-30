@@ -84,6 +84,29 @@ abstract class Nada_Dbms
     }
 
     /**
+     * Run database query and return complete result set
+     *
+     * This method is intended to be used internally by NADA. Application code
+     * should preferrably use methods from the underlying database abstraction
+     * layer.
+     *
+     * This method is intended for SELECT and similar commands that return a
+     * result set. The result is returned as a 2-dimensional array. The outer
+     * array is numeric and contains the rows. The rows are associative arrays
+     * with lowercase column identifiers as keys.
+     * @param string $statement SQL statement with optional placeholders
+     * @param mixed $params Single value or array of values to substitute for placeholders
+     * @return array Array of all rows
+     */
+    public function query($statement, $params=array())
+    {
+        if (!is_array($params)) {
+            $params = array($params);
+        }
+        return $this->_link->query($statement, $params);
+    }
+
+    /**
      * Execute a database statement that does not return a result set
      *
      * This method is intended to be used internally by NADA. Application code

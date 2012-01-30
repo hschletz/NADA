@@ -53,6 +53,22 @@ class Nada_Link_ZendDb extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function query($statement, $params)
+    {
+        $statement = $this->_link->query($statement, $params);
+
+        // Don't use fetchAll() because keys must be turned lowercase
+        $rowset = array();
+        while ($row = $statement->fetch(Zend_Db::FETCH_ASSOC)) {
+            foreach ($row as $column => $value) {
+                $output[strtolower($column)] = $value;
+            }
+            $rowset[] = $output;
+        }
+        return $rowset;
+    }
+
+    /** {@inheritdoc} */
     public function exec($statement, $params)
     {
         return $this->_link->query($statement, $params)->rowCount();
