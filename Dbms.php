@@ -84,6 +84,28 @@ abstract class Nada_Dbms
     }
 
     /**
+     * Execute a database statement that does not return a result set
+     *
+     * This method is intended to be used internally by NADA. Application code
+     * should preferrably use methods from the underlying database abstraction
+     * layer.
+     *
+     * SQL commands like UPDATE, INSERT, DELETE, SET etc. don't return a result
+     * set. This method is intended for this type of commands. The return value
+     * is typically the number of affected rows.
+     * @param string $statement SQL statement with optional placeholders
+     * @param mixed $params Single value or array of values to substitute for placeholders
+     * @return integer Number of affected rows
+     */
+    public function exec($statement, $params=array())
+    {
+        if (!is_array($params)) {
+            $params = array($params);
+        }
+        return $this->_link->exec($statement, $params);
+    }
+
+    /**
      * Return a case insensitive LIKE operator if available
      *
      * The behavior of the LIKE operator varies across DBMS. Sometimes it is
