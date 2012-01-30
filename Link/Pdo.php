@@ -37,11 +37,6 @@
  */
 class Nada_Link_Pdo extends Nada_Link
 {
-    /**
-     * Preserved PDO error mode
-     * @var mixed
-     */
-    protected $_oldErrMode;
 
     /** {@inheritdoc} */
     public function getDbmsSuffix()
@@ -59,9 +54,18 @@ class Nada_Link_Pdo extends Nada_Link
     /** {@inheritdoc} */
     public function exec($statement)
     {
-        $this->_setErrMode();
         $result = $this->_link->exec($statement);
-        $this->_resetErrMode();
+        if ($result === false) {
+            $error = $this->_link->errorInfo();
+            throw new RuntimeException(
+                sprintf(
+                    'PDO::exec() returned SQLSTATE %s: Error %s (%s)',
+                    $error[0],
+                    $error[1],
+                    $error[2]
+                )
+            );
+        }
         return $result;
     }
 
@@ -71,24 +75,4 @@ class Nada_Link_Pdo extends Nada_Link
         return $this->_link->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
 
-    /**
-     * Have PDO object throw an exception on error
-     *
-     * Since the application expects the error mode not to change, it must be
-     * restored via {@link _resetErrMode()} before returning from the calling
-     * method. Nested calls are not supported - this must be called only once!
-     */
-    protected function _setErrMode()
-    {
-        $this->_oldErrMode = $this->_link->getAttribute(PDO::ATTR_ERRMODE);
-        $this->_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-    /**
-     * Undo changes from {@link _setErrMode()}
-     */
-    protected function _resetErrMode()
-    {
-        $this->_link->setAttribute(PDO::ATTR_ERRMODE, $this->_oldErrMode);
-    }
 }
