@@ -52,9 +52,13 @@ class Nada_Link_Mdb2 extends Nada_Link
     }
 
     /** {@inheritdoc} */
-    public function exec($statement)
+    public function exec($statement, $params)
     {
-        $result = $this->_link->exec($statement);
+        $statement = $this->_link->prepare($statement, null, MDB2_PREPARE_MANIP);
+        if (PEAR::isError($statement)) {
+            throw new RuntimeException($statement->getMessage());
+        }
+        $result = $statement->execute($params);
         if (PEAR::isError($result)) {
             throw new RuntimeException($result->getMessage());
         }

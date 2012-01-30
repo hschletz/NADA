@@ -83,11 +83,12 @@ abstract class Nada_Link
      * Implementations must ensure that an exception gets thrown upon errors,
      * either by the implementation itself or by the underlying database access
      * method.
-     * @param string $statement SQL statement
+     * @param string $statement SQL statement with optional placeholders
+     * @param array $params Values to substitute for placeholders
      * @return integer Number of affected rows
      * @throws Exception if execution fails
      */
-    abstract public function exec($statement);
+    abstract public function exec($statement, $params);
 
     /**
      * Get database server version

@@ -53,9 +53,9 @@ class Nada_Link_ZendDb extends Nada_Link
     }
 
     /** {@inheritdoc} */
-    public function exec($statement)
+    public function exec($statement, $params)
     {
-        return $this->_link->query($statement)->rowCount();
+        return $this->_link->query($statement, $params)->rowCount();
     }
 
     /** {@inheritdoc} */

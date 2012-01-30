@@ -52,21 +52,18 @@ class Nada_Link_Pdo extends Nada_Link
     }
 
     /** {@inheritdoc} */
-    public function exec($statement)
+    public function exec($statement, $params)
     {
-        $result = $this->_link->exec($statement);
-        if ($result === false) {
-            $error = $this->_link->errorInfo();
-            throw new RuntimeException(
-                sprintf(
-                    'PDO::exec() returned SQLSTATE %s: Error %s (%s)',
-                    $error[0],
-                    $error[1],
-                    $error[2]
-                )
-            );
+        $statement = $this->_link->prepare($statement);
+        if ($statement === false) {
+            $this->_throw($this->_link);
         }
-        return $result;
+
+        if ($statement->execute($params) === false) {
+            $this->_throw($statement);
+        }
+
+        return $statement->rowCount();
     }
 
     /** {@inheritdoc} */
@@ -75,4 +72,21 @@ class Nada_Link_Pdo extends Nada_Link
         return $this->_link->getAttribute(PDO::ATTR_SERVER_VERSION);
     }
 
+    /**
+     * Throw exception with information from PDO's errorInfo()
+     * @param object PDO object that caused the error
+     * @throws RuntimeException
+     */
+    protected function _throw($object)
+    {
+        $error = $object->errorInfo();
+        throw new RuntimeException(
+            sprintf(
+                'PDO operation returned SQLSTATE %s: Error %s (%s)',
+                $error[0],
+                $error[1],
+                $error[2]
+            )
+        );
+    }
 }
