@@ -8,11 +8,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
+ *
  * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,27 +28,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package NADA
- * @filesource
  */
 /**
  * Interface class for MySQL
+ *
+ * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
 class Nada_Dbms_Mysql extends Nada_Dbms
 {
-    /**
-     * Return TRUE if underlying DBMS is MySQL
-     * @return bool
-     */
+
+    /** {@inheritdoc} */
     public function isMysql()
     {
         return true;
     }
 
-
-    /**
-     * Return an ISO style format string with a DBMS-recognized timestamp format
-     */
+    /** {@inheritdoc} */
     public function timestampFormatIso()
     {
         // MySQL would accept a timezone, but ignore it and issue a warning.
@@ -54,9 +52,7 @@ class Nada_Dbms_Mysql extends Nada_Dbms
         return 'yyyy-MM-ddTHH:mm:ss';
     }
 
-    /**
-     * Return a PHP style format string with a DBMS-recognized timestamp format
-     */
+    /** {@inheritdoc} */
     public function timestampFormatPhp()
     {
         // MySQL would accept a timezone, but ignore it and issue a warning.
@@ -64,9 +60,7 @@ class Nada_Dbms_Mysql extends Nada_Dbms
         return 'Y-m-d\TH:i:s';
     }
 
-    /**
-     * Set strict and more standards compliant behavior on database connection
-     */
+    /** {@inheritdoc} */
     public function setStrictMode()
     {
         $modes = implode(

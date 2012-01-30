@@ -8,11 +8,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
+ *
  * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,7 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package NADA
- * @filesource
  */
 /**
  * Main application interface class
@@ -45,6 +46,7 @@
  * all {@link Nada_Link} derived classes for those database abstraction layers
  * that support this DBMS.
  * @package NADA
+ * @api
  */
 abstract class Nada_Dbms
 {
@@ -91,7 +93,7 @@ abstract class Nada_Dbms
      * It is encapsulated in spaces, so that surrounding spaces in the query
      * string are not required (but possible).
      *
-     * <b>NOTE:</b> This method does not guarantee that the operation will be
+     * **NOTE:** This method does not guarantee that the operation will be
      * case insensitive. The actual behavior may depend on several factors
      * outside this method's scope, like the particular table's collation. Some
      * DBMS may not even provide a case insensitive operator. This method's
@@ -99,10 +101,9 @@ abstract class Nada_Dbms
      * operation.
      *
      * Example:
-     * <code>
-     * // Works for all DBMS, no need to write DBMS-specific code
-     * $sql = 'SELECT foo FROM bar WHERE foo' . $nada->iLike() . '\'%foobar%\'';
-     * </code>
+     *
+     *     // Works for all DBMS, no need to write DBMS-specific code
+     *     $sql = 'SELECT foo FROM bar WHERE foo' . $nada->iLike() . '\'%foobar%\'';
      */
     public function iLike()
     {
@@ -123,13 +124,12 @@ abstract class Nada_Dbms
      * format, like Zend_Date.
      *
      * Example:
-     * <code>
-     * // Don't bother about timestamp format recognized by a particular DBMS
-     * $params = array(
-     *     $zend_date->get($nada->timestampFormatIso())
-     * );
-     * $pdoStatement->execute($params);
-     * </code>
+     *
+     *     // Don't bother about timestamp format recognized by a particular DBMS
+     *     $params = array(
+     *         $zend_date->get($nada->timestampFormatIso())
+     *     );
+     *     $pdoStatement->execute($params);
      * @return string ISO 8601 compliant format string
      */
     public function timestampFormatIso()
@@ -152,13 +152,12 @@ abstract class Nada_Dbms
      * that expect ISO 8601 format specification.
      *
      * Example:
-     * <code>
-     * // Don't bother about timestamp format recognized by a particular DBMS
-     * $params = array(
-     *     date($nada->timestampFormatIso())
-     * );
-     * $pdoStatement->execute($params);
-     * </code>
+     *
+     *     // Don't bother about timestamp format recognized by a particular DBMS
+     *     $params = array(
+     *         date($nada->timestampFormatIso())
+     *     );
+     *     $pdoStatement->execute($params);
      * @return string PHP style format string
      */
     public function timestampFormatPhp()
@@ -184,7 +183,7 @@ abstract class Nada_Dbms
      * turns on some compatibility options for the current connection (other
      * connections will not be affected).
      *
-     * <b>WARNING:</b> Turning on these options for an existing application may
+     * **WARNING:** Turning on these options for an existing application may
      * reveal previously unnoticed problems and stop the application from
      * working until these issues are resolved. This method is intended for
      * development purposes only. It is not advisable for a production

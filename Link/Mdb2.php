@@ -8,11 +8,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
+ *
  * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,17 +28,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package NADA
- * @filesource
  */
 /**
  * Link to MDB2 based classes
+ *
+ * This class overrides methods with MDB2-specific implementations.
  * @package NADA
  */
 class Nada_Link_Mdb2 extends Nada_Link
 {
-    /**
-     * Detect DBMS type and return suffix for its class
-     */
+
+    /** {@inheritdoc} */
     public function getDbmsSuffix()
     {
         switch ($this->_link->dbsyntax) {
@@ -49,9 +51,7 @@ class Nada_Link_Mdb2 extends Nada_Link
         }
     }
 
-    /**
-     * Execute a database statement that does not return a result set
-     */
+    /** {@inheritdoc} */
     public function exec($statement)
     {
         $result = $this->_link->exec($statement);
@@ -61,9 +61,7 @@ class Nada_Link_Mdb2 extends Nada_Link
         return $result;
     }
 
-    /**
-     * Get database server version
-     */
+    /** {@inheritdoc} */
     public function getServerVersion()
     {
         $version = $this->_link->getServerVersion();

@@ -8,11 +8,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
+ *
  * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,7 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package NADA
- * @filesource
  */
 /**
  * Abstract link class
@@ -51,6 +52,7 @@ abstract class Nada_Link
 
     /**
      * Constructor
+     * @param mixed DBAL-specific link object or ressource
      */
     function __construct($link)
     {
@@ -61,12 +63,13 @@ abstract class Nada_Link
      * Detect DBMS type and return suffix for its class
      *
      * Implementations should detect all DBMS types supported by both NADA and
-     * the database abstraction layer. If no supported DBMS is detected, throw
-     * an exception. The returned suffix is appended to the base class name
-     * (like Nada_Dbms_Suffix) and to determine the file name of the script that
-     * defines this class (like Dbms/Suffix.php). Because the result is used to
-     * construct a path, implementations MUST take care that it does not resolve
-     * into something evil.
+     * the database abstraction layer. The returned suffix is appended to the
+     * base class name (like Nada_Dbms_Suffix) and to determine the file name of
+     * the script that defines this class (like Dbms/Suffix.php). Because the
+     * result is used to construct a path, implementations MUST take care that
+     * it does not resolve into something evil.
+     * @return string DBMS suffix
+     * @throws UnexpectedValueException if no supported DBMS is detected
      */
     abstract public function getDbmsSuffix();
 
@@ -82,6 +85,7 @@ abstract class Nada_Link
      * method.
      * @param string $statement SQL statement
      * @return integer Number of affected rows
+     * @throws Exception if execution fails
      */
     abstract public function exec($statement);
 

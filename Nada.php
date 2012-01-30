@@ -8,11 +8,13 @@
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
+ *
  * - Redistributions of source code must retain the above copyright notice, this
  *   list of conditions and the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
  *   this list of conditions and the following disclaimer in the documentation
  *   and/or other materials provided with the distribution.
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -26,7 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package NADA
- * @filesource
  */
 /**
  * Factory class to create a NADA interface from a database link
@@ -34,15 +35,16 @@
  * This is the method to get an interface to NADA's functionality. Connect to
  * the database as usual via PDO/Zend_Db/MDB2 and pass the database link to the
  * factory() method. Example for PDO:
- * <code>
- * require_once 'path/to/NADA/Nada.php'; // No need to have this in include_path
- * $pdo = new PDO($dsn, $user, $password);
- * $nada = Nada::factory($pdo);
- * </code>
+ *
+ *     require_once 'path/to/NADA/Nada.php'; // No need to have this in include_path
+ *     $pdo = new PDO($dsn, $user, $password);
+ *     $nada = Nada::factory($pdo);
+ *
  * The result is a {@link Nada_Dbms} derived object which is aware of the
  * database link it was created from and the DBMS type it connects to. All
  * further interaction goes through this object.
  * @package NADA
+ * @api
  */
 class Nada
 {
@@ -52,6 +54,7 @@ class Nada
      * See class description for usage example.
      * @param mixed $link Database link
      * @return Nada_Dbms NADA interface
+     * @throws InvalidArgumentException if no supported DBAL is detected
      */
     static function factory($link)
     {
