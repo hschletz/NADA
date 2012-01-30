@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * Copyright (c) 2011, Holger Schletz <holger.schletz@web.de>
+ * Copyright (c) 2011,2012 Holger Schletz <holger.schletz@web.de>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
