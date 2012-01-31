@@ -78,6 +78,6 @@ class Nada_Dbms_Mysql extends Nada_Dbms
                 'REAL_AS_FLOAT', // REAL is single precision, not double
             )
         );
-        $this->_link->exec("SET SESSION sql_mode='$modes'");
+        $this->exec('SET SESSION sql_mode=?', $modes);
     }
 }
