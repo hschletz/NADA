@@ -80,4 +80,16 @@ class Nada_Dbms_Mysql extends Nada_Dbms
         );
         $this->exec('SET SESSION sql_mode=?', $modes);
     }
+
+    /** {@inheritdoc} */
+    public function getDatabaseName()
+    {
+        if (!$this->_databaseName) {
+            $result = $this->query(
+                'SELECT DATABASE() AS catalog_name'
+            );
+            $this->_databaseName = $result[0]['catalog_name'];
+        }
+        return $this->_databaseName;
+    }
 }

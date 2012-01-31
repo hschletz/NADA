@@ -57,6 +57,14 @@ abstract class Nada_Dbms
     protected $_link;
 
     /**
+     * Cache for current database name
+     *
+     * Managed by {@link getDatabaseName()}, do not use directly.
+     * @var string
+     */
+    protected $_databaseName;
+
+    /**
      * Constructor
      * @param Nada_Link Database link
      */
@@ -238,5 +246,20 @@ abstract class Nada_Dbms
     {
         // This is essentially DBMS specific.
         // Any actions are implemented in a subclass.
+    }
+
+    /**
+     * Return name of the database that the current connection points to
+     * @return string Database name
+     */
+    public function getDatabaseName()
+    {
+        if (!$this->_databaseName) {
+            $result = $this->query(
+                'select catalog_name from information_schema.information_schema_catalog_name'
+            );
+            $this->_databaseName = $result[0]['catalog_name'];
+        }
+        return $this->_databaseName;
     }
 }
