@@ -75,10 +75,14 @@ class Nada
         $class = "Nada_Link_$class";
         $link = new $class($link);
 
-        // Create and return matching Nada_Dbms object
+        // Load matching classes
         $class = $link->getDbmsSuffix();
         self::_requireOnce('Dbms.php');
         self::_requireOnce("Dbms/$class.php");
+        self::_requireOnce('Table.php');
+        self::_requireOnce("Table/$class.php");
+
+        // Create and return matching Nada_Dbms object
         $class = "Nada_Dbms_$class";
         return new $class($link);
     }

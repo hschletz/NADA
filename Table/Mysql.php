@@ -1,6 +1,6 @@
 <?php
 /**
- * Interface class for PostgreSQL
+ * Table class for MySQL
  *
  * $Id$
  *
@@ -30,41 +30,12 @@
  * @package NADA
  */
 /**
- * Interface class for PostgreSQL
+ * Table class for MySQL
  *
- * This class overrides methods with PostgreSQL-specific implementations.
+ * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
-class Nada_Dbms_Pgsql extends Nada_Dbms
+class Nada_Table_Mysql extends Nada_Table
 {
 
-    /** {@inheritdoc} */
-    protected $_tableSchema = 'public';
-
-    /** {@inheritdoc} */
-    public function isPgsql()
-    {
-        return true;
-    }
-
-    /** {@inheritdoc} */
-    public function iLike()
-    {
-        return ' ILIKE ';
-    }
-
-    /** {@inheritdoc} */
-    public function setStrictMode()
-    {
-        // Force standard compliant escaping of single quotes ('', not \')
-        $this->exec('SET backslash_quote TO off');
-        // Treat backslashes literally (not as escape character)
-        $this->exec('SET standard_conforming_strings TO on');
-        // Keep special semantics of NULL, i.e. 'expr = NULL' always evaluates to FALSE
-        $this->exec('SET transform_null_equals TO off');
-        // Don't implicitly add missing columns to FROM clause (no longer supported with 9.0)
-        if (version_compare($this->_link->getServerVersion(), '9.0', '<')) {
-            $this->exec('SET add_missing_from TO off');
-        }
-    }
 }

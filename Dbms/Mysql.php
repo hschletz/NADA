@@ -39,6 +39,12 @@ class Nada_Dbms_Mysql extends Nada_Dbms
 {
 
     /** {@inheritdoc} */
+    function __construct($link){
+        parent::__construct($link);
+        $this->_tableSchema = $this->getDatabaseName();
+    }
+
+    /** {@inheritdoc} */
     public function isMysql()
     {
         return true;

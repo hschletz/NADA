@@ -57,6 +57,12 @@ abstract class Nada_Dbms
     protected $_link;
 
     /**
+     * DBMS-specific class suffix
+     * @var string
+     */
+    protected $_dbmsSuffix;
+
+    /**
      * Cache for current database name
      *
      * Managed by {@link getDatabaseName()}, do not use directly.
@@ -65,12 +71,42 @@ abstract class Nada_Dbms
     protected $_databaseName;
 
     /**
+     * Value to search for in the table_schema column with information_schema queries
+     *
+     * This is DBMS-specific and must be set by a subclass that uses the default
+     * information_schema implementation.
+     * @var string
+     */
+    protected $_tableSchema;
+
+    /**
+     * Table cache
+     *
+     * {@link getTable()} stores its results here to avoid expensive requeries
+     * of the same table.
+     * @var array
+     */
+    private $_tables = array();
+
+    /**
      * Constructor
      * @param Nada_Link Database link
      */
     function __construct($link)
     {
         $this->_link = $link;
+        $this->_dbmsSuffix = $link->getDbmsSuffix();
+    }
+
+    /**
+     * Get suffix for DBMS-specific classes
+     *
+     * This is useful for instantiation of DBMS-specific subclasses.
+     * @return string Class suffix
+     */
+    public function getDbmsSuffix()
+    {
+        return $this->_dbmsSuffix;
     }
 
     /**
@@ -261,5 +297,34 @@ abstract class Nada_Dbms
             $this->_databaseName = $result[0]['catalog_name'];
         }
         return $this->_databaseName;
+    }
+
+    /**
+     * Get access to a specific table
+     *
+     * The returned object provides access to the given table and its associated
+     * database objects (columns etc.). The result is cached internally, so that
+     * subsequent calls won't hurt performance.
+     * @param string $name Table name. An exception gets thrown if the name does not exist.
+     * @return Nada_Table Table object
+     */
+    public function getTable($name)
+    {
+        if (!isset($this->_tables[$name])) {
+            $this->_tables[$name] = Nada_Table::factory($this, $name);
+        }
+        return $this->_tables[$name];
+    }
+
+    /**
+     * Get database-specific table_schema value for information_schema queries
+     *
+     * The returned string should be used as a filter on the table_schema column
+     * for information_schema queries to limit results to the current database.
+     * @return string
+     */
+    public function getTableSchema()
+    {
+        return $this->_tableSchema;
     }
 }
