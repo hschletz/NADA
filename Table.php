@@ -54,6 +54,9 @@ abstract class Nada_Table
 
     /**
      * This table's columns
+     *
+     * This is an associative array populated by {@link _fetchColumns()}.
+     * The column name is the key, and the value is a Nada_Column derived class.
      * @var array
      */
     protected $_columns;
@@ -85,7 +88,7 @@ abstract class Nada_Table
         $this->_dbms = $dbms;
         $this->_name = $name;
 
-        $this->_columns = $this->_fetchColumns();
+        $this->_fetchColumns();
         if (empty($this->_columns)) {
             throw new RuntimeException('Table does not exist: ' . $name);
         }
@@ -106,21 +109,26 @@ abstract class Nada_Table
     }
 
     /**
+     * Return database interface
+     * @return Nada_Dbms Database interface
+     */
+    public function getDbms()
+    {
+        return $this->_dbms;
+    }
+
+    /**
      * Fetch column information from the database
      *
      * Invoked by the constructor, the default implementation queries
      * information_schema.columns for all columns belonging to this table. To
-     * make this functional, subclasses must set {@link Nada_Dbms::_tableSchema}
-     * and extend {@link _informationSchemaColumns} with essential DBMS-specific
-     * columns.
-     *
-     * Overridden implementations must return columns in an information_schema
-     * compatible structure.
-     * @return array Query result
+     * make this functional, subclasses must set {@link Nada_Dbms::$_tableSchema}
+     * and, if necessary, extend {@link $_informationSchemaColumns} with
+     * DBMS-specific columns.
      */
     protected function _fetchColumns()
     {
-        return $this->_dbms->query(
+        $columns = $this->_dbms->query(
             'SELECT ' .
             implode(',', $this->_informationSchemaColumns) .
             ' FROM information_schema.columns WHERE table_schema=? AND table_name=? ORDER BY ordinal_position',
@@ -129,6 +137,9 @@ abstract class Nada_Table
                 $this->_name,
             )
         );
+        foreach ($columns as $column) {
+            $this->_columns[$column['column_name']] = Nada_Column::factory($this, $column);
+        }
     }
 
     /**

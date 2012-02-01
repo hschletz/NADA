@@ -49,6 +49,27 @@
 class Nada
 {
     /**
+     * Constant for INTEGER datatypes. Length gives the size in bits.
+     */
+    const DATATYPE_INTEGER = 'integer';
+    /**
+     * Constant for VARCHAR datatypes. Length gives the size in characters, not bytes.
+     */
+    const DATATYPE_VARCHAR = 'varchar';
+    /**
+     * Constant for TIMESTAMP datatypes
+     */
+    const DATATYPE_TIMESTAMP = 'timestamp';
+    /**
+     * Constant for CLOB datatypes. Length is only available for some DBMS. Don't rely on it.
+     */
+    const DATATYPE_CLOB = 'clob';
+    /**
+     * Constant for DECIMAL/NUMERIC datatypes. Length consists of precision and scale, like '7,4'.
+     */
+    const DATATYPE_DECIMAL = 'decimal';
+
+    /**
      * Factory method to create NADA interface
      *
      * See class description for usage example.
@@ -81,6 +102,8 @@ class Nada
         self::_requireOnce("Dbms/$class.php");
         self::_requireOnce('Table.php');
         self::_requireOnce("Table/$class.php");
+        self::_requireOnce('Column.php');
+        self::_requireOnce("Column/$class.php");
 
         // Create and return matching Nada_Dbms object
         $class = "Nada_Dbms_$class";

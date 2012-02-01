@@ -1,6 +1,6 @@
 <?php
 /**
- * Table class for PostgreSQL
+ * Column class for PostgreSQL
  *
  * $Id$
  *
@@ -30,12 +30,40 @@
  * @package NADA
  */
 /**
- * Table class for PostgreSQL
+ * Column class for PostgreSQL
  *
  * This class overrides methods with PostgreSQL-specific implementations.
  * @package NADA
  */
-class Nada_Table_Pgsql extends Nada_Table
+class Nada_Column_Pgsql extends Nada_Column
 {
 
+    /** {@inheritdoc} */
+    protected function _parseDatatype($data)
+    {
+        switch ($data['data_type']) {
+            case 'integer':
+            case 'smallint':
+            case 'bigint':
+                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_length = $data['numeric_precision'];
+                break;
+            case 'character varying':
+                $this->_datatype = Nada::DATATYPE_VARCHAR;
+                $this->_length = $data['character_maximum_length'];
+                break;
+            case 'timestamp without time zone':
+                $this->_datatype = Nada::DATATYPE_TIMESTAMP;
+                break;
+            case 'text':
+                $this->_datatype = Nada::DATATYPE_CLOB;
+                break;
+            case 'numeric':
+                $this->_datatype = Nada::DATATYPE_DECIMAL;
+                $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
+                break;
+            default:
+                throw new UnexpectedValueException('Unknown PostgreSQL Datatype: ' . $data['data_type']);
+        }
+    }
 }
