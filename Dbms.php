@@ -1,6 +1,6 @@
 <?php
 /**
- * Main application interface class
+ * Database application interface class
  *
  * $Id$
  *
@@ -30,12 +30,11 @@
  * @package NADA
  */
 /**
- * Main application interface class
+ * Database application interface class
  *
- * This is the base class for all objects through which applications will
- * interact. The public methods provide a DBMS-independent interface to
- * high-level database actions. Their inner workings and return values are
- * specific to the underlying DBMS.
+ * This class is the starting point for applications. Its public methods provide
+ * a DBMS-independent interface to high-level database actions. Their inner
+ * workings and return values are specific to the underlying DBMS.
  *
  * Objects should not be instantiated directly, but through
  * {@link Nada::factory()}.

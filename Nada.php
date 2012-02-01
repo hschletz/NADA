@@ -42,7 +42,7 @@
  *
  * The result is a {@link Nada_Dbms} derived object which is aware of the
  * database link it was created from and the DBMS type it connects to. All
- * further interaction goes through this object.
+ * further interaction starts with this object.
  * @package NADA
  * @api
  */
