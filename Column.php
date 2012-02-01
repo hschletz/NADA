@@ -131,6 +131,7 @@ abstract class Nada_Column
      * Implementations can expect an array with information_schema compatible
      * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
      * @param mixed $data Column data
+     * @throws UnexpectedValueException if datatype is not recognized.
      */
     abstract protected function _parseDatatype($data);
 
