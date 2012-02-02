@@ -143,6 +143,20 @@ abstract class Nada_Table
     }
 
     /**
+     * Return a single column
+     * @param $name Column name, must be lowercase
+     * @return Nada_Column Column interface
+     * @throws RuntimeException if column does not exist
+     */
+    public function getColumn($name)
+    {
+        if (!isset($this->_columns[$name])) {
+            throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
+        }
+        return $this->_columns[$name];
+    }
+
+    /**
      * Return all columns
      * @return array
      */
