@@ -158,7 +158,7 @@ abstract class Nada_Table
 
     /**
      * Return all columns
-     * @return array
+     * @return array Array of Nada_Column objects with column names as keys
      */
     public function getColumns()
     {
