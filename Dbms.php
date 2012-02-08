@@ -304,7 +304,7 @@ abstract class Nada_Dbms
      * The returned object provides access to the given table and its associated
      * database objects (columns etc.). The result is cached internally, so that
      * subsequent calls won't hurt performance.
-     * @param string $name Table name. An exception gets thrown if the name does not exist.
+     * @param string $name Table name (lowercase). An exception gets thrown if the name does not exist.
      * @return Nada_Table Table object
      */
     public function getTable($name)
