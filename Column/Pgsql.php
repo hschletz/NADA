@@ -66,4 +66,41 @@ class Nada_Column_Pgsql extends Nada_Column
                 throw new UnexpectedValueException('Unknown PostgreSQL Datatype: ' . $data['data_type']);
         }
     }
+
+    /** {@inheritdoc} */
+    protected function _parseDefault($data)
+    {
+        // Do not use the default from autoincrement columns.
+        // See _isAutoIncrement() for an explanation.
+        if (!$this->_isAutoIncrement($data))
+        {
+            parent::_parseDefault($data);
+        }
+    }
+
+    /** {@inheritdoc} */
+    protected function _parseAutoIncrement($data)
+    {
+        $this->_autoIncrement = $this->_isAutoIncrement($data);
+    }
+
+    /**
+     * Detect autoincrement property from column data
+     *
+     * PostgreSQL does not have a real autoincrement type, but implements it via
+     * a sequence and nextval() as default. This method detects that construct
+     * for 'integer' and 'bigint' columns.
+     * @param array $data Column data
+     */
+    protected function _isAutoIncrement($data)
+    {
+        if (
+            ($data['data_type'] == 'integer' or $data['data_type'] == 'bigint')
+            and strpos($data['column_default'], 'nextval(') === 0
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

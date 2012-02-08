@@ -83,6 +83,12 @@ abstract class Nada_Column
     protected $_default;
 
     /**
+     * TRUE if this is an autoincrement field
+     * @var bool
+     */
+    protected $_autoIncrement;
+
+    /**
      * Constructor
      * @param Nada_Table $table Table that this column belongs to
      * @param mixed $data Column data
@@ -95,6 +101,7 @@ abstract class Nada_Column
         $this->_parseDatatype($data);
         $this->_parseNotnull($data);
         $this->_parseDefault($data);
+        $this->_parseAutoIncrement($data);
     }
 
     /**
@@ -169,6 +176,16 @@ abstract class Nada_Column
     }
 
     /**
+     * Extract autoincrement property from column data
+     *
+     * Since this part is DBMS-specific, no default implementation exists.
+     * Implementations can expect an array with information_schema compatible
+     * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
+     * @param mixed $data Column data
+     */
+    abstract protected function _parseAutoIncrement($data);
+
+    /**
      * Get column name
      * @return string Column name
      */
@@ -214,5 +231,14 @@ abstract class Nada_Column
     public function getDefault()
     {
         return $this->_default;
+    }
+
+    /**
+     * Get autoincrement property
+     * @return bool TRUE if the column is an autoincrement field.
+     */
+    public function getAutoIncrement()
+    {
+        return $this->_autoIncrement;
     }
 }

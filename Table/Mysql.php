@@ -38,4 +38,10 @@
 class Nada_Table_Mysql extends Nada_Table
 {
 
+    /** {@inheritdoc} */
+    function __construct($database, $name)
+    {
+        $this->_informationSchemaColumns[] = 'extra';
+        parent::__construct($database, $name);
+    }
 }

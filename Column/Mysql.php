@@ -74,4 +74,13 @@ class Nada_Column_Mysql extends Nada_Column
         }
     }
 
+    /** {@inheritdoc} */
+    protected function _parseAutoIncrement($data)
+    {
+        if (strpos($data['extra'], 'auto_increment') !== false) {
+            $this->_autoIncrement = true;
+        } else {
+            $this->_autoIncrement = false;
+        }
+    }
 }
