@@ -306,9 +306,14 @@ abstract class Nada_Dbms
      * subsequent calls won't hurt performance.
      * @param string $name Table name (lowercase). An exception gets thrown if the name does not exist.
      * @return Nada_Table Table object
+     * @throws DomainException if $name is not lowercase
      */
     public function getTable($name)
     {
+        if ($name != strtolower($name)) {
+            throw new DomainException('Table name must be lowercase: ' . $name);
+        }
+
         if (!isset($this->_tables[$name])) {
             $this->_tables[$name] = Nada_Table::factory($this, $name);
         }

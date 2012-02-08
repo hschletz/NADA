@@ -131,13 +131,14 @@ abstract class Nada_Table
         $columns = $this->_dbms->query(
             'SELECT ' .
             implode(',', $this->_informationSchemaColumns) .
-            ' FROM information_schema.columns WHERE table_schema=? AND table_name=? ORDER BY ordinal_position',
+            ' FROM information_schema.columns WHERE table_schema=? AND LOWER(table_name)=? ORDER BY ordinal_position',
             array(
                 $this->_dbms->getTableSchema(),
                 $this->_name,
             )
         );
         foreach ($columns as $column) {
+            $column['column_name'] = strtolower($column['column_name']);
             $this->_columns[$column['column_name']] = Nada_Column::factory($this, $column);
         }
     }
@@ -147,9 +148,14 @@ abstract class Nada_Table
      * @param $name Column name, must be lowercase
      * @return Nada_Column Column interface
      * @throws RuntimeException if column does not exist
+     * @throws DomainException if $name is not lowercase
      */
     public function getColumn($name)
     {
+        if ($name != strtolower($name)) {
+            throw new DomainException('Column name must be lowercase: ' . $name);
+        }
+
         if (!isset($this->_columns[$name])) {
             throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
         }
