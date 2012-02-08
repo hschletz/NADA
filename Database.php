@@ -47,7 +47,7 @@
  * @package NADA
  * @api
  */
-abstract class Nada_Dbms
+abstract class Nada_Database
 {
     /**
      * Database link
@@ -64,10 +64,10 @@ abstract class Nada_Dbms
     /**
      * Cache for current database name
      *
-     * Managed by {@link getDatabaseName()}, do not use directly.
+     * Managed by {@link getName()}, do not use directly.
      * @var string
      */
-    protected $_databaseName;
+    protected $_name;
 
     /**
      * Value to search for in the table_schema column with information_schema queries
@@ -287,15 +287,15 @@ abstract class Nada_Dbms
      * Return name of the database that the current connection points to
      * @return string Database name
      */
-    public function getDatabaseName()
+    public function getName()
     {
-        if (!$this->_databaseName) {
+        if (!$this->_name) {
             $result = $this->query(
                 'select catalog_name from information_schema.information_schema_catalog_name'
             );
-            $this->_databaseName = $result[0]['catalog_name'];
+            $this->_name = $result[0]['catalog_name'];
         }
-        return $this->_databaseName;
+        return $this->_name;
     }
 
     /**

@@ -35,13 +35,13 @@
  * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
-class Nada_Dbms_Mysql extends Nada_Dbms
+class Nada_Database_Mysql extends Nada_Database
 {
 
     /** {@inheritdoc} */
     function __construct($link){
         parent::__construct($link);
-        $this->_tableSchema = $this->getDatabaseName();
+        $this->_tableSchema = $this->getName();
     }
 
     /** {@inheritdoc} */
@@ -88,14 +88,14 @@ class Nada_Dbms_Mysql extends Nada_Dbms
     }
 
     /** {@inheritdoc} */
-    public function getDatabaseName()
+    public function getName()
     {
-        if (!$this->_databaseName) {
+        if (!$this->_name) {
             $result = $this->query(
                 'SELECT DATABASE() AS catalog_name'
             );
-            $this->_databaseName = $result[0]['catalog_name'];
+            $this->_name = $result[0]['catalog_name'];
         }
-        return $this->_databaseName;
+        return $this->_name;
     }
 }

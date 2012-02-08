@@ -42,9 +42,9 @@ abstract class Nada_Column
 {
     /**
      * Database link
-     * @var Nada_Dbms
+     * @var Nada_Database
      */
-    protected $_dbms;
+    protected $_database;
 
     /**
      * Table that this column belongs to
@@ -89,7 +89,7 @@ abstract class Nada_Column
      */
     function __construct($table, $data)
     {
-        $this->_dbms = $table->getDbms();
+        $this->_database = $table->getDatabase();
         $this->_table = $table;
         $this->_parseName($data);
         $this->_parseDatatype($data);
@@ -108,7 +108,7 @@ abstract class Nada_Column
      */
     public static function factory($table, $data)
     {
-        $class = 'Nada_Column_' . $table->getDbms()->getDbmsSuffix();
+        $class = 'Nada_Column_' . $table->getDatabase()->getDbmsSuffix();
         return new $class($table, $data);
     }
 

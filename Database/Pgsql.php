@@ -35,7 +35,7 @@
  * This class overrides methods with PostgreSQL-specific implementations.
  * @package NADA
  */
-class Nada_Dbms_Pgsql extends Nada_Dbms
+class Nada_Database_Pgsql extends Nada_Database
 {
 
     /** {@inheritdoc} */

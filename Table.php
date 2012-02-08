@@ -34,7 +34,7 @@
  *
  * This is the base class for providing a unified interface to database tables.
  * It is not intended to be instantiated directly, but through one of the
- * {@link Nada_Dbms} methods.
+ * {@link Nada_Database} methods.
  * @package NADA
  * @api
  */
@@ -42,9 +42,9 @@ abstract class Nada_Table
 {
     /**
      * Database link
-     * @var Nada_Dbms
+     * @var Nada_Database
      */
-    protected $_dbms;
+    protected $_database;
 
     /**
      * Table name
@@ -79,13 +79,13 @@ abstract class Nada_Table
 
     /**
      * Constructor
-     * @param Nada_Dbms $dbms Database interface
+     * @param Nada_Database $database Database interface
      * @param string $name Table name
      * @throws RuntimeException if table does not exist
      */
-    function __construct($dbms, $name)
+    function __construct($database, $name)
     {
-        $this->_dbms = $dbms;
+        $this->_database = $database;
         $this->_name = $name;
 
         $this->_fetchColumns();
@@ -98,23 +98,23 @@ abstract class Nada_Table
      * Factory method
      *
      * This should be preferred over direct instantiation.
-     * @param Nada_Dbms $dbms Database interface
+     * @param Nada_Database $database Database interface
      * @param string $name Table name. An exception is thrown if the table does not exist.
      * @return NADA_Table DBMS-specific subclass
      */
-    public static function factory($dbms, $name)
+    public static function factory($database, $name)
     {
-        $class = 'Nada_Table_' . $dbms->getDbmsSuffix();
-        return new $class($dbms, $name);
+        $class = 'Nada_Table_' . $database->getDbmsSuffix();
+        return new $class($database, $name);
     }
 
     /**
      * Return database interface
-     * @return Nada_Dbms Database interface
+     * @return Nada_Database Database interface
      */
-    public function getDbms()
+    public function getDatabase()
     {
-        return $this->_dbms;
+        return $this->_database;
     }
 
     /**
@@ -122,18 +122,18 @@ abstract class Nada_Table
      *
      * Invoked by the constructor, the default implementation queries
      * information_schema.columns for all columns belonging to this table. To
-     * make this functional, subclasses must set {@link Nada_Dbms::$_tableSchema}
+     * make this functional, subclasses must set {@link Nada_Database::$_tableSchema}
      * and, if necessary, extend {@link $_informationSchemaColumns} with
      * DBMS-specific columns.
      */
     protected function _fetchColumns()
     {
-        $columns = $this->_dbms->query(
+        $columns = $this->_database->query(
             'SELECT ' .
             implode(',', $this->_informationSchemaColumns) .
             ' FROM information_schema.columns WHERE table_schema=? AND LOWER(table_name)=? ORDER BY ordinal_position',
             array(
-                $this->_dbms->getTableSchema(),
+                $this->_database->getTableSchema(),
                 $this->_name,
             )
         );

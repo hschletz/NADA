@@ -40,7 +40,7 @@
  *     $pdo = new PDO($dsn, $user, $password);
  *     $nada = Nada::factory($pdo);
  *
- * The result is a {@link Nada_Dbms} derived object which is aware of the
+ * The result is a {@link Nada_Database} derived object which is aware of the
  * database link it was created from and the DBMS type it connects to. All
  * further interaction starts with this object.
  * @package NADA
@@ -74,7 +74,7 @@ class Nada
      *
      * See class description for usage example.
      * @param mixed $link Database link
-     * @return Nada_Dbms NADA interface
+     * @return Nada_Database NADA interface
      * @throws InvalidArgumentException if no supported DBAL is detected
      */
     static function factory($link)
@@ -98,15 +98,15 @@ class Nada
 
         // Load matching classes
         $class = $link->getDbmsSuffix();
-        self::_requireOnce('Dbms.php');
-        self::_requireOnce("Dbms/$class.php");
+        self::_requireOnce('Database.php');
+        self::_requireOnce("Database/$class.php");
         self::_requireOnce('Table.php');
         self::_requireOnce("Table/$class.php");
         self::_requireOnce('Column.php');
         self::_requireOnce("Column/$class.php");
 
-        // Create and return matching Nada_Dbms object
-        $class = "Nada_Dbms_$class";
+        // Create and return matching Nada_Database object
+        $class = "Nada_Database_$class";
         return new $class($link);
     }
 
