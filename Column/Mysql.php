@@ -80,6 +80,14 @@ class Nada_Column_Mysql extends Nada_Column
                 $this->_datatype = Nada::DATATYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
+            case 'float':
+                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_length = 24;
+                break;
+            case 'double':
+                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_length = 53;
+                break;
             default:
                 throw new UnexpectedValueException('Unknown MySQL Datatype: ' . $data['data_type']);
         }

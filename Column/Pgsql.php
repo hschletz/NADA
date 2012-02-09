@@ -71,6 +71,11 @@ class Nada_Column_Pgsql extends Nada_Column
                 $this->_datatype = Nada::DATATYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
+            case 'double precision':
+            case 'real':
+                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_length = $data['numeric_precision'];
+                break;
             default:
                 throw new UnexpectedValueException('Unknown PostgreSQL Datatype: ' . $data['data_type']);
         }

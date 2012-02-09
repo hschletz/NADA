@@ -80,6 +80,10 @@ class Nada
      * Constant for DECIMAL/NUMERIC datatypes. Length consists of precision and scale, like '7,4'.
      */
     const DATATYPE_DECIMAL = 'decimal';
+    /**
+     * Constant for FLOAT datatypes. Length denotes precision, typically 24 for single 53 for double.
+     */
+    const DATATYPE_FLOAT = 'float';
 
     /**
      * Factory method to create NADA interface
