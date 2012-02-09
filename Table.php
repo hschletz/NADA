@@ -109,6 +109,15 @@ abstract class Nada_Table
     }
 
     /**
+     * Return table name
+     * @return string table name
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
+    /**
      * Return database interface
      * @return Nada_Database Database interface
      */
