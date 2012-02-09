@@ -77,7 +77,7 @@ class Nada_Column_Mysql extends Nada_Column
     /** {@inheritdoc} */
     protected function _parseAutoIncrement($data)
     {
-        if (strpos($data['extra'], 'auto_increment') !== false) {
+        if ($data['extra'] == 'auto_increment') {
             $this->_autoIncrement = true;
         } else {
             $this->_autoIncrement = false;
