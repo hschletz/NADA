@@ -61,9 +61,21 @@ class Nada
      */
     const DATATYPE_TIMESTAMP = 'timestamp';
     /**
+     * Constant for DATE datatypes
+     */
+    const DATATYPE_DATE = 'date';
+    /**
+     * Constant for BOOL datatypes (not available for all DBMS, emulated if necessary)
+     */
+    const DATATYPE_BOOL = 'bool';
+    /**
      * Constant for CLOB datatypes. Length is only available for some DBMS. Don't rely on it.
      */
     const DATATYPE_CLOB = 'clob';
+    /**
+     * Constant for BLOB datatypes. Length is only available for some DBMS. Don't rely on it.
+     */
+    const DATATYPE_BLOB = 'blob';
     /**
      * Constant for DECIMAL/NUMERIC datatypes. Length consists of precision and scale, like '7,4'.
      */

@@ -53,9 +53,20 @@ class Nada_Column_Mysql extends Nada_Column
             case 'datetime':
                 $this->_datatype = Nada::DATATYPE_TIMESTAMP;
                 break;
+            case 'date':
+                $this->_datatype = Nada::DATATYPE_DATE;
+                break;
             case 'longtext':
                 $this->_datatype = Nada::DATATYPE_CLOB;
                 $this->_length = $data['character_maximum_length'];
+                break;
+            case 'longblob':
+                $this->_datatype = Nada::DATATYPE_BLOB;
+                $this->_length = $data['character_maximum_length'];
+                break;
+            case 'tinyint':
+                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_length = 8;
                 break;
             case 'smallint':
                 $this->_datatype = Nada::DATATYPE_INTEGER;

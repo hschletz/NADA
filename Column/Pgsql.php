@@ -55,8 +55,17 @@ class Nada_Column_Pgsql extends Nada_Column
             case 'timestamp without time zone':
                 $this->_datatype = Nada::DATATYPE_TIMESTAMP;
                 break;
+            case 'date':
+                $this->_datatype = Nada::DATATYPE_DATE;
+                break;
+            case 'boolean':
+                $this->_datatype = Nada::DATATYPE_BOOL;
+                break;
             case 'text':
                 $this->_datatype = Nada::DATATYPE_CLOB;
+                break;
+            case 'bytea':
+                $this->_datatype = Nada::DATATYPE_BLOB;
                 break;
             case 'numeric':
                 $this->_datatype = Nada::DATATYPE_DECIMAL;
