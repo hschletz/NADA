@@ -85,8 +85,12 @@ class Nada_Column_Pgsql extends Nada_Column
         {
             parent::_parseDefault($data);
             // Extract value from typed defaults
-            if (preg_match("/^'(.*)'::$data[data_type]$/", $this->_default, $matches)) {
-                $this->_default = $matches[1];
+            if (preg_match("/^('(.*)'|NULL)::$data[data_type]$/", $this->_default, $matches)) {
+                if ($matches[1] == 'NULL') {
+                    $this->_default = null;
+                } else {
+                    $this->_default = $matches[2]; // String without surrounding quotes
+                }
             }
         }
     }
