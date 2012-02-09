@@ -88,6 +88,12 @@ abstract class Nada_Database
     private $_tables = array();
 
     /**
+     * Flag that indicates if {@link getTables()} has already been invoked
+     * @var bool
+     */
+    private $_allTablesFetched = false;
+
+    /**
      * Constructor
      * @param Nada_Link Database link
      */
@@ -318,6 +324,35 @@ abstract class Nada_Database
             $this->_tables[$name] = Nada_Table::factory($this, $name);
         }
         return $this->_tables[$name];
+    }
+
+    /**
+     * Return all tables
+     *
+     * The result is cached internally, so that subsequent calls won't hurt performance.
+     * @return array Array with table names as keys and {@link Nada_Table} objects as values
+     */
+    public function getTables()
+    {
+        if (!$this->_allTablesFetched) { // Fetch only once
+            // Get all table names
+            $tables = $this->query(
+                'SELECT table_name FROM information_schema.tables WHERE table_schema=? AND table_type=?',
+                array(
+                    $this->getTableSchema(),
+                    'BASE TABLE'
+                )
+            );
+            // Fetch missing tables
+            foreach ($tables as $table) {
+                $this->getTable($table['table_name']); // Discard result, still available in cache
+            }
+            // Sort cache
+            ksort($this->_tables);
+            // Set flag for subsequent invocations
+            $this->_allTablesFetched = true;
+        }
+        return $this->_tables;
     }
 
     /**
