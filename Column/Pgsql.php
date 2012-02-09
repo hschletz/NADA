@@ -84,6 +84,10 @@ class Nada_Column_Pgsql extends Nada_Column
         if (!$this->_isAutoIncrement($data))
         {
             parent::_parseDefault($data);
+            // Extract value from typed defaults
+            if (preg_match("/^'(.*)'::$data[data_type]$/", $this->_default, $matches)) {
+                $this->_default = $matches[1];
+            }
         }
     }
 
