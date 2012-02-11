@@ -94,6 +94,18 @@ abstract class Nada_Database
     private $_allTablesFetched = false;
 
     /**
+     * Tell prepareIdentifier() to quote identifiers with invalid characters
+     * @var bool
+     */
+    public $quoteInvalidCharacters = false;
+
+    /**
+     * Keywords that should be quoted by prepareIdentifier()
+     * @var array
+     */
+    public $quoteKeywords = array();
+
+    /**
      * Constructor
      * @param Nada_Link Database link
      */
@@ -259,6 +271,84 @@ abstract class Nada_Database
         // Default implementation yields full ISO 8601 timestamp, like
         // 2011-10-17T17:19:38+02:00. Override if necessary.
         return 'Y-m-d\TH:i:sP';
+    }
+
+    /**
+     * Prepare an identifier (table/column name etc.) for insertion into an SQL statement
+     *
+     * This method is a more flexible alternative to {@link quoteIdentifier()}.
+     * By default, no quoting and escaping is applied for maximum compatibility.
+     * Identifiers that would require quoting raise an exception.
+     *
+     * The public {@link quoteKeywords} property can be set to an array of
+     * keywords that would raise an error if inserted unquoted. If $identifier
+     * matches one of those keywords, it will be quoted. However, naming a
+     * database object with a reserved keyword is a bad idea. Consider renaming
+     * it if possible. Concealing the flaw by applying quotes is only a solution
+     * if the object cannot be renamed. For this reason, {@link quoteKeywords}
+     * is empty by default.
+     *
+     * For maximum portability, this method is rather strict about valid
+     * identifiers: They must contain only letters, digits and underscores and
+     * must not begin with a digit. To allow identifiers that do not meet these
+     * criteria, set the public {@link quoteInvalidCharacters} property to TRUE.
+     * This will quote and escape identifiers that contain invalid characters.
+     * Again, this is a bad idea and the object should rather be renamed if
+     * possible. Note that these restrictions do not apply to defined keywords
+     * as these get quoted anyway.
+     *
+     * This method uses {@link quoteIdentifier()} to quote and escape
+     * identifiers. The same limitations, problems and warnings apply. Valid,
+     * non-keyword identifiers will never be quoted.
+     * @param string $identifier Identifier to check
+     * @return string Identifier, quoted and escaped if necessary
+     * @throws RuntimeException if identifier is invalid and not quoted.
+     */
+    public function prepareIdentifier($identifier)
+    {
+        if (in_array($identifier, $this->quoteKeywords)) {
+            return $this->quoteIdentifier($identifier);
+        }
+
+        if (!preg_match('/^[_[:alpha:]][_[:alnum:]]*$/', $identifier)) {
+            if ($this->quoteInvalidCharacters) {
+                return $this->quoteIdentifier($identifier);
+            } else {
+                throw new RuntimeException('Invalid characters in identifier: ' . $identifier);
+            }
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Quote and escape an identifier (table/column name etc.) for insertion into an SQL statement
+     *
+     * Inserting identifiers from external sources into an SQL statement is
+     * tricky and error-prone. They can contain invalid characters, match an SQL
+     * keyword on some DBMS, or be abused for SQL injection.
+     *
+     * This method partially addresses that problem by quoting and escaping the
+     * identifier. It assumes the identifier to be encoded as ASCII, ISO-8859-*,
+     * UTF-8 or a compatible encoding. Be very careful if any other encoding is
+     * used by the application or database. Don't rely on this method alone for
+     * untrusted input - always sanitize input before using it as an identifier,
+     * regardless of quoting.
+     *
+     * Quoting raises a new problem: According to SQL standards, quoted
+     * identifiers may become case sensitive while unquoted identifiers are case
+     * insensitive. Under certain circumstances, the referred object may become
+     * impossible to address safely across all DBMS.
+     *
+     * For this reason, avoid using this method directly. Use {@link prepareIdentifier()}
+     * instead.
+     * @param string $identifier Identifier to quote and escape
+     * @return string Quoted and escaped identifier
+     */
+    public function quoteIdentifier($identifier)
+    {
+        // Default implementation uses standard quoting and escaping style.
+        return '"' . str_replace('"', '""', $identifier) . '"';
     }
 
     /**
