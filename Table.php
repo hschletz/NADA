@@ -154,20 +154,12 @@ abstract class Nada_Table
 
     /**
      * Return a single column
-     * @param $name Column name, must be lowercase
+     * @param $name Column name
      * @return Nada_Column Column interface
-     * @throws RuntimeException if column does not exist
-     * @throws DomainException if $name is not lowercase
      */
     public function getColumn($name)
     {
-        if ($name != strtolower($name)) {
-            throw new DomainException('Column name must be lowercase: ' . $name);
-        }
-
-        if (!isset($this->_columns[$name])) {
-            throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
-        }
+        $this->requireColumn($name);
         return $this->_columns[$name];
     }
 
@@ -178,5 +170,22 @@ abstract class Nada_Table
     public function getColumns()
     {
         return $this->_columns;
+    }
+
+    /**
+     * Force presence of column
+     * @param string $name Column name to check for, must be lowercase
+     * @throws RuntimeException if column does not exist
+     * @throws DomainException if $name is not lowercase
+     */
+    public function requireColumn($name)
+    {
+        if ($name != strtolower($name)) {
+            throw new DomainException('Column name must be lowercase: ' . $name);
+        }
+
+        if (!isset($this->_columns[$name])) {
+            throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
+        }
     }
 }
