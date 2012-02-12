@@ -188,4 +188,19 @@ abstract class Nada_Table
             throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
         }
     }
+
+    /**
+     * Drop a column
+     * @param string Column name
+     */
+    public function dropColumn($name)
+    {
+        $this->requireColumn($name);
+
+        $table  = $this->_database->prepareIdentifier($this->_name);
+        $column = $this->_database->prepareIdentifier($name);
+
+        $this->_database->exec("ALTER TABLE $table DROP COLUMN $column");
+        unset($this->_columns[$name]);
+    }
 }
