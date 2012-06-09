@@ -57,7 +57,7 @@ class Nada
      */
     const DATATYPE_VARCHAR = 'varchar';
     /**
-     * Constant for TIMESTAMP datatypes
+     * Constant for TIMESTAMP datatypes (without timezone treatment)
      */
     const DATATYPE_TIMESTAMP = 'timestamp';
     /**
