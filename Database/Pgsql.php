@@ -67,4 +67,17 @@ class Nada_Database_Pgsql extends Nada_Database
             $this->exec('SET add_missing_from TO off');
         }
     }
+
+    /** {@inheritdoc} */
+    public function getNativeDatatype($type, $length=null)
+    {
+        switch ($type) {
+            case Nada::DATATYPE_CLOB:
+                return 'TEXT';
+            case Nada::DATATYPE_BLOB:
+                return 'BYTEA';
+            default:
+                return parent::getNativeDatatype($type, $length);
+        }
+    }
 }

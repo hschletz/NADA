@@ -456,4 +456,64 @@ abstract class Nada_Database
     {
         return $this->_tableSchema;
     }
+
+    /**
+     * Get DBMS-specific datatype for abstract NADA datatype
+     * @param string $type One of the NADA::DATATYPE_* constants
+     * @param mixed $length Optional length modifier (default provided for some datatypes)
+     * @return string SQL fragment representing the datatype
+     * @throws DomainException if the datatype is not supported for the current DBMS
+     * @throws InvalidArgumentException if $length is invalid
+     **/
+    public function getNativeDatatype($type, $length=null)
+    {
+        switch ($type) {
+            case Nada::DATATYPE_INTEGER:
+                if ($length === null) {
+                    $length = Nada::DEFAULT_LENGTH_INTEGER;
+                }
+                switch ($length) {
+                    case 16:
+                        return 'SMALLINT';
+                    case 32:
+                        return 'INTEGER';
+                    case 64:
+                        return 'BIGINT';
+                    default:
+                        throw new DomainException("Invalid length for type $type: $length");
+                }
+            case Nada::DATATYPE_VARCHAR:
+                if (!ctype_digit((string)$length) or $length < 1) {
+                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                }
+                return "VARCHAR($length)";
+            case Nada::DATATYPE_TIMESTAMP:
+                return 'TIMESTAMP';
+            case Nada::DATATYPE_DATE:
+                return 'DATE';
+            case Nada::DATATYPE_BOOL:
+                return 'BOOLEAN';
+            case Nada::DATATYPE_BLOB:
+                return 'BLOB';
+            case Nada::DATATYPE_DECIMAL:
+                if (!preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
+                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                }
+                $precision = (integer)$components[1];
+                $scale = (integer)$components[2];
+                if ($precision < $scale) {
+                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                }
+                return "NUMERIC($precision,$scale)";
+            case Nada::DATATYPE_FLOAT:
+                if ($length === null) {
+                    $length = Nada::DEFAULT_LENGTH_FLOAT;
+                } elseif (!ctype_digit((string)$length) or $length < 1) {
+                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                }
+                return "FLOAT($length)";
+            default:
+                throw new DomainException('Unsupported datatype: ' . $type);
+        }
+    }
 }

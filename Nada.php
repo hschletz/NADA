@@ -86,6 +86,15 @@ class Nada
     const DATATYPE_FLOAT = 'float';
 
     /**
+     * Default length for integers if no length is explicitly specified
+     **/
+    const DEFAULT_LENGTH_INTEGER = 32;
+    /**
+     * Default length for floats if no length is explicitly specified
+     **/
+    const DEFAULT_LENGTH_FLOAT = 53; // Double precision
+
+    /**
      * Factory method to create NADA interface
      *
      * See class description for usage example.
