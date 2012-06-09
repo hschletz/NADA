@@ -65,7 +65,7 @@ class Nada
      */
     const DATATYPE_DATE = 'date';
     /**
-     * Constant for BOOL datatypes (not available for all DBMS, emulated if necessary)
+     * Constant for BOOL datatypes (not available for all DBMS, emulated if necessary and enabled)
      */
     const DATATYPE_BOOL = 'bool';
     /**

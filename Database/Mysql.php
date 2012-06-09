@@ -113,7 +113,11 @@ class Nada_Database_Mysql extends Nada_Database
             case Nada::DATATYPE_TIMESTAMP:
                 return 'DATETIME';
             case Nada::DATATYPE_BOOL:
-                throw new DomainException('BOOL not supported by MySQL and not emulated');
+                if (in_array(Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
+                    return 'TINYINT';
+                } else {
+                    throw new DomainException('BOOL not supported by MySQL and not emulated');
+                }
             case Nada::DATATYPE_CLOB:
                 return 'LONGTEXT';
             case Nada::DATATYPE_BLOB:

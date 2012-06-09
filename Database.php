@@ -106,6 +106,21 @@ abstract class Nada_Database
     public $quoteKeywords = array();
 
     /**
+     * Datatypes that will be emulated if they are not natively supported
+     *
+     * Some datatypes are not available for every DBMS, like BOOL for MySQL.
+     * They can be emulated, but the behavior may be slightly different. For
+     * example, emulating BOOL with TINYINT will allow otherwise invalid input
+     * (like 42) and not allow otherwise valid input (TRUE/FALSE). For that
+     * reason, no emulation happens by default and must be explicitly enabled:
+     *
+     *     $nada->emulatedDatatypes = array(Nada::DATATYPE_BOOL);
+     *
+     * @var array
+     */
+    public $emulatedDatatypes = array();
+
+    /**
      * Constructor
      * @param Nada_Link Database link
      */
