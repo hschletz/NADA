@@ -109,6 +109,17 @@ abstract class Nada_Link
     abstract public function exec($statement, $params);
 
     /**
+     * Quote a literal value
+     *
+     * This method should only be called with values that require quotes. It may
+     * not work properly with numbers, NULL and similar.
+     * @param string $value Value to quote
+     * @param string $datatype Value's datatype
+     * @return string Quoted and escaped value
+     **/
+    abstract public function quoteValue($value, $datatype);
+
+    /**
      * Get database server version
      * @return string Database server version
      */

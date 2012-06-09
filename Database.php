@@ -367,6 +367,51 @@ abstract class Nada_Database
     }
 
     /**
+     * Prepare a literal value for insertion into an SQL statement
+     * @param mixed $value Value to prepare
+     * @param string $datatype The value's datatype
+     * @return string Value, processed, quoted and escaped if necessary
+     */
+     public function prepareValue($value, $datatype)
+     {
+        if ($value === null) {
+            return 'NULL';
+        }
+        switch ($datatype) {
+            case Nada::DATATYPE_INTEGER:
+                // Filter explicitly because some DBAL silently convert/truncate to integer
+                $filtered = filter_var($value, FILTER_VALIDATE_INT);
+                if ($filtered === false) {
+                    throw new InvalidArgumentException('Not an integer: '. $value);
+                }
+                return $filtered; // No quotes necessary
+            case Nada::DATATYPE_FLOAT:
+            case Nada::DATATYPE_DECIMAL:
+                // Filter explicitly because some DBAL silently convert/truncate to float
+                $filtered = filter_var($value, FILTER_VALIDATE_FLOAT);
+                if ($filtered === false) {
+                    throw new InvalidArgumentException('Not a number: '. $value);
+                }
+                return $filtered; // No quotes necessary
+            case Nada::DATATYPE_BOOL:
+                if (is_bool($value)) { // filter_var() does not work with real booleans
+                    $filtered = $value;
+                } else {
+                    $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+                }
+                if ($filtered === null) {
+                    throw new InvalidArgumentException('Not a boolean: ' . $value);
+                }
+                return (integer)$filtered; // Convert to 0/1 for compatibility with emulated booleans
+            case Nada::DATATYPE_BLOB:
+                // Handled differently across DBMS and abstraction layers - refuse by default.
+                throw new InvalidArgumentException('Cannot prepare BLOB values');
+            default:
+                return $this->_link->quoteValue($value, $datatype);
+        }
+     }
+
+    /**
      * Set strict and more standards compliant behavior on database connection
      *
      * When developing with a particular DBMS, it can often happen that a

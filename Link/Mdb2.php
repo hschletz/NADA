@@ -89,6 +89,12 @@ class Nada_Link_Mdb2 extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function quoteValue($value, $datatype)
+    {
+        return $this->_link->quote((string)$value);
+    }
+
+    /** {@inheritdoc} */
     public function getServerVersion()
     {
         $version = $this->_link->getServerVersion();
