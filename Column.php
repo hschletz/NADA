@@ -89,11 +89,26 @@ abstract class Nada_Column
     protected $_autoIncrement;
 
     /**
-     * Constructor
+     * @internal
+     * Internal factory method
+     * @return NADA_Column DBMS-specific subclass
+     */
+    public static function factory($database)
+    {
+        $class = 'Nada_Column_' . $database->getDbmsSuffix();
+        return new $class;
+    }
+
+    /**
+     * @internal
+     * Internal method to set up the object from within a Nada_Table object
+     *
+     * The column data can be of any type and is passed to the _parse*()
+     * methods.
      * @param Nada_Table $table Table that this column belongs to
      * @param mixed $data Column data
      */
-    function __construct($table, $data)
+    public function constructFromTable($table, $data)
     {
         $this->_database = $table->getDatabase();
         $this->_table = $table;
@@ -102,21 +117,6 @@ abstract class Nada_Column
         $this->_parseNotnull($data);
         $this->_parseDefault($data);
         $this->_parseAutoIncrement($data);
-    }
-
-    /**
-     * Factory method
-     *
-     * This should be preferred over direct instantiation. The column data can
-     * be of any type and is passed to the _parse*() methods.
-     * @param Nada_Table $table Table that this column belongs to
-     * @param mixed $data Column data
-     * @return NADA_Column DBMS-specific subclass
-     */
-    public static function factory($table, $data)
-    {
-        $class = 'Nada_Column_' . $table->getDatabase()->getDbmsSuffix();
-        return new $class($table, $data);
     }
 
     /**
