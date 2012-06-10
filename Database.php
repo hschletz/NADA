@@ -568,6 +568,19 @@ abstract class Nada_Database
     }
 
     /**
+     * Clear cache
+     *
+     * NADA caches the database structure internally. The structure manipulation
+     * methods maintain the cache automatically. If the structure has been
+     * altered without one of NADA's methods, the cache is outdated and needs to
+     * be flushed with this method. This includes replaying captured commands.
+     **/
+    public function clearCache()
+    {
+        $this->_tables = array();
+    }
+
+    /**
      * Get database-specific table_schema value for information_schema queries
      *
      * The returned string should be used as a filter on the table_schema column
