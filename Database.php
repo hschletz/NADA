@@ -234,7 +234,7 @@ abstract class Nada_Database
      **/
     public function beginCapture()
     {
-        if ($this->_capturedCommands !== null) {
+        if ($this->isCapturing()) {
             throw new RuntimeException('Capture already started.');
         }
         $this->_capturedCommands = array();
@@ -250,7 +250,7 @@ abstract class Nada_Database
      **/
     public function endCapture()
     {
-        if ($this->_capturedCommands === null) {
+        if (!$this->isCapturing()) {
             throw new RuntimeException('Capture not started yet.');
         }
         $commands = $this->_capturedCommands;
@@ -258,6 +258,14 @@ abstract class Nada_Database
         return $commands;
     }
 
+    /**
+     * Get capturing status
+     * @return bool TRUE if capturing has been started via beginCapture()
+     **/
+    public function isCapturing()
+    {
+        return $this->_capturedCommands !== null;
+    }
     /**
      * Return a case insensitive LIKE operator if available
      *
