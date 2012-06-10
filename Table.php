@@ -259,22 +259,14 @@ abstract class Nada_Table
      * Drop a column
      * @param string Column name
      */
-    public final function dropColumn($name)
+    public function dropColumn($name)
     {
         $this->requireColumn($name);
-        $this->_database->exec($this->_dropColumn($name));
-        unset($this->_columns[$name]);
-    }
 
-    /**
-     * Generate SQL command for dropping a column
-     * @param string name Column name
-     * @return string
-     **/
-    protected function _dropColumn($name)
-    {
         $table  = $this->_database->prepareIdentifier($this->_name);
         $column = $this->_database->prepareIdentifier($name);
-        return "ALTER TABLE $table DROP COLUMN $column";
+
+        $this->_database->exec("ALTER TABLE $table DROP COLUMN $column");
+        unset($this->_columns[$name]); // Update column cache
     }
 }
