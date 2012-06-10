@@ -295,4 +295,14 @@ abstract class Nada_Column
     {
         return $this->_autoIncrement;
     }
+
+    /**
+     * Retrieve SQL fragment that describes the column properties
+     *
+     * The name is not part of the description. The return value is a DBMS-
+     * specific pece of SQL like "VARCHAR(30) NOT NULL DEFAULT 'foo'".
+     * @return string
+     * @throws DomainException if Column properties are invalid
+     **/
+    abstract public function getDefinition();
 }

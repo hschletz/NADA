@@ -125,4 +125,35 @@ class Nada_Column_Pgsql extends Nada_Column
             return false;
         }
     }
+
+    /** {@inheritdoc} */
+    public function getDefinition()
+    {
+        if ($this->_autoIncrement) {
+            if ($this->_datatype != Nada::DATATYPE_INTEGER) {
+                throw new DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
+            }
+            if ($this->_default !== null) {
+                throw new DomainException('Invalid default for autoincrement column: ' . $this->_default);
+            }
+            if ($this->_length == '32' or $this->_length === null) {
+                $sql = 'SERIAL';
+            } elseif ($this->_length == '64') {
+                $sql = 'BIGSERIAL';
+            } else {
+                throw new DomainException('Invalid length for autoincrement: ' . $this->_length);
+            }
+        } else {
+            $sql = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
+        }
+
+        if ($this->_notnull) {
+            $sql .= ' NOT NULL';
+        }
+
+        $sql .= ' DEFAULT ';
+        $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+
+        return $sql;
+    }
 }

@@ -102,4 +102,29 @@ class Nada_Column_Mysql extends Nada_Column
             $this->_autoIncrement = false;
         }
     }
+
+    /** {@inheritdoc} */
+    public function getDefinition()
+    {
+        $sql = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
+
+        if ($this->_notnull) {
+            $sql .= ' NOT NULL';
+        }
+
+        $sql .= ' DEFAULT ';
+        $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+
+        if ($this->_autoIncrement) {
+            if ($this->_datatype != Nada::DATATYPE_INTEGER and $this->_datatype != Nada::DATATYPE_FLOAT) {
+                throw new DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
+            }
+            if ($this->_default !== null and $this->_default !== 0) {
+                throw new DomainException('Invalid default for autoincrement column: ' . $this->_default);
+            }
+            $sql .= ' AUTO_INCREMENT';
+        }
+
+        return $sql;
+    }
 }
