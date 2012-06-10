@@ -120,6 +120,60 @@ abstract class Nada_Column
     }
 
     /**
+     * @internal
+     * Internal method to set up the object from construct()
+     * @param Nada_Database $database
+     * @param string $name
+     * @param string $type
+     * @param mixed $length
+     * @param bool $notnull
+     * @param mixed $default
+     * @param bool $autoIncrement
+     **/
+    public function constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement)
+    {
+        $this->_database = $database;
+        $this->_name = $name;
+        $this->_datatype = $type;
+        $this->_length = $length;
+        $this->_notnull = $notnull;
+        $this->_default = $default;
+        $this->_autoIncrement = $autoIncrement;
+    }
+
+    /**
+     * Construct a new column
+     *
+     * Input is not validated at this point, i.e. this method always succeeds.
+     * Invalid input is detected once the column data is actually used.
+     *
+     * The returned object is not linked to a table. It should only be used for
+     * adding it to a table. It can be discarded afterwards.
+     * @param Nada_Database $database Database this column is created for
+     * @param string $name Column name
+     * @param string $type Datatype
+     * @param mixed $length Optional length modifier
+     * @param bool $notnull NOT NULL constraint (default FALSE)
+     * @param mixed $default Default value (default NULL)
+     * @param bool $autoIncrement Auto increment property (default FALSE)
+     * @return Nada_Column Temporary column object
+     **/
+    public static function construct(
+        $database,
+        $name,
+        $type,
+        $length=null,
+        $notnull=false,
+        $default=null,
+        $autoIncrement=false
+    )
+    {
+        $column = self::factory($database);
+        $column->constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement);
+        return $column;
+    }
+
+    /**
      * Extract name from column data
      *
      * The default implementation expects an array with information_schema
