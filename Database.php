@@ -94,6 +94,12 @@ abstract class Nada_Database
     private $_allTablesFetched = false;
 
     /**
+     * Array of captured commands if exec() capturing is enabled
+     * @var array
+     */
+    protected $_capturedCommands = null;
+
+    /**
      * Tell prepareIdentifier() to quote identifiers with invalid characters
      * @var bool
      */
@@ -192,16 +198,64 @@ abstract class Nada_Database
      * SQL commands like UPDATE, INSERT, DELETE, SET etc. don't return a result
      * set. This method is intended for this type of commands. The return value
      * is typically the number of affected rows.
+     *
+     * Commands can be captured instead of being executed - see beginCapture().
+     * In this mode, TRUE is always returned. Don't capture commands if the real
+     * return value is relevant.
      * @param string $statement SQL statement with optional placeholders
      * @param mixed $params Single value or array of values to substitute for placeholders
-     * @return integer Number of affected rows
+     * @return integer Number of affected rows, TRUE if command gets captured
      */
     public function exec($statement, $params=array())
     {
         if (!is_array($params)) {
             $params = array($params);
         }
-        return $this->_link->exec($statement, $params);
+        if ($this->_capturedCommands !== null and empty($params)) {
+            $this->_capturedCommands[] = $statement;
+            return true;
+        } else {
+            return $this->_link->exec($statement, $params);
+        }
+    }
+
+    /**
+     * Start capturing of write SQL commands
+     *
+     * This method allows capturing write queries using exec(), including all
+     * commands issued from NADA methods that alter the database structure. This
+     * allows reviewing changes before anything gets executed.
+     * In this mode, calls to exec() without parameters will not be executed.
+     * They will be stored internally and returned with endCapture() instead.
+     * They can then get executed manually or discarded.
+     * Queries with parameters cannot be captured. They will be executed
+     * immediately even when capturing is active.
+     * @throws RuntimeException if capturing has already been started
+     **/
+    public function beginCapture()
+    {
+        if ($this->_capturedCommands !== null) {
+            throw new RuntimeException('Capture already started.');
+        }
+        $this->_capturedCommands = array();
+    }
+
+    /**
+     * Stop command capturing
+     *
+     * This reverts to normal mode and subsequent queries will be executed
+     * immediately.
+     * @return array Captured SQL commands
+     * @throws RuntimeException if capturing has not been started yet.
+     **/
+    public function endCapture()
+    {
+        if ($this->_capturedCommands === null) {
+            throw new RuntimeException('Capture not started yet.');
+        }
+        $commands = $this->_capturedCommands;
+        $this->_capturedCommands = null;
+        return $commands;
     }
 
     /**
