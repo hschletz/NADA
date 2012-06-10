@@ -192,6 +192,70 @@ abstract class Nada_Table
     }
 
     /**
+     * Force Absence of column
+     * @param string $name Column name to check for, must be lowercase
+     * @throws RuntimeException if column exists
+     * @throws DomainException if $name is not lowercase
+     */
+    public function forbidColumn($name)
+    {
+        if ($name != strtolower($name)) {
+            throw new DomainException('Column name must be lowercase: ' . $name);
+        }
+
+        if (isset($this->_columns[$name])) {
+            throw new RuntimeException('Already defined column: ' . $this->_name . '.' . $name);
+        }
+    }
+
+    /**
+     * Add a column using parameters
+     * @param string $name Column name
+     * @param string $type Datatype, one of the Nada::DATATYPE_* constants
+     * @param mixed $length Optional length specification
+     * @param bool $notnull NOT NULL constraint (default: FALSE)
+     * @param mixed $default Default value (DEFAULT: NULL)
+     * @param bool $autoIncrement Auto increment property (default: FALSE)
+     * @return Nada_Column object describing the generated column or NULL when capturing is enabled
+     **/
+    public final function addColumn($name, $type, $length=null, $notnull=false, $default=null, $autoIncrement=false)
+    {
+        return $this->addColumnObject(
+            Nada_Column::construct($this->_database, $name, $type, $length, $notnull, $default, $autoIncrement)
+        );
+    }
+
+
+    /**
+     * Add a column using a Nada_Column object
+     *
+     * Unlike the object passed to this method, the returned object is linked to
+     * to its table object. This means that it is different from the parameter
+     * object which can safely be reused or discarded.
+     * @return Nada_Column object describing the generated column or NULL when capturing is enabled
+     **/
+    public function addColumnObject($column)
+    {
+        $name = $column->getName();
+
+        $this->forbidColumn($name);
+
+        $sql = 'ALTER TABLE ';
+        $sql .= $this->_database->prepareIdentifier($this->_name);
+        $sql .= ' ADD COLUMN ';
+        $sql .= $this->_database->prepareIdentifier($name);
+        $sql .= ' ';
+        $sql .= $column->getDefinition();
+
+        $this->_database->exec($sql);
+
+        if (!$this->_database->isCapturing()) {
+            $this->_fetchColumns(); // Update column cache
+            return $this->getColumn($name);
+        }
+    }
+
+    /**
      * Drop a column
      * @param string Column name
      */
