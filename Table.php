@@ -209,6 +209,25 @@ abstract class Nada_Table
     }
 
     /**
+     * Compose and execute an ALTER TABLE statement
+     *
+     * This method simply appends the given operation to an "ALTER TABLE name "
+     * statement and executes it via exec(). Since the operation syntax is often
+     * DBMS-specific, this method is mostly useful for other NADA methods.
+     * @param string $operation SQL fragment
+     * @return mixed Return value of exec()
+     **/
+    public function alter($operation)
+    {
+        return $this->_database->exec(
+            'ALTER TABLE ' .
+            $this->_database->prepareIdentifier($this->_name) .
+            ' ' .
+            $operation
+        );
+    }
+
+    /**
      * Add a column using parameters
      * @param string $name Column name
      * @param string $type Datatype, one of the Nada::DATATYPE_* constants
@@ -240,14 +259,12 @@ abstract class Nada_Table
 
         $this->forbidColumn($name);
 
-        $sql = 'ALTER TABLE ';
-        $sql .= $this->_database->prepareIdentifier($this->_name);
-        $sql .= ' ADD COLUMN ';
+        $sql = 'ADD COLUMN ';
         $sql .= $this->_database->prepareIdentifier($name);
         $sql .= ' ';
         $sql .= $column->getDefinition();
 
-        $this->_database->exec($sql);
+        $this->alter($sql);
 
         if (!$this->_database->isCapturing()) {
             $this->_fetchColumns(); // Update column cache
@@ -262,11 +279,7 @@ abstract class Nada_Table
     public function dropColumn($name)
     {
         $this->requireColumn($name);
-
-        $table  = $this->_database->prepareIdentifier($this->_name);
-        $column = $this->_database->prepareIdentifier($name);
-
-        $this->_database->exec("ALTER TABLE $table DROP COLUMN $column");
+        $this->alter('DROP COLUMN ' . $this->_database->prepareIdentifier($name));
         unset($this->_columns[$name]); // Update column cache
     }
 }
