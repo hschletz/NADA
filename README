@@ -41,7 +41,8 @@ $pdo = new PDO($dsn, $user, $password);
 $nada = Nada::factory($pdo);
 
 From that point on, $nada will provide high-level abstraction methods matching
-the DBMS in use. Available methods are documented in the Dbms.php file.
+the DBMS in use. Available methods are documented in Database.php, Table.php and
+Column.php.
 
 
 REQUIREMENTS
