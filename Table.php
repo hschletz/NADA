@@ -280,6 +280,8 @@ abstract class Nada_Table
     {
         $this->requireColumn($name);
         $this->alter('DROP COLUMN ' . $this->_database->prepareIdentifier($name));
-        unset($this->_columns[$name]); // Update column cache
+        if (!$this->_database->isCapturing()) {
+            unset($this->_columns[$name]); // Update column cache
+        }
     }
 }
