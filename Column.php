@@ -305,4 +305,23 @@ abstract class Nada_Column
      * @throws DomainException if Column properties are invalid
      **/
     abstract public function getDefinition();
+
+    /**
+     * Change the column's name
+     *
+     * If this instance is linked to a table, i.e. not created via construct(),
+     * the operation will be performed on the database.
+     * @param string $name New name
+     * @throws InvalidArgumentException if name is empty
+     **/
+    public function setName($name)
+    {
+        if (strlen($name) == 0) {
+            throw new InvalidArgumentException('Column name must not be empty');
+        }
+        // Call the table method before the property gets updated because the
+        // old name is retrieved from $this
+        $this->_table->renameColumn($this, $name);
+        $this->_name = $name;
+    }
 }

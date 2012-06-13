@@ -38,4 +38,14 @@
 class Nada_Table_Pgsql extends Nada_Table
 {
 
+    /** {@inheritdoc} */
+    protected function _renameColumn($column, $name)
+    {
+        $this->alter(
+            'RENAME COLUMN ' .
+            $this->_database->prepareIdentifier($column->getName()) .
+            ' TO ' .
+            $this->_database->prepareIdentifier($name)
+        );
+    }
 }

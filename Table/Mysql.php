@@ -44,4 +44,17 @@ class Nada_Table_Mysql extends Nada_Table
         $this->_informationSchemaColumns[] = 'extra';
         parent::__construct($database, $name);
     }
+
+    /** {@inheritdoc} */
+    protected function _renameColumn($column, $name)
+    {
+        $this->alter(
+            'CHANGE ' .
+            $this->_database->prepareIdentifier($column->getName()) .
+            ' ' .
+            $this->_database->prepareIdentifier($name) .
+            ' ' .
+            $column->getDefinition()
+        );
+    }
 }

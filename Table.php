@@ -284,4 +284,31 @@ abstract class Nada_Table
             unset($this->_columns[$name]); // Update column cache
         }
     }
+
+    /**
+     * @internal
+     * Internal method to rename a column. Applications must not use this - the
+     * column's setName() method is the correct way to rename a column.
+     * @param Nada_Column $column Column object
+     * @param string $name New name
+     **/
+    public final function renameColumn($column, $name)
+    {
+        $this->requireColumn($column->getName());
+        $this->forbidColumn($name);
+
+        $this->_renameColumn($column, $name);
+        if (!$this->_database->isCapturing()) {
+            // Update column cache
+            $this->_columns[$name] = $column;
+            unset($this->_columns[$column->getName()]);
+        }
+    }
+
+    /**
+     * DBMS-specific implementation for renaming a column
+     * @param Nada_Column $column Column object
+     * @param string $name New name
+     **/
+    abstract protected function _renameColumn($column, $name);
 }
