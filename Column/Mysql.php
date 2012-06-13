@@ -112,8 +112,12 @@ class Nada_Column_Mysql extends Nada_Column
             $sql .= ' NOT NULL';
         }
 
-        $sql .= ' DEFAULT ';
-        $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+        // For NOT NULL columns, an explicit DEFAULT NULL is not allowed. In
+        // that case the default is omitted to achieve a default of NULL.
+        if (!($this->_notnull and $this->_default === null)) {
+            $sql .= ' DEFAULT ';
+            $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+        }
 
         if ($this->_autoIncrement) {
             if ($this->_datatype != Nada::DATATYPE_INTEGER and $this->_datatype != Nada::DATATYPE_FLOAT) {
