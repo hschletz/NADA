@@ -65,6 +65,8 @@ abstract class Nada_Table
      * Default set of columns to query from information_schema.columns
      *
      * Subclasses can extend this with DBMS-specific columns.
+     * Values are inserted directly into a FROM clause and therefore interpreted
+     * as an arbitrary column expression.
      * @var array
      */
     protected $_informationSchemaColumns = array(
