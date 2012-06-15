@@ -39,6 +39,38 @@ class Nada_Table_Pgsql extends Nada_Table
 {
 
     /** {@inheritdoc} */
+    function __construct($database, $name)
+    {
+        $this->_informationSchemaColumns[] = 'COL_DESCRIPTION(table_name::REGCLASS::OID, ordinal_position) AS comment';
+        parent::__construct($database, $name);
+    }
+
+    /** {@inheritdoc} */
+    public function addColumnObject($column)
+    {
+        $newColumn = parent::addColumnObject($column);
+
+        // The created column has no comment yet. Add it if necessary.
+        if ($column->getComment()) {
+            if ($newColumn) {
+                // Set it on the newly created object
+                $newColumn->setComment($column->getComment());
+            } else {
+                // Set manually on the database
+                $this->_database->exec(
+                    'COMMENT ON COLUMN ' .
+                    $this->_database->prepareIdentifier($this->getName()) .
+                    '.' .
+                    $this->_database->prepareIdentifier($column->getName()) .
+                    ' IS ' .
+                    $this->_database->prepareValue($column->getComment(), Nada::DATATYPE_VARCHAR)
+                );
+            }
+        }
+        return $newColumn;
+    }
+
+    /** {@inheritdoc} */
     protected function _renameColumn($column, $name)
     {
         $this->alter(

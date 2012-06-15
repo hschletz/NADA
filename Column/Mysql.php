@@ -104,6 +104,18 @@ class Nada_Column_Mysql extends Nada_Column
     }
 
     /** {@inheritdoc} */
+    protected function _parseComment($data)
+    {
+        // If a column has no comment, column_comment is an empty string and
+        // must be converted to NULL.
+        if (empty($data['column_comment'])) {
+            $this->_comment = null;
+        } else {
+            $this->_comment = $data['column_comment'];
+        }
+    }
+
+    /** {@inheritdoc} */
     public function getDefinition()
     {
         $sql = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
@@ -129,6 +141,31 @@ class Nada_Column_Mysql extends Nada_Column
             $sql .= ' AUTO_INCREMENT';
         }
 
+        if ($this->_comment !== null) {
+            $sql .= ' COMMENT ';
+            $sql .= $this->_database->prepareValue($this->_comment, Nada::DATATYPE_VARCHAR);
+        }
+
         return $sql;
+    }
+
+    /**
+     * Modify column in the database according to current properties
+     * @return void
+     **/
+    protected function _modify()
+    {
+        $this->_table->alter(
+            'MODIFY ' .
+            $this->_database->prepareIdentifier($this->_name) .
+            ' ' .
+            $this->getDefinition()
+        );
+    }
+
+    /** {@inheritdoc} */
+    protected function _setComment()
+    {
+        $this->_modify();
     }
 }

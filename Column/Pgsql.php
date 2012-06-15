@@ -106,6 +106,12 @@ class Nada_Column_Pgsql extends Nada_Column
         $this->_autoIncrement = $this->_isAutoIncrement($data);
     }
 
+    /** {@inheritdoc} */
+    protected function _parseComment($data)
+    {
+        $this->_comment = $data['comment'];
+    }
+
     /**
      * Detect autoincrement property from column data
      *
@@ -155,5 +161,18 @@ class Nada_Column_Pgsql extends Nada_Column
         $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
 
         return $sql;
+    }
+
+    /** {@inheritdoc} */
+    protected function _setComment()
+    {
+        $this->_database->exec(
+            'COMMENT ON COLUMN ' .
+            $this->_database->prepareIdentifier($this->_table->getName()) .
+            '.' .
+            $this->_database->prepareIdentifier($this->_name) .
+            ' IS ' .
+            $this->_database->prepareValue($this->_comment, Nada::DATATYPE_VARCHAR)
+        );
     }
 }

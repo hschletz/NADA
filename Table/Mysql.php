@@ -42,6 +42,7 @@ class Nada_Table_Mysql extends Nada_Table
     function __construct($database, $name)
     {
         $this->_informationSchemaColumns[] = 'extra';
+        $this->_informationSchemaColumns[] = 'column_comment';
         parent::__construct($database, $name);
     }
 

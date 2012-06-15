@@ -89,6 +89,12 @@ abstract class Nada_Column
     protected $_autoIncrement;
 
     /**
+     * Column comment
+     * @var string
+     */
+    protected $_comment;
+
+    /**
      * @internal
      * Internal factory method
      * @return NADA_Column DBMS-specific subclass
@@ -117,6 +123,7 @@ abstract class Nada_Column
         $this->_parseNotnull($data);
         $this->_parseDefault($data);
         $this->_parseAutoIncrement($data);
+        $this->_parseComment($data);
     }
 
     /**
@@ -240,12 +247,31 @@ abstract class Nada_Column
     abstract protected function _parseAutoIncrement($data);
 
     /**
+     * Extract comment property from column data
+     *
+     * Since this part is DBMS-specific, no default implementation exists.
+     * Implementations can expect an array with information_schema compatible
+     * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
+     * @param mixed $data Column data
+     */
+    abstract protected function _parseComment($data);
+
+    /**
      * Get column name
      * @return string Column name
      */
     public function getName()
     {
         return $this->_name;
+    }
+
+    /**
+     * Get table object which this instance is linked to
+     * @return Nada_Table Parent table or NULL if this object was created via construct()
+     */
+    public function getTable()
+    {
+        return $this->_table;
     }
 
     /**
@@ -297,6 +323,15 @@ abstract class Nada_Column
     }
 
     /**
+     * Get column comment
+     * @return string Comment
+     **/
+    public function getComment()
+    {
+        return $this->_comment;
+    }
+
+    /**
      * Retrieve SQL fragment that describes the column properties
      *
      * The name is not part of the description. The return value is a DBMS-
@@ -324,4 +359,25 @@ abstract class Nada_Column
         $this->_table->renameColumn($this, $name);
         $this->_name = $name;
     }
+
+    /**
+     * Set Column comment
+     *
+     * If this instance is linked to a table, i.e. not created via construct(),
+     * the operation will be performed on the database.
+     * @param string $comment Comment (use NULL to remove comment)
+     **/
+    public function setComment($comment)
+    {
+        $this->_comment = $comment;
+        if ($this->_table) {
+            $this->_setComment($comment);
+        }
+    }
+
+    /**
+     * DBMS-specific implementation for setting a column comment
+     * @param string $comment (use NULL to remove comment)
+     **/
+    abstract protected function _setComment();
 }
