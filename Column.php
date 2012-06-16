@@ -181,6 +181,16 @@ abstract class Nada_Column
     }
 
     /**
+     * @internal
+     * Internal method to link this instance to a table object
+     * @param Nada_Table $table Table object
+     **/
+    public function setTable($table)
+    {
+        $this->_table = $table;
+    }
+
+    /**
      * Extract name from column data
      *
      * The default implementation expects an array with information_schema

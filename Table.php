@@ -237,7 +237,7 @@ abstract class Nada_Table
      * @param bool $notnull NOT NULL constraint (default: FALSE)
      * @param mixed $default Default value (DEFAULT: NULL)
      * @param bool $autoIncrement Auto increment property (default: FALSE)
-     * @return Nada_Column object describing the generated column or NULL when capturing is enabled
+     * @return Nada_Column object describing the generated column
      **/
     public final function addColumn($name, $type, $length=null, $notnull=false, $default=null, $autoIncrement=false)
     {
@@ -249,11 +249,8 @@ abstract class Nada_Table
 
     /**
      * Add a column using a Nada_Column object
-     *
-     * Unlike the object passed to this method, the returned object is linked to
-     * to its table object. This means that it is different from the parameter
-     * object which can safely be reused or discarded.
-     * @return Nada_Column object describing the generated column or NULL when capturing is enabled
+     * @param Nada_Column Column object
+     * @return Nada_Column object describing the generated column
      **/
     public function addColumnObject($column)
     {
@@ -268,10 +265,10 @@ abstract class Nada_Table
 
         $this->alter($sql);
 
-        if (!$this->_database->isCapturing()) {
-            $this->_fetchColumns(); // Update column cache
-            return $this->getColumn($name);
-        }
+        // Update column cache
+        $this->_columns[$name] = $column;
+        $this->_columns[$name]->setTable($this);
+        return $this->_columns[$name];
     }
 
     /**
@@ -282,9 +279,7 @@ abstract class Nada_Table
     {
         $this->requireColumn($name);
         $this->alter('DROP COLUMN ' . $this->_database->prepareIdentifier($name));
-        if (!$this->_database->isCapturing()) {
-            unset($this->_columns[$name]); // Update column cache
-        }
+        unset($this->_columns[$name]); // Update column cache
     }
 
     /**
@@ -300,11 +295,9 @@ abstract class Nada_Table
         $this->forbidColumn($name);
 
         $this->_renameColumn($column, $name);
-        if (!$this->_database->isCapturing()) {
-            // Update column cache
-            $this->_columns[$name] = $column;
-            unset($this->_columns[$column->getName()]);
-        }
+        // Update column cache
+        $this->_columns[$name] = $column;
+        unset($this->_columns[$column->getName()]);
     }
 
     /**

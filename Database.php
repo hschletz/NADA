@@ -222,14 +222,19 @@ abstract class Nada_Database
     /**
      * Start capturing of write SQL commands
      *
-     * This method allows capturing write queries using exec(), including all
-     * commands issued from NADA methods that alter the database structure. This
-     * allows reviewing changes before anything gets executed.
-     * In this mode, calls to exec() without parameters will not be executed.
-     * They will be stored internally and returned with endCapture() instead.
-     * They can then get executed manually or discarded.
+     * This method allows capturing write queries using the internal exec()
+     * method without parameters, including all commands issued from NADA
+     * methods that alter the database structure. This allows reviewing changes
+     * before anything gets executed. The internal state of cached objects
+     * (tables, columns...) still gets updated to make the simulation complete.
+     * This means that the cache is ahead of the database's state until the
+     * captured commands get executed manually.
+     *
      * Queries with parameters cannot be captured. They will be executed
      * immediately even when capturing is active.
+     *
+     * Use endCapture() to retrieve the captured commands and return to
+     * immediate execution.
      * @throws RuntimeException if capturing has already been started
      **/
     public function beginCapture()
@@ -573,7 +578,7 @@ abstract class Nada_Database
      * NADA caches the database structure internally. The structure manipulation
      * methods maintain the cache automatically. If the structure has been
      * altered without one of NADA's methods, the cache is outdated and needs to
-     * be flushed with this method. This includes replaying captured commands.
+     * be flushed with this method.
      **/
     public function clearCache()
     {
