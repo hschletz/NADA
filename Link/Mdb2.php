@@ -30,6 +30,7 @@
  * @package NADA
  */
 /**
+ * @internal
  * Link to MDB2 based classes
  *
  * This class overrides methods with MDB2-specific implementations.

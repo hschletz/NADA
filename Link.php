@@ -30,6 +30,7 @@
  * @package NADA
  */
 /**
+ * @internal
  * Abstract link class
  *
  * This is the base class for providing a unified interface to different

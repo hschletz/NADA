@@ -30,6 +30,7 @@
  * @package NADA
  */
 /**
+ * @internal
  * Link to PDO based classes
  *
  * This class overrides methods with PDO-specific implementations.

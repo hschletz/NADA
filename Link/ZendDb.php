@@ -30,6 +30,7 @@
  * @package NADA
  */
 /**
+ * @internal
  * Link to Zend_Db_Adapter based classes
  *
  * This class overrides methods with ZendDb-specific implementations.

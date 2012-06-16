@@ -166,6 +166,7 @@ abstract class Nada_Database
     }
 
     /**
+     * @internal
      * Run database query and return complete result set
      *
      * This method is intended to be used internally by NADA. Application code
@@ -189,6 +190,7 @@ abstract class Nada_Database
     }
 
     /**
+     * @internal
      * Execute a database statement that does not return a result set
      *
      * This method is intended to be used internally by NADA. Application code
