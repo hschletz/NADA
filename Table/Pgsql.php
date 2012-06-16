@@ -52,20 +52,7 @@ class Nada_Table_Pgsql extends Nada_Table
 
         // The created column has no comment yet. Add it if necessary.
         if ($column->getComment()) {
-            if ($newColumn) {
-                // Set it on the newly created object
-                $newColumn->setComment($column->getComment());
-            } else {
-                // Set manually on the database
-                $this->_database->exec(
-                    'COMMENT ON COLUMN ' .
-                    $this->_database->prepareIdentifier($this->getName()) .
-                    '.' .
-                    $this->_database->prepareIdentifier($column->getName()) .
-                    ' IS ' .
-                    $this->_database->prepareValue($column->getComment(), Nada::DATATYPE_VARCHAR)
-                );
-            }
+            $newColumn->setComment($column->getComment());
         }
         return $newColumn;
     }

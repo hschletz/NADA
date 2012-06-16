@@ -237,12 +237,30 @@ abstract class Nada_Table
      * @param bool $notnull NOT NULL constraint (default: FALSE)
      * @param mixed $default Default value (DEFAULT: NULL)
      * @param bool $autoIncrement Auto increment property (default: FALSE)
+     * @param string $comment Column comment (default: NULL)
      * @return Nada_Column object describing the generated column
      **/
-    public final function addColumn($name, $type, $length=null, $notnull=false, $default=null, $autoIncrement=false)
+    public final function addColumn(
+        $name,
+        $type,
+        $length=null,
+        $notnull=false,
+        $default=null,
+        $autoIncrement=false,
+        $comment = null
+    )
     {
         return $this->addColumnObject(
-            Nada_Column::construct($this->_database, $name, $type, $length, $notnull, $default, $autoIncrement)
+            Nada_Column::construct(
+                $this->_database,
+                $name,
+                $type,
+                $length,
+                $notnull,
+                $default,
+                $autoIncrement,
+                $comment
+            )
         );
     }
 

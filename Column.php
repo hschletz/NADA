@@ -136,8 +136,9 @@ abstract class Nada_Column
      * @param bool $notnull
      * @param mixed $default
      * @param bool $autoIncrement
+     * @param string $comment
      **/
-    public function constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement)
+    public function constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement, $comment)
     {
         $this->_database = $database;
         $this->_name = $name;
@@ -146,6 +147,7 @@ abstract class Nada_Column
         $this->_notnull = $notnull;
         $this->_default = $default;
         $this->_autoIncrement = $autoIncrement;
+        $this->_comment = $comment;
     }
 
     /**
@@ -163,6 +165,7 @@ abstract class Nada_Column
      * @param bool $notnull NOT NULL constraint (default FALSE)
      * @param mixed $default Default value (default NULL)
      * @param bool $autoIncrement Auto increment property (default FALSE)
+     * @param string $comment Column comment (default: NULL)
      * @return Nada_Column Temporary column object
      **/
     public static function construct(
@@ -172,11 +175,12 @@ abstract class Nada_Column
         $length=null,
         $notnull=false,
         $default=null,
-        $autoIncrement=false
+        $autoIncrement=false,
+        $comment=null
     )
     {
         $column = self::factory($database);
-        $column->constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement);
+        $column->constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
         return $column;
     }
 
