@@ -128,7 +128,7 @@ abstract class Nada_Column
 
     /**
      * @internal
-     * Internal method to set up the object from construct()
+     * Internal method to set up the object from Nada_Database::createColumn()
      * @param Nada_Database $database
      * @param string $name
      * @param string $type
@@ -148,40 +148,6 @@ abstract class Nada_Column
         $this->_default = $default;
         $this->_autoIncrement = $autoIncrement;
         $this->_comment = $comment;
-    }
-
-    /**
-     * Construct a new column
-     *
-     * Input is not validated at this point, i.e. this method always succeeds.
-     * Invalid input is detected once the column data is actually used.
-     *
-     * The returned object is not linked to a table. It should only be used for
-     * adding it to a table. It can be discarded afterwards.
-     * @param Nada_Database $database Database this column is created for
-     * @param string $name Column name
-     * @param string $type Datatype
-     * @param mixed $length Optional length modifier
-     * @param bool $notnull NOT NULL constraint (default FALSE)
-     * @param mixed $default Default value (default NULL)
-     * @param bool $autoIncrement Auto increment property (default FALSE)
-     * @param string $comment Column comment (default: NULL)
-     * @return Nada_Column Temporary column object
-     **/
-    public static function construct(
-        $database,
-        $name,
-        $type,
-        $length=null,
-        $notnull=false,
-        $default=null,
-        $autoIncrement=false,
-        $comment=null
-    )
-    {
-        $column = self::factory($database);
-        $column->constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
-        return $column;
     }
 
     /**
@@ -281,7 +247,7 @@ abstract class Nada_Column
 
     /**
      * Get table object which this instance is linked to
-     * @return Nada_Table Parent table or NULL if this object was created via construct()
+     * @return Nada_Table Parent table or NULL if this object was created via Nada_Database::createColumn()
      */
     public function getTable()
     {
@@ -358,7 +324,7 @@ abstract class Nada_Column
     /**
      * Change the column's name
      *
-     * If this instance is linked to a table, i.e. not created via construct(),
+     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
      * the operation will be performed on the database.
      * @param string $name New name
      * @throws InvalidArgumentException if name is empty
@@ -379,7 +345,7 @@ abstract class Nada_Column
     /**
      * Set Column comment
      *
-     * If this instance is linked to a table, i.e. not created via construct(),
+     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
      * the operation will be performed on the database.
      * @param string $comment Comment (use NULL to remove comment)
      **/

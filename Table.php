@@ -251,8 +251,7 @@ abstract class Nada_Table
     )
     {
         return $this->addColumnObject(
-            Nada_Column::construct(
-                $this->_database,
+            $this->_database->createColumn(
                 $name,
                 $type,
                 $length,

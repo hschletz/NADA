@@ -656,4 +656,36 @@ abstract class Nada_Database
                 throw new DomainException('Unsupported datatype: ' . $type);
         }
     }
+
+    /**
+     * Construct a new column
+     *
+     * Input is not validated at this point, i.e. this method always succeeds.
+     * Invalid input is detected once the column data is actually used.
+     *
+     * The returned object is not linked to a table. It should only be used for
+     * adding it to a table. It can be discarded afterwards.
+     * @param string $name Column name
+     * @param string $type Datatype
+     * @param mixed $length Optional length modifier
+     * @param bool $notnull NOT NULL constraint (default FALSE)
+     * @param mixed $default Default value (default NULL)
+     * @param bool $autoIncrement Auto increment property (default FALSE)
+     * @param string $comment Column comment (default: NULL)
+     * @return Nada_Column Temporary column object
+     **/
+    public function createColumn(
+        $name,
+        $type,
+        $length=null,
+        $notnull=false,
+        $default=null,
+        $autoIncrement=false,
+        $comment=null
+    )
+    {
+        $column = Nada_Column::factory($this);
+        $column->constructNew($this, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
+        return $column;
+    }
 }
