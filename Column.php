@@ -354,9 +354,11 @@ abstract class Nada_Column
         if (strlen($name) == 0) {
             throw new InvalidArgumentException('Column name must not be empty');
         }
-        // Call the table method before the property gets updated because the
-        // old name is retrieved from $this
-        $this->_table->renameColumn($this, $name);
+        if ($this->_table) {
+            // Call the table method before the property gets updated because the
+            // old name is retrieved from $this
+            $this->_table->renameColumn($this, $name);
+        }
         $this->_name = $name;
     }
 
