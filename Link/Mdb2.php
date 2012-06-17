@@ -30,11 +30,11 @@
  * @package NADA
  */
 /**
- * @internal
  * Link to MDB2 based classes
  *
  * This class overrides methods with MDB2-specific implementations.
  * @package NADA
+ * @internal
  */
 class Nada_Link_Mdb2 extends Nada_Link
 {

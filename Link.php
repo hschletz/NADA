@@ -30,7 +30,6 @@
  * @package NADA
  */
 /**
- * @internal
  * Abstract link class
  *
  * This is the base class for providing a unified interface to different
@@ -42,6 +41,7 @@
  * declared abstract in this class. Additionally, add detection for the link
  * type in {@link Nada::factory()}.
  * @package NADA
+ * @internal
  */
 abstract class Nada_Link
 {

@@ -95,9 +95,10 @@ abstract class Nada_Column
     protected $_comment;
 
     /**
-     * @internal
      * Internal factory method
-     * @return NADA_Column DBMS-specific subclass
+     * @param Nada_Database database object
+     * @return Nada_Column DBMS-specific subclass
+     * @internal
      */
     public static function factory($database)
     {
@@ -106,13 +107,13 @@ abstract class Nada_Column
     }
 
     /**
-     * @internal
      * Internal method to set up the object from within a Nada_Table object
      *
      * The column data can be of any type and is passed to the _parse*()
      * methods.
      * @param Nada_Table $table Table that this column belongs to
      * @param mixed $data Column data
+     * @internal
      */
     public function constructFromTable($table, $data)
     {
@@ -127,7 +128,6 @@ abstract class Nada_Column
     }
 
     /**
-     * @internal
      * Internal method to set up the object from Nada_Database::createColumn()
      * @param Nada_Database $database
      * @param string $name
@@ -137,6 +137,7 @@ abstract class Nada_Column
      * @param mixed $default
      * @param bool $autoIncrement
      * @param string $comment
+     * @internal
      **/
     public function constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement, $comment)
     {
@@ -151,9 +152,9 @@ abstract class Nada_Column
     }
 
     /**
-     * @internal
      * Internal method to link this instance to a table object
      * @param Nada_Table $table Table object
+     * @internal
      **/
     public function setTable($table)
     {
@@ -359,7 +360,6 @@ abstract class Nada_Column
 
     /**
      * DBMS-specific implementation for setting a column comment
-     * @param string $comment (use NULL to remove comment)
      **/
     abstract protected function _setComment();
 }

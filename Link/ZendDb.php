@@ -30,11 +30,11 @@
  * @package NADA
  */
 /**
- * @internal
  * Link to Zend_Db_Adapter based classes
  *
  * This class overrides methods with ZendDb-specific implementations.
  * @package NADA
+ * @internal
  */
 class Nada_Link_ZendDb extends Nada_Link
 {

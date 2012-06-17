@@ -166,7 +166,6 @@ abstract class Nada_Database
     }
 
     /**
-     * @internal
      * Run database query and return complete result set
      *
      * This method is intended to be used internally by NADA. Application code
@@ -180,6 +179,7 @@ abstract class Nada_Database
      * @param string $statement SQL statement with optional placeholders
      * @param mixed $params Single value or array of values to substitute for placeholders
      * @return array Array of all rows
+     * @internal
      */
     public function query($statement, $params=array())
     {
@@ -190,7 +190,6 @@ abstract class Nada_Database
     }
 
     /**
-     * @internal
      * Execute a database statement that does not return a result set
      *
      * This method is intended to be used internally by NADA. Application code
@@ -207,6 +206,7 @@ abstract class Nada_Database
      * @param string $statement SQL statement with optional placeholders
      * @param mixed $params Single value or array of values to substitute for placeholders
      * @return integer Number of affected rows, TRUE if command gets captured
+     * @internal
      */
     public function exec($statement, $params=array())
     {

@@ -300,11 +300,11 @@ abstract class Nada_Table
     }
 
     /**
-     * @internal
      * Internal method to rename a column. Applications must not use this - the
      * column's setName() method is the correct way to rename a column.
      * @param Nada_Column $column Column object
      * @param string $name New name
+     * @internal
      **/
     public final function renameColumn($column, $name)
     {
