@@ -67,7 +67,7 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function quoteIdentifier($identifier)
+    protected function _quoteIdentifier($identifier)
     {
         // Use backtick that works independently of ANSI_QUOTES setting
         return '`' . str_replace('`', '``', $identifier) . '`';

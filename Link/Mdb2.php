@@ -96,6 +96,12 @@ class Nada_Link_Mdb2 extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function quoteIdentifier($identifier)
+    {
+        return $this->_link->quoteIdentifier($identifier);
+    }
+
+    /** {@inheritdoc} */
     public function getServerVersion()
     {
         $version = $this->_link->getServerVersion();

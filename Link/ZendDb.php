@@ -82,6 +82,12 @@ class Nada_Link_ZendDb extends Nada_Link
     }
 
     /** {@inheritdoc} */
+    public function quoteIdentifier($identifier)
+    {
+        return $this->_link->quoteIdentifier($identifier);
+    }
+
+    /** {@inheritdoc} */
     public function getServerVersion()
     {
         return $this->_link->getServerVersion();

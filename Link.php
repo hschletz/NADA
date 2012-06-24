@@ -121,6 +121,22 @@ abstract class Nada_Link
     abstract public function quoteValue($value, $datatype);
 
     /**
+     * Quote an identifier
+     *
+     * The default implementation returns NULL in which case the calling code
+     * must use its own implementation for quoting and escaping identifiers.
+     * Derived classes should override it with the appropriate method provided
+     * by the database abstraction layer, if available. This may be more
+     * sophisticated regarding charset handling etc.
+     * @param string $identifier Identifier to quote
+     * @return string Quoted and escaped identifier or NULL if unavailable
+     **/
+    public function quoteIdentifier($identifier)
+    {
+        return null;
+    }
+
+    /**
      * Get database server version
      * @return string Database server version
      */
