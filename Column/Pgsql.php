@@ -157,8 +157,11 @@ class Nada_Column_Pgsql extends Nada_Column
             $sql .= ' NOT NULL';
         }
 
-        $sql .= ' DEFAULT ';
-        $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+        // Explicit DEFAULT NULL is not necessary and leads to ugly 'default NULL::character varying'
+        if ($this->_default !== null) {
+            $sql .= ' DEFAULT ';
+            $sql .= $this->_database->prepareValue($this->_default, $this->_datatype);
+        }
 
         return $sql;
     }
