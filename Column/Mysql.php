@@ -94,6 +94,15 @@ class Nada_Column_Mysql extends Nada_Column
                 $this->_datatype = Nada::DATATYPE_FLOAT;
                 $this->_length = 53;
                 break;
+            case 'timestamp':
+                if (in_array(Nada::DATATYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
+                    $this->_datatype = Nada::DATATYPE_TIMESTAMP;
+                } else {
+                    throw new UnexpectedValueException(
+                        'Enable emulation for Nada::DATATYPE_TIMESTAMP to accept MySQL timestamp datatype.'
+                    );
+                }
+                break;
             default:
                 throw new UnexpectedValueException('Unknown MySQL Datatype: ' . $data['data_type']);
         }
