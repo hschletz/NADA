@@ -604,6 +604,7 @@ abstract class Nada_Database
     public function clearCache()
     {
         $this->_tables = array();
+        $this->_allTablesFetched = false;
     }
 
     /**
