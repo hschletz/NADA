@@ -167,6 +167,18 @@ class Nada_Column_Pgsql extends Nada_Column
     }
 
     /** {@inheritdoc} */
+    protected function _setDatatype()
+    {
+        $name = $this->_database->prepareIdentifier($this->_name);
+        $datatype = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
+        $this->_database->exec(
+            'ALTER TABLE ' .
+            $this->_database->prepareIdentifier($this->_table->getName()) .
+            " ALTER COLUMN $name TYPE $datatype USING CAST($name AS $datatype)"
+        );
+    }
+
+    /** {@inheritdoc} */
     protected function _setComment()
     {
         $this->_database->exec(

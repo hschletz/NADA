@@ -343,6 +343,31 @@ abstract class Nada_Column
         $this->_name = $name;
     }
 
+
+    /**
+     * Set the column's datatype and/or length
+     *
+     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
+     * the operation will be performed on the database.
+     * Note that the database operation may fail if the column contains data that cannot be cast
+     * to the new datatype.
+     * @param string $datatype New datatype
+     * @param string $length New length (default: none)
+     **/
+    public function setDatatype($datatype, $length=null)
+    {
+        $this->_datatype = $datatype;
+        $this->_length = $length;
+        if ($this->_table) {
+            $this->_setDatatype($datatype, $length);
+        }
+    }
+
+    /**
+     * DBMS-specific implementation for setting a column's datatype
+     **/
+    abstract protected function _setDatatype();
+
     /**
      * Set Column comment
      *
