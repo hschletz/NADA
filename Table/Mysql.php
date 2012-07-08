@@ -58,4 +58,34 @@ class Nada_Table_Mysql extends Nada_Table
             $column->getDefinition()
         );
     }
+
+    /**
+     * Set character set and convert data to new character set
+     * @param string $charset Character set known to MySQL server
+     * @return void
+     **/
+    public function setCharset($charset)
+    {
+        $this->_database->exec(
+            'ALTER TABLE ' .
+            $this->_database->prepareIdentifier($this->_name) .
+            ' CONVERT TO CHARACTER SET ' .
+            $this->_database->prepareValue($charset, Nada::DATATYPE_VARCHAR)
+        );
+    }
+
+    /**
+     * Set table engine
+     * @param string $engine New table engine (MyISAM, InnoDB etc.)
+     * @return void
+     **/
+    public function setEngine($engine)
+    {
+        $this->_database->exec(
+            'ALTER TABLE ' .
+            $this->_database->prepareIdentifier($this->_name) .
+            ' ENGINE = ' .
+            $this->_database->prepareValue($engine, Nada::DATATYPE_VARCHAR)
+        );
+    }
 }
