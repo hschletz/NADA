@@ -11,20 +11,20 @@ without any warranty.
 ABOUT NADA
 ==========
 
-NADA ("Not Another Database Abstraction layer") is a PHP library that assists in
-developing database applications that are independent of the used DBMS (for now,
-PostgreSQL and MySQL are supported). It operates on top of a conventional
-database abstraction layer (currently supported: PDO, Zend_Db and MDB2),
-allowing easy integration into existing applications.
+NADA ("Not Another Database Abstraction layer") is a high level SQL abstraction
+library for PHP. It operates on top of a conventional database abstraction layer
+(currently supported: PDO, Zend_Db and MDB2), allowing easy integration into
+existing applications.
 
-NADA provides high-level abstraction methods that are not available in typical
-database abstraction layers which (with the notable exception of MDB2) just
-provide a unified interface to a database connection. In contrast, NADA supplies
-a unified interface to some SQL operations which would otherwise require
-DBMS-specific workarounds in the code.
+NADA provides SQL abstraction methods for different database backends (currently
+supported: PostgreSQL and MySQL) that are not available in typical database
+abstraction layers which (with the notable exception of MDB2) just provide a
+unified interface to a database connection. In contrast, NADA supplies a unified
+interface to some SQL operations which would otherwise require DBMS-specific
+workarounds in the code.
 
 NADA's modular and extensible design make it easy to add support for other DBMS
-and database abstraction layers. The files Dbms.php and Link.php contain
+and database abstraction layers. The files Database.php and Link.php contain
 instructions for this.
 
 
