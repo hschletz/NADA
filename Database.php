@@ -2,8 +2,6 @@
 /**
  * Database application interface class
  *
- * $Id$
- *
  * Copyright (C) 2011-2013 Holger Schletz <holger.schletz@web.de>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
