@@ -34,9 +34,9 @@ Nada.php is loaded, the factory method will find and include all required files.
 
 Example for PDO:
 
-require_once 'path/to/NADA/Nada.php';
-$pdo = new PDO($dsn, $user, $password);
-$nada = Nada::factory($pdo);
+    require_once 'path/to/NADA/Nada.php';
+    $pdo = new PDO($dsn, $user, $password);
+    $nada = Nada::factory($pdo);
 
 From that point on, $nada will provide high-level abstraction methods matching
 the DBMS in use. Available methods are documented in Database.php, Table.php and
