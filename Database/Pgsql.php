@@ -46,6 +46,18 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function getServerVersion()
+    {
+        $version = $this->query('SELECT VERSION() AS version');
+        $version = $version[0]['version'];
+
+        // Extract second part from version string ("PostgreSQL x.y.z on ...")
+        $startpos = strpos($version, ' ') + 1;
+        $endpos = strpos($version, ' ', $startpos);
+        return substr($version, $startpos, $endpos - $startpos);
+    }
+
+    /** {@inheritdoc} */
     public function iLike()
     {
         return ' ILIKE ';
@@ -61,7 +73,7 @@ class Nada_Database_Pgsql extends Nada_Database
         // Keep special semantics of NULL, i.e. 'expr = NULL' always evaluates to FALSE
         $this->exec('SET transform_null_equals TO off');
         // Don't implicitly add missing columns to FROM clause (no longer supported with 9.0)
-        if (version_compare($this->_link->getServerVersion(), '9.0', '<')) {
+        if (version_compare($this->getServerVersion(), '9.0', '<')) {
             $this->exec('SET add_missing_from TO off');
         }
     }

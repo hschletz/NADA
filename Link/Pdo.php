@@ -94,12 +94,6 @@ class Nada_Link_Pdo extends Nada_Link
         return $this->_link->quote((string)$value, PDO::PARAM_STR);
     }
 
-    /** {@inheritdoc} */
-    public function getServerVersion()
-    {
-        return $this->_link->getAttribute(PDO::ATTR_SERVER_VERSION);
-    }
-
     /**
      * Throw exception with information from PDO's errorInfo()
      * @param object PDO object that caused the error

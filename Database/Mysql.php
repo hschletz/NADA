@@ -49,6 +49,21 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function getServerVersion()
+    {
+        $version = $this->query('SELECT VERSION() AS version');
+        $version = $version[0]['version'];
+
+        // Chop off optional suffix ("x.y.z-suffix")
+        $endpos = strpos($version, '-');
+        if ($endpos) {
+            return substr($version, 0, $endpos);
+        } else {
+            return $version;
+        }
+    }
+
+    /** {@inheritdoc} */
     public function timestampFormatIso()
     {
         // MySQL would accept a timezone, but ignore it and issue a warning.

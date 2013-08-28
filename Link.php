@@ -133,10 +133,4 @@ abstract class Nada_Link
     {
         return null;
     }
-
-    /**
-     * Get database server version
-     * @return string Database server version
-     */
-    abstract public function getServerVersion();
 }

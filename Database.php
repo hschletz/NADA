@@ -170,6 +170,11 @@ abstract class Nada_Database
     }
 
     /**
+     * Return the version string as reported by the database server
+     */
+    abstract public function getServerVersion();
+
+    /**
      * Run database query and return complete result set
      *
      * This method is intended to be used internally by NADA. Application code
