@@ -105,6 +105,8 @@ class Nada
         // Determine the database abstraction layer
         if ($link instanceof PDO) {
             $class = 'Pdo';
+        } elseif ($link instanceof \Zend\Db\Adapter\Adapter) {
+            $class = 'ZendDb2';
         } elseif ($link instanceof Zend_Db_Adapter_Abstract) {
             $class = 'ZendDb';
         } elseif ($link instanceof MDB2_Driver_Common) {

@@ -7,15 +7,16 @@ About NADA
 NADA is a high level SQL abstraction library for PHP. It complements and
 operates on top of a conventional database abstraction layer (currently
 supported: [PDO](http://php.net/manual/en/book.pdo.php),
-[Zend_Db](http://framework.zend.com) and
+[Zend_Db (Zend Framework 1.x)](http://framework.zend.com),
+[Zend\Db (Zend Framework 2.x)](http://framework.zend.com) and
 [MDB2](http://pear.php.net/package/MDB2)), allowing easy integration into
 existing applications.
 
 NADA provides SQL abstraction methods for different database backends (currently
 supported: [PostgreSQL](http://postgresql.org) and [MySQL](http://mysql.org))
 that are not available in typical database abstraction layers which (with the
-notable exception of MDB2) just provide a unified interface to a database
-connection. In contrast, NADA supplies a unified interface to some SQL
+notable exception of MDB2 and Zend\Db) just provide a unified interface to a
+database connection. In contrast, NADA supplies a unified interface to some SQL
 operations which would otherwise require DBMS-specific workarounds in the code:
 
 - Querying and altering the database structure (tables, columns, datatypes)
