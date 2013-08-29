@@ -537,10 +537,16 @@ abstract class Nada_Database
      * methods maintain the cache automatically. If the structure has been
      * altered without one of NADA's methods, the cache is outdated and needs to
      * be flushed with this method.
+     *
+     * @param string $table Optional: Flush only the given table instead of the entire cache
      **/
-    public function clearCache()
+    public function clearCache($table=null)
     {
-        $this->_tables = array();
+        if ($table) {
+            unset($this->_tables[$table]);
+        } else {
+            $this->_tables = array();
+        }
         $this->_allTablesFetched = false;
     }
 
@@ -646,5 +652,74 @@ abstract class Nada_Database
         $column = Nada_Column::factory($this);
         $column->constructNew($this, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
         return $column;
+    }
+
+    /**
+     * Create a table
+     *
+     * Some constraints are checked before the creation is attempted:
+     *
+     * - There can be at most 1 autoincrement column.
+     * - If there is an autoincrement column, $primaryKey must be its name or null.
+     * - Otherwise, $primaryKey must not be empty.
+     *
+     * The $primaryKey value is interpreted literally and can be any valid PK
+     * specification. This may be a column name or a comma-separated list of
+     * column names. It can be omitted for tables with an autoincrement column
+     * because the autoincrement column is automatically made the primary key.
+     *
+     * @param string $name Table name
+     * @param array $columns Array of Nada_Column objects, created via createColumn()
+     * @param string $primaryKey Primary key
+     * @return Nada_Table A representation of the created table
+     * @throws InvalidArgumentException if $columns is empty or constaints are violated
+     * @throws RuntimeException if the table already exists
+     */
+    public function createTable($name, array $columns, $primaryKey=null)
+    {
+        if (empty($columns)) {
+            throw new InvalidArgumentException('No columns specified for new table');
+        }
+        $numAutoIncrement = 0;
+        $autoPk = null;
+        foreach ($columns as $column) {
+            if ($column->getAutoIncrement()) {
+                $numAutoIncrement++;
+                $autoPk = $this->prepareIdentifier($column->getName());
+            }
+        }
+        if ($numAutoIncrement > 1) {
+            throw new InvalidArgumentException(
+                'More than 1 autoincrement field specified, given: ' . $numAutoIncrement
+            );
+        }
+        if ($autoPk) {
+            if ($primaryKey and $autoPk != $this->prepareIdentifier($primaryKey)) {
+                throw new InvalidArgumentException('Invalid primary key: ' . $primaryKey);
+            }
+            $primaryKey = $autoPk;
+        }
+        if (!$primaryKey) {
+            throw new InvalidArgumentException('Missing primary key for table ' . $name);
+        }
+        $tables = $this->getTables(); // TODO: use _getTableNames() when implemented
+        if (isset($tables[$name])) {
+            throw new RuntimeException('Table already exists: ' . $name);
+        }
+
+        $colspecs = array();
+        foreach ($columns as $column) {
+            $colspecs[] = $this->prepareIdentifier($column->getName()) . ' ' . $column->getDefinition();
+        }
+
+        $sql = 'CREATE TABLE ' . $this->prepareIdentifier($name) . " (\n";
+        $sql .= implode(",\n", $colspecs);
+        if ($primaryKey) {
+            $sql .= ",\nPRIMARY KEY ($primaryKey)";
+        }
+        $sql .= "\n)";
+
+        $this->exec($sql);
+        return $this->getTable($name);
     }
 }

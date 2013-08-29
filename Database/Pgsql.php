@@ -90,4 +90,23 @@ class Nada_Database_Pgsql extends Nada_Database
                 return parent::getNativeDatatype($type, $length);
         }
     }
+
+    /** {@inheritdoc} */
+    public function createTable($name, array $columns, $primaryKey=null)
+    {
+        $table = parent::createTable($name, $columns, $primaryKey);
+
+        // CREATE TABLE does not set comments. Add them manually.
+        foreach ($columns as $column) {
+            $comment = $column->getComment();
+            if ($comment) {
+                $column->setTable($table);
+                $column->setComment($comment);
+            }
+        }
+
+        // Refresh cached table object
+        $this->clearCache($name);
+        return $this->getTable($name);
+    }
 }
