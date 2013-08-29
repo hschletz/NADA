@@ -92,12 +92,6 @@ abstract class Nada_Database
     private $_allTablesFetched = false;
 
     /**
-     * Array of captured commands if exec() capturing is enabled
-     * @var array
-     */
-    protected $_capturedCommands = null;
-
-    /**
      * Tell prepareIdentifier() to always quote identifiers
      * @var bool
      */
@@ -209,12 +203,9 @@ abstract class Nada_Database
      * set. This method is intended for this type of commands. The return value
      * is typically the number of affected rows.
      *
-     * Commands can be captured instead of being executed - see beginCapture().
-     * In this mode, TRUE is always returned. Don't capture commands if the real
-     * return value is relevant.
      * @param string $statement SQL statement with optional placeholders
      * @param mixed $params Single value or array of values to substitute for placeholders
-     * @return integer Number of affected rows, TRUE if command gets captured
+     * @return integer Number of affected rows
      * @internal
      */
     public function exec($statement, $params=array())
@@ -222,66 +213,9 @@ abstract class Nada_Database
         if (!is_array($params)) {
             $params = array($params);
         }
-        if ($this->_capturedCommands !== null and empty($params)) {
-            $this->_capturedCommands[] = $statement;
-            return true;
-        } else {
-            return $this->_link->exec($statement, $params);
-        }
+        return $this->_link->exec($statement, $params);
     }
 
-    /**
-     * Start capturing of write SQL commands
-     *
-     * This method allows capturing write queries using the internal exec()
-     * method without parameters, including all commands issued from NADA
-     * methods that alter the database structure. This allows reviewing changes
-     * before anything gets executed. The internal state of cached objects
-     * (tables, columns...) still gets updated to make the simulation complete.
-     * This means that the cache is ahead of the database's state until the
-     * captured commands get executed manually.
-     *
-     * Queries with parameters cannot be captured. They will be executed
-     * immediately even when capturing is active.
-     *
-     * Use endCapture() to retrieve the captured commands and return to
-     * immediate execution.
-     * @throws RuntimeException if capturing has already been started
-     **/
-    public function beginCapture()
-    {
-        if ($this->isCapturing()) {
-            throw new RuntimeException('Capture already started.');
-        }
-        $this->_capturedCommands = array();
-    }
-
-    /**
-     * Stop command capturing
-     *
-     * This reverts to normal mode and subsequent queries will be executed
-     * immediately.
-     * @return array Captured SQL commands
-     * @throws RuntimeException if capturing has not been started yet.
-     **/
-    public function endCapture()
-    {
-        if (!$this->isCapturing()) {
-            throw new RuntimeException('Capture not started yet.');
-        }
-        $commands = $this->_capturedCommands;
-        $this->_capturedCommands = null;
-        return $commands;
-    }
-
-    /**
-     * Get capturing status
-     * @return bool TRUE if capturing has been started via beginCapture()
-     **/
-    public function isCapturing()
-    {
-        return $this->_capturedCommands !== null;
-    }
     /**
      * Return a case insensitive LIKE operator if available
      *
