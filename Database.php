@@ -722,4 +722,15 @@ abstract class Nada_Database
         $this->exec($sql);
         return $this->getTable($name);
     }
+
+    /**
+     * Drop a table
+     *
+     * @param string $name Table name
+     */
+    public function dropTable($name)
+    {
+        $this->exec('DROP TABLE ' . $this->prepareIdentifier($name));
+        $this->clearCache($name);
+    }
 }
