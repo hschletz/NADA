@@ -92,7 +92,9 @@ class Nada_Column_Pgsql extends Nada_Column
                 if ($matches[1] == 'NULL') {
                     $this->_default = null;
                 } else {
-                    $this->_default = $matches[2]; // String without surrounding quotes
+                    // String without surrounding quotes. Quote characters
+                    // within the string must be unescaped first.
+                    $this->_default = str_replace("''", "'", $matches[2]);
                 }
             }
         }
