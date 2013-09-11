@@ -14,14 +14,23 @@ existing applications.
 
 NADA provides SQL abstraction methods for different database backends (currently
 supported: [PostgreSQL](http://postgresql.org) and [MySQL](http://mysql.org))
-that are not available in typical database abstraction layers which (with the
-notable exception of MDB2 and Zend\Db) just provide a unified interface to a
-database connection. In contrast, NADA supplies a unified interface to some SQL
-operations which would otherwise require DBMS-specific workarounds in the code:
+that are not available in typical database abstraction layers which often just
+provide a unified interface to a database connection. In contrast, NADA supplies
+a unified interface to some SQL operations which would otherwise require
+DBMS-specific workarounds in the code:
 
 - Querying and altering the database structure (tables, columns, datatypes)
 - Generating SQL code fragments for non-portable functions
 - Setting compatibility flags to force predictable, standards-compliant behavior
+
+Some database abstraction layers already offer some of that high level
+functionality, but that is tightly coupled to their database connection method.
+To make use of it, the entire application has to be built around a particular
+library (which may or may not suit the needs of the project) or a second
+database connection has to be established just for the higher level operations
+(which would be inefficient and somewhat messy because 2 different APIs are
+involved). NADA provides a clean and lightweight solution by operating on top
+of an existing database connection object of any supported type.
 
 NADA's modular and extensible design makes it easy to add support for other DBMS
 and database abstraction layers. The files Database.php and Link.php contain
