@@ -13,11 +13,11 @@ supported: [PDO](http://php.net/manual/en/book.pdo.php),
 existing applications.
 
 NADA provides SQL abstraction methods for different database backends (currently
-supported: [PostgreSQL](http://postgresql.org) and [MySQL](http://mysql.org))
-that are not available in typical database abstraction layers which often just
-provide a unified interface to a database connection. In contrast, NADA supplies
-a unified interface to some SQL operations which would otherwise require
-DBMS-specific workarounds in the code:
+supported: [PostgreSQL](http://postgresql.org), [MySQL](http://mysql.org) and
+[SQLite](http://sqlite.org/)) that are not available in typical database
+abstraction layers which often just provide a unified interface to a database
+connection. In contrast, NADA supplies a unified interface to some SQL
+operations which would otherwise require DBMS-specific workarounds in the code:
 
 - Querying and altering the database structure (tables, columns, datatypes)
 - Generating SQL code fragments for non-portable functions
@@ -90,6 +90,19 @@ NADA throws an exception whenever an error occurs. If a database call fails and
 the connection object is set up to throw exceptions on error, the native
 exception is thrown. Otherwise NADA will detect the error and throw its own
 exception.
+
+
+Caveats
+-------
+
+There are currently some limitations with SQLite:
+
+- SQLite does not support altering and dropping columns directly. Instead,
+  NADA's methods re-create the table with the altered structure. Data and
+  primary keys are preserved, but other attributes (constraints etc.) are not.
+  This applies to all columns of the same table, not just the altered one.
+
+- Primary keys over multiple columns may lead to incorrect behavior.
 
 
 More documentation

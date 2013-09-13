@@ -45,6 +45,8 @@ class Nada_Link_ZendDb2 extends Nada_Link
                 return 'Mysql';
             case 'Postgresql':
                 return 'Pgsql';
+            case 'Sqlite':
+                return 'Sqlite';
             default:
                 throw new UnexpectedValueException('Unsupported DBMS type');
         }

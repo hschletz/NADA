@@ -45,6 +45,8 @@ class Nada_Link_Pdo extends Nada_Link
                 return 'Mysql';
             case 'pgsql':
                 return 'Pgsql';
+            case 'sqlite':
+                return 'Sqlite';
             default:
                 throw new UnexpectedValueException('Unsupported DBMS type');
         }

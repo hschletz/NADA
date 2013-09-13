@@ -164,6 +164,15 @@ abstract class Nada_Database
     }
 
     /**
+     * Return TRUE if underlying DBMS is SQLite
+     * @return bool
+     */
+    public function isSqlite()
+    {
+        return false; // SQLite-specific subclass overrides this
+    }
+
+    /**
      * Return the version string as reported by the database server
      */
     abstract public function getServerVersion();
@@ -510,14 +519,7 @@ abstract class Nada_Database
     public function getTables()
     {
         if (!$this->_allTablesFetched) { // Fetch only once
-            // Get all table names
-            $tables = $this->query(
-                'SELECT table_name FROM information_schema.tables WHERE table_schema=? AND table_type=?',
-                array(
-                    $this->getTableSchema(),
-                    'BASE TABLE'
-                )
-            );
+            $tables = $this->getTableNames();
             // Fetch missing tables
             foreach ($tables as $table) {
                 $this->getTable($table['table_name']); // Discard result, still available in cache
@@ -528,6 +530,25 @@ abstract class Nada_Database
             $this->_allTablesFetched = true;
         }
         return $this->_tables;
+    }
+
+    /**
+     * Return list of all table names
+     * 
+     * The default implementation queries information_schema. This can be
+     * overridden where information_schema is not available.
+     *
+     * @return array Query result with 1 column named 'table_name'
+     */
+    public function getTableNames()
+    {
+        return $this->query(
+            'SELECT table_name FROM information_schema.tables WHERE table_schema=? AND table_type=?',
+            array(
+                $this->getTableSchema(),
+                'BASE TABLE'
+            )
+        );
     }
 
     /**
@@ -655,6 +676,28 @@ abstract class Nada_Database
     }
 
     /**
+     * Construct a new column with data from an array
+     * 
+     * This is a wrapper aroung createColumn() which gets column data from an
+     * associative array.
+     *
+     * @param array $data column data: name, type, length, notnull, default, autoincrement, comment
+     * @return Nada_Column Temporary column object
+     */
+    public function createColumnFromArray(array $data)
+    {
+        return $this->createColumn(
+            $data['name'],
+            $data['type'],
+            $data['length'],
+            $data['notnull'],
+            $data['default'],
+            $data['autoincrement'],
+            $data['comment']
+        );
+    }
+
+    /**
      * Create a table
      *
      * Some constraints are checked before the creation is attempted:
@@ -662,6 +705,8 @@ abstract class Nada_Database
      * - There can be at most 1 autoincrement column.
      * - If there is an autoincrement column, $primaryKey must be its name or null.
      * - Otherwise, $primaryKey must not be empty.
+     * - Table names must not begin with sqlite_. For maximum compatibility,
+     *   this constraint is enforced for all DBMS, not only for SQLite.
      *
      * The $primaryKey value is interpreted literally and can be any valid PK
      * specification. This may be a column name or a comma-separated list of
@@ -677,6 +722,10 @@ abstract class Nada_Database
      */
     public function createTable($name, array $columns, $primaryKey=null)
     {
+        $name = strtolower($name);
+        if (strpos($name, 'sqlite_') === 0) {
+            throw new InvalidArgumentException('Created table name must not begin with sqlite_');
+        }
         if (empty($columns)) {
             throw new InvalidArgumentException('No columns specified for new table');
         }
@@ -702,7 +751,7 @@ abstract class Nada_Database
         if (!$primaryKey) {
             throw new InvalidArgumentException('Missing primary key for table ' . $name);
         }
-        $tables = $this->getTables(); // TODO: use _getTableNames() when implemented
+        $tables = $this->getTables(); // TODO: use getTableNames() when implemented
         if (isset($tables[$name])) {
             throw new RuntimeException('Table already exists: ' . $name);
         }
@@ -714,13 +763,26 @@ abstract class Nada_Database
 
         $sql = 'CREATE TABLE ' . $this->prepareIdentifier($name) . " (\n";
         $sql .= implode(",\n", $colspecs);
-        if ($primaryKey) {
-            $sql .= ",\nPRIMARY KEY ($primaryKey)";
-        }
+        $sql .= $this->_getTablePkDeclaration($primaryKey, $numAutoIncrement);
         $sql .= "\n)";
 
         $this->exec($sql);
         return $this->getTable($name);
+    }
+
+    /**
+     * Get the declaration for a table's primary key
+     *
+     * This is called by createTable() to get the PRIMARY KEY declaration to be
+     * inserted into a CREATE TABLE statement. The default implementation 
+     * unconditionally returns ", PRIMARY KEY ($primaryKey)". Other
+     * implementations may override this, depending on $numAutoIncrement.
+     *
+     * @return string
+     */
+    protected function _getTablePkDeclaration($primaryKey, $numAutoIncrement)
+    {
+        return ",\nPRIMARY KEY ($primaryKey)";
     }
 
     /**

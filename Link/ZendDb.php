@@ -46,6 +46,8 @@ class Nada_Link_ZendDb extends Nada_Link
             return 'Mysql';
         } elseif ($this->_link instanceof Zend_Db_Adapter_Pdo_Pgsql) {
             return 'Pgsql';
+        } elseif ($this->_link instanceof Zend_Db_Adapter_Pdo_Sqlite) {
+            return 'Sqlite';
         } else {
             throw new UnexpectedValueException('Unsupported DBMS type');
         }

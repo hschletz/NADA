@@ -160,6 +160,24 @@ abstract class Nada_Column
     }
 
     /**
+     * Export column data to an associative array
+     *
+     * @return array Column data: name, type, length, notnull, default, autoincrement, comment
+     */
+    public function toArray()
+    {
+        return array(
+            'name' => $this->_name,
+            'type' => $this->_datatype,
+            'length' => $this->_length,
+            'notnull' => $this->_notnull,
+            'default' => $this->_default,
+            'autoincrement' => $this->_autoIncrement,
+            'comment' => $this->_comment,
+        );
+    }
+
+    /**
      * Extract name from column data
      *
      * The default implementation expects an array with information_schema
