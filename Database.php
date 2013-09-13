@@ -522,7 +522,7 @@ abstract class Nada_Database
             $tables = $this->getTableNames();
             // Fetch missing tables
             foreach ($tables as $table) {
-                $this->getTable($table['table_name']); // Discard result, still available in cache
+                $this->getTable($table); // Discard result, still available in cache
             }
             // Sort cache
             ksort($this->_tables);
@@ -538,17 +538,22 @@ abstract class Nada_Database
      * The default implementation queries information_schema. This can be
      * overridden where information_schema is not available.
      *
-     * @return array Query result with 1 column named 'table_name'
+     * @return array
      */
     public function getTableNames()
     {
-        return $this->query(
+        $names = $this->query(
             'SELECT table_name FROM information_schema.tables WHERE table_schema=? AND table_type=?',
             array(
                 $this->getTableSchema(),
                 'BASE TABLE'
             )
         );
+        // Flatten array
+        foreach ($names as &$name) {
+            $name = $name['table_name'];
+        }
+        return $names;
     }
 
     /**

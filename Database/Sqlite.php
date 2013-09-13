@@ -83,9 +83,14 @@ class Nada_Database_Sqlite extends Nada_Database
         // Fetch table names from sqlite_master, excluding system tables. The
         // name filter works because SQLite forbids names beginning with
         // "sqlite" for regular tables.
-        return $this->query(
-            "SELECT name AS table_name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+        $names = $this->query(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
         );
+        // Flatten array
+        foreach ($names as &$name) {
+            $name = $name['name'];
+        }
+        return $names;
     }
 
     /** {@inheritdoc} */
