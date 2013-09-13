@@ -756,8 +756,7 @@ abstract class Nada_Database
         if (!$primaryKey) {
             throw new InvalidArgumentException('Missing primary key for table ' . $name);
         }
-        $tables = $this->getTables(); // TODO: use getTableNames() when implemented
-        if (isset($tables[$name])) {
+        if (in_array($name, $this->getTableNames())) {
             throw new RuntimeException('Table already exists: ' . $name);
         }
 
