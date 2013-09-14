@@ -35,6 +35,10 @@
  */
 class Nada_Table_Mysql extends Nada_Table
 {
+    /**
+     * Table engine, managed by getEngine()/setEngine()
+     */
+    protected $_engine;
 
     /** {@inheritdoc} */
     function __construct($database, $name)
@@ -73,9 +77,23 @@ class Nada_Table_Mysql extends Nada_Table
     }
 
     /**
+     * Retrieve table engine
+     * 
+     * @return string
+     */
+    public function getEngine()
+    {
+        if (!$this->_engine) {
+            $table = $this->_database->query('SHOW TABLE STATUS LIKE ?', $this->_name);
+            $this->_engine = $table[0]['engine'];
+        }
+        return $this->_engine;
+    }
+
+    /**
      * Set table engine
      * @param string $engine New table engine (MyISAM, InnoDB etc.)
-     * @return void
+     * @throws RuntimeException if $engine is not recognized by the server
      **/
     public function setEngine($engine)
     {
@@ -85,5 +103,10 @@ class Nada_Table_Mysql extends Nada_Table
             ' ENGINE = ' .
             $this->_database->prepareValue($engine, Nada::DATATYPE_VARCHAR)
         );
+        // MySQL ignores invalid engine names. Check explicitly.
+        // The getEngine() also implicitly updates $_engine.
+        if (strcasecmp($this->getEngine(), $engine) != 0) {
+            throw new RuntimeException('Unsupported table engine: ' . $engine);
+        }
     }
 }
