@@ -59,14 +59,12 @@ class Nada_Column_Mysql extends Nada_Column
             case 'mediumtext':
             case 'longtext':
                 $this->_datatype = Nada::DATATYPE_CLOB;
-                $this->_length = $data['character_maximum_length'];
                 break;
             case 'tinyblob':
             case 'blob':
             case 'mediumblob':
             case 'longblob':
                 $this->_datatype = Nada::DATATYPE_BLOB;
-                $this->_length = $data['character_maximum_length'];
                 break;
             case 'tinyint':
                 $this->_datatype = Nada::DATATYPE_INTEGER;
