@@ -321,4 +321,31 @@ abstract class Nada_Table
      * @param string $name New name
      **/
     abstract protected function _renameColumn($column, $name);
+
+    /**
+     * Export table data to an associative array
+     *
+     * The returned array has the following elements:
+     *
+     * - **name**: the table name
+     * - **columns**: array of columns (numeric or associative, depending on
+     *   $assoc). See Nada_Column::toArray() for a description of keys.
+     * - **mysql**: (MySQL only) array with MySQL-specific data:
+     *   - **engine**: table engine
+     *
+     * @param bool $assoc
+     * @return array
+     */
+    public function toArray($assoc=false)
+    {
+        $data = array('name' => $this->_name);
+        foreach ($this->_columns as $name => $column) {
+            if ($assoc) {
+                $data['columns'][$name] = $column->toArray();
+            } else {
+                $data['columns'][] = $column->toArray();
+            }
+        }
+        return $data;
+    }
 }

@@ -61,6 +61,14 @@ class Nada_Table_Mysql extends Nada_Table
         );
     }
 
+    /** {@inheritdoc} */
+    public function toArray($assoc=false)
+    {
+        $data = parent::toArray($assoc);
+        $data['mysql']['engine'] = $this->getEngine();
+        return $data;
+    }
+
     /**
      * Set character set and convert data to new character set
      * @param string $charset Character set known to MySQL server
