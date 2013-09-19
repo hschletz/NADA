@@ -60,6 +60,16 @@ abstract class Nada_Table
     protected $_columns;
 
     /**
+     * This table's primary key
+     *
+     * This is always an array, even for single column primary keys. The columns
+     * are arranged in the correct order.
+     *
+     * @var array[Nada_Column]
+     */
+    protected $_primaryKey;
+
+    /**
      * Default set of columns to query from information_schema.columns
      *
      * Subclasses can extend this with DBMS-specific columns.
@@ -92,6 +102,7 @@ abstract class Nada_Table
         if (empty($this->_columns)) {
             throw new RuntimeException('Table does not exist: ' . $name);
         }
+        $this->_fetchConstraints();
     }
 
     /**
@@ -155,6 +166,42 @@ abstract class Nada_Table
     }
 
     /**
+     * Fetch constraint information from the database
+     *
+     * Invoked by the constructor, the default implementation queries
+     * information_schema.table_constraints and information_schema.key_column_usage.
+     * To make this functional, subclasses must set Nada_Database::$_tableSchema.
+     *
+     * Only primary keys are recognized for now. All other constraints are
+     * ignored.
+     *
+     * @todo Recognize other constraint types
+     */
+    protected function _fetchConstraints()
+    {
+        $constraints = $this->_database->query(
+            <<<EOT
+            SELECT kcu.column_name
+            FROM information_schema.key_column_usage kcu
+            JOIN information_schema.table_constraints tc
+            USING (table_schema, table_name, constraint_schema, constraint_name)
+            WHERE tc.constraint_type = 'PRIMARY KEY'
+            AND tc.table_schema = ?
+            AND LOWER(tc.table_name) = ?
+            ORDER BY kcu.ordinal_position
+EOT
+            ,
+            array(
+                $this->_database->getTableSchema(),
+                $this->_name,
+            )
+        );
+        foreach ($constraints as $constraint) {
+            $this->_primaryKey[] = $this->_columns[strtolower($constraint['column_name'])];
+        }
+    }
+
+    /**
      * Return a single column
      * @param $name Column name
      * @return Nada_Column Column interface
@@ -206,6 +253,16 @@ abstract class Nada_Table
         if (isset($this->_columns[$name])) {
             throw new RuntimeException('Already defined column: ' . $this->_name . '.' . $name);
         }
+    }
+
+    /**
+     * Return primary key
+     *
+     * @return array[Nada_Column]
+     */
+    public function getPrimaryKey()
+    {
+        return $this->_primaryKey;
     }
 
     /**
@@ -330,6 +387,7 @@ abstract class Nada_Table
      * - **name**: the table name
      * - **columns**: array of columns (numeric or associative, depending on
      *   $assoc). See Nada_Column::toArray() for a description of keys.
+     * - **primary_key**: array of column names for primary key
      * - **mysql**: (MySQL only) array with MySQL-specific data:
      *   - **engine**: table engine
      *
@@ -345,6 +403,9 @@ abstract class Nada_Table
             } else {
                 $data['columns'][] = $column->toArray();
             }
+        }
+        foreach ($this->_primaryKey as $name => $column) {
+            $data['primary_key'][] = $column->getName();
         }
         return $data;
     }

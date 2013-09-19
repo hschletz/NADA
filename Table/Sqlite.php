@@ -45,7 +45,19 @@ class Nada_Table_Sqlite extends Nada_Table
             $object = Nada_Column::factory($this->_database);
             $object->constructFromTable($this, $column);
             $this->_columns[$column['name']] = $object;
+
+            // Evaluate PK here to avoid extra query
+            if ($column['pk']) {
+                // Returned ordinal positions start with 1
+                $this->_primaryKey[$column['pk'] - 1] = $object;
+            }
         }
+    }
+
+    /** {@inheritdoc} */
+    protected function _fetchConstraints()
+    {
+        // PK is already evaluated by _fetchColumns()
     }
 
     /** {@inheritdoc} */
