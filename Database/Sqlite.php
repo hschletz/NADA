@@ -129,14 +129,14 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    protected function _getTablePkDeclaration($primaryKey, $numAutoIncrement)
+    protected function _getTablePkDeclaration(array $primaryKey, $autoIncrement)
     {
         // For autoincrement columns, the PK is already specified with the
         // column and must not be set again for the table.
-        if ($numAutoIncrement == 0) {
-            return parent::_getTablePkDeclaration($primaryKey, $numAutoIncrement);
-        } else {
+        if ($autoIncrement) {
             return '';
+        } else {
+            return parent::_getTablePkDeclaration($primaryKey, $autoIncrement);
         }
     }
 }

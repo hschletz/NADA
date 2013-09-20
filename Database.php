@@ -708,21 +708,20 @@ abstract class Nada_Database
      * Some constraints are checked before the creation is attempted:
      *
      * - There can be at most 1 autoincrement column.
-     * - If there is an autoincrement column, $primaryKey must be its name or null.
+     * - If there is an autoincrement column, it must be the primary key.
      * - Otherwise, $primaryKey must not be empty.
      * - Table names must not begin with sqlite_. For maximum compatibility,
      *   this constraint is enforced for all DBMS, not only for SQLite.
      *
-     * The $primaryKey value is interpreted literally and can be any valid PK
-     * specification. This may be a column name or a comma-separated list of
-     * column names. It can be omitted for tables with an autoincrement column
-     * because the autoincrement column is automatically made the primary key.
+     * The $primaryKey value can be omitted for tables with an autoincrement
+     * column because the autoincrement column is automatically made the primary
+     * key.
      *
      * @param string $name Table name
      * @param array $columns Array of Nada_Column objects, created via createColumn()
-     * @param string $primaryKey Primary key
+     * @param string|array $primaryKey Primary key (column name or aray of column names)
      * @return Nada_Table A representation of the created table
-     * @throws InvalidArgumentException if $columns is empty or constaints are violated
+     * @throws InvalidArgumentException if $columns is empty or constraints are violated
      * @throws RuntimeException if the table already exists
      */
     public function createTable($name, array $columns, $primaryKey=null)
@@ -734,12 +733,15 @@ abstract class Nada_Database
         if (empty($columns)) {
             throw new InvalidArgumentException('No columns specified for new table');
         }
+        if ($primaryKey !== null and !is_array($primaryKey)) {
+            $primaryKey = array($primaryKey);
+        }
         $numAutoIncrement = 0;
         $autoPk = null;
         foreach ($columns as $column) {
             if ($column->getAutoIncrement()) {
                 $numAutoIncrement++;
-                $autoPk = $this->prepareIdentifier($column->getName());
+                $autoPk = $column->getName();
             }
         }
         if ($numAutoIncrement > 1) {
@@ -748,10 +750,11 @@ abstract class Nada_Database
             );
         }
         if ($autoPk) {
-            if ($primaryKey and $autoPk != $this->prepareIdentifier($primaryKey)) {
-                throw new InvalidArgumentException('Invalid primary key: ' . $primaryKey);
+            if ($primaryKey === null) {
+                $primaryKey = array($autoPk);
+            } elseif (count($primaryKey) != 1 or $autoPk != $primaryKey[0]) {
+                throw new InvalidArgumentException('Invalid primary key: ' . implode(',', $primaryKey));
             }
-            $primaryKey = $autoPk;
         }
         if (!$primaryKey) {
             throw new InvalidArgumentException('Missing primary key for table ' . $name);
@@ -767,7 +770,7 @@ abstract class Nada_Database
 
         $sql = 'CREATE TABLE ' . $this->prepareIdentifier($name) . " (\n";
         $sql .= implode(",\n", $colspecs);
-        $sql .= $this->_getTablePkDeclaration($primaryKey, $numAutoIncrement);
+        $sql .= $this->_getTablePkDeclaration($primaryKey, (bool) $numAutoIncrement);
         $sql .= "\n)";
 
         $this->exec($sql);
@@ -779,14 +782,19 @@ abstract class Nada_Database
      *
      * This is called by createTable() to get the PRIMARY KEY declaration to be
      * inserted into a CREATE TABLE statement. The default implementation 
-     * unconditionally returns ", PRIMARY KEY ($primaryKey)". Other
-     * implementations may override this, depending on $numAutoIncrement.
+     * unconditionally returns ", PRIMARY KEY ($column[,$column...])". Other
+     * implementations may override this, depending on $autoIncrement.
      *
+     * @param array $primaryKey Array of column names for PK
+     * @param bool $autoIncrement Whether the table has an autoincrement column
      * @return string
      */
-    protected function _getTablePkDeclaration($primaryKey, $numAutoIncrement)
+    protected function _getTablePkDeclaration(array $primaryKey, $autoIncrement)
     {
-        return ",\nPRIMARY KEY ($primaryKey)";
+        foreach ($primaryKey as &$column) {
+            $column = $this->prepareIdentifier($column);
+        }
+        return ",\nPRIMARY KEY (" . implode(', ', $primaryKey) .  ')';
     }
 
     /**
