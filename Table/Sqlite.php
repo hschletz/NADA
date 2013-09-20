@@ -65,6 +65,7 @@ class Nada_Table_Sqlite extends Nada_Table
     {
         // Reimplentation due to missing DROP COLUMN support
         $this->alterColumn($name, null, null);
+        $this->_updateConstraints($name, null);
     }
 
     /** {@inheritdoc} */
@@ -172,10 +173,6 @@ class Nada_Table_Sqlite extends Nada_Table
         $this->_columns = array();
         foreach ($newColumns as $column) {
             $this->_columns[$column->getName()] = $column;
-        }
-        $this->_primaryKey = array();
-        foreach ($pkColumns as $pkColumnName) {
-            $this->_primaryKey[] = $this->_columns[$pkColumnName];
         }
     }
 }

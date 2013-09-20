@@ -352,6 +352,7 @@ EOT
         $this->requireColumn($name);
         $this->alter('DROP COLUMN ' . $this->_database->prepareIdentifier($name));
         unset($this->_columns[$name]); // Update column cache
+        $this->_updateConstraints($name, null);
     }
 
     /**
@@ -363,13 +364,16 @@ EOT
      **/
     public final function renameColumn($column, $name)
     {
-        $this->requireColumn($column->getName());
+        $oldName = $column->getName();
+
+        $this->requireColumn($oldName);
         $this->forbidColumn($name);
 
         $this->_renameColumn($column, $name);
         // Update column cache
         $this->_columns[$name] = $column;
-        unset($this->_columns[$column->getName()]);
+        unset($this->_columns[$oldName]);
+        $this->_updateConstraints($oldName, $name);
     }
 
     /**
@@ -378,6 +382,34 @@ EOT
      * @param string $name New name
      **/
     abstract protected function _renameColumn($column, $name);
+
+    /**
+     * Update constraints after renaming or dropping a column
+     *
+     * This updates affected column names in all constraints and must be called
+     * throm the renameColumn() and dropColumn() implementation.
+     *
+     * @param string $oldColumnName Column name before renaming/dropping
+     * @param string $newColumnName Column name after renaming, NULL for dropped column
+     */
+    protected function _updateConstraints($oldColumnName, $newColumnName)
+    {
+        $columnIndex = null;
+        foreach ($this->_primaryKey as $index => $column) {
+            if ($oldColumnName == $column->getName()) {
+                $columnIndex = $index;
+                break;
+            }
+        }
+        if ($columnIndex !== null) {
+            if ($newColumnName) {
+                $this->_primaryKey[$columnIndex] = $this->_columns[$newColumnName];
+            } else {
+                unset($this->_primaryKey[$columnIndex]);
+                $this->_primaryKey = array_values($this->_primaryKey);
+            }
+        }
+    }
 
     /**
      * Export table data to an associative array
