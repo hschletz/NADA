@@ -108,25 +108,20 @@ class Nada_Table_Sqlite extends Nada_Table
 
         // Preserve PK
         // TODO preserve other constraints
-        // TODO Create methods for reading PKs and constaints.
-        $tableName = $this->_database->prepareIdentifier($this->_name);
-        $columns = $this->_database->query("PRAGMA table_info($tableName)");
         $pkColumns = array();
-        foreach ($columns as $column) {
-            // Skip column about to be deleted
-            if ($attrib === null and $column['name'] == $name) {
-                continue;
-            }
-            if ($column['pk']) {
-                if ($attrib == 'name' and $column['name'] == $name) {
+        foreach ($this->_primaryKey as $column) {
+            if ($name == $column->getName()) {
+                if ($attrib === null) {
+                    // Skip column about to be deleted
+                    continue;
+                } elseif ($attrib == 'name') {
                     // Use new column name for PK
-                    $pkColumns[] = $this->_database->prepareIdentifier($value);
-                } else {
-                    $pkColumns[] = $this->_database->prepareIdentifier($column['name']);
+                    $pkColumns[] = $value;
+                    continue;
                 }
             }
+            $pkColumns[] = $column->getName();
         }
-        $pkColumns = implode(', ', $pkColumns);
 
         // Create savepoint instead of starting a transaction because calling
         // code might already have started a transaction.
@@ -141,6 +136,7 @@ class Nada_Table_Sqlite extends Nada_Table
         // Use quoteIdentifier() instead of prepareIdentifier() because the
         // temporary name is not identified as a keyword.
         $tmpTableName = $this->_database->quoteIdentifier($tmpTableName);
+        $tableName = $this->_database->prepareIdentifier($this->_name);
         $this->_database->exec("ALTER TABLE $tableName RENAME TO $tmpTableName");
 
         // Create table with new column specifications
@@ -174,5 +170,9 @@ class Nada_Table_Sqlite extends Nada_Table
 
         // Update column cache
         $this->_columns = $newColumns;
+        $this->_primaryKey = array();
+        foreach ($pkColumns as $pkColumnName) {
+            $this->_primaryKey[] = $this->_columns[$pkColumnName];
+        }
     }
 }
