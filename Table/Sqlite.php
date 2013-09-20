@@ -168,8 +168,11 @@ class Nada_Table_Sqlite extends Nada_Table
         // Release savepoint
         $this->_database->exec('RELEASE ' . __FUNCTION__);
 
-        // Update column cache
-        $this->_columns = $newColumns;
+        // Update column cache (update keys as well in case of renamed columns)
+        $this->_columns = array();
+        foreach ($newColumns as $column) {
+            $this->_columns[$column->getName()] = $column;
+        }
         $this->_primaryKey = array();
         foreach ($pkColumns as $pkColumnName) {
             $this->_primaryKey[] = $this->_columns[$pkColumnName];
