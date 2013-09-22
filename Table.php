@@ -428,7 +428,10 @@ EOT
      */
     public function toArray($assoc=false)
     {
-        $data = array('name' => $this->_name);
+        $data = array(
+            'name' => $this->_name,
+            'comment' => $this->_comment,
+        );
         foreach ($this->_columns as $name => $column) {
             if ($assoc) {
                 $data['columns'][$name] = $column->toArray();
