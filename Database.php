@@ -718,7 +718,7 @@ abstract class Nada_Database
      * key.
      *
      * @param string $name Table name
-     * @param array $columns Array of Nada_Column objects, created via createColumn()
+     * @param array $columns Array of Nada_Column objects, created via createColumn(), or associative arrays
      * @param string|array $primaryKey Primary key (column name or aray of column names)
      * @return Nada_Table A representation of the created table
      * @throws InvalidArgumentException if $columns is empty or constraints are violated
@@ -738,12 +738,16 @@ abstract class Nada_Database
         }
         $numAutoIncrement = 0;
         $autoPk = null;
-        foreach ($columns as $column) {
+        foreach ($columns as &$column) {
+            if (is_array($column)) {
+                $column = $this->createColumnFromArray($column);
+            }
             if ($column->getAutoIncrement()) {
                 $numAutoIncrement++;
                 $autoPk = $column->getName();
             }
         }
+        unset($column);
         if ($numAutoIncrement > 1) {
             throw new InvalidArgumentException(
                 'More than 1 autoincrement field specified, given: ' . $numAutoIncrement

@@ -98,6 +98,9 @@ class Nada_Database_Pgsql extends Nada_Database
 
         // CREATE TABLE does not set comments. Add them manually.
         foreach ($columns as $column) {
+            if (is_array($column)) {
+                $column = $this->createColumnFromArray($column);
+            }
             $comment = $column->getComment();
             if ($comment) {
                 $column->setTable($table);
