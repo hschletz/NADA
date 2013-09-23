@@ -51,6 +51,18 @@ abstract class Nada_Table
     protected $_name;
 
     /**
+     * Table comment
+     * @var string
+     */
+    protected $_comment;
+
+    /**
+     * Flag indicating whether comment has already been fetched
+     * @var bool
+     */
+    protected $_commentFetched = false;
+
+    /**
      * This table's columns
      *
      * This is an associative array populated by {@link _fetchColumns()}.
@@ -127,6 +139,45 @@ abstract class Nada_Table
     {
         return $this->_name;
     }
+
+    /**
+     * Return table comment
+     * @return string table comment
+     */
+    public function getComment()
+    {
+        if (!$this->_commentFetched) {
+            $this->_comment = $this->_fetchComment();
+            $this->_commentFetched = true;
+        }
+        return $this->_comment;
+    }
+
+    /**
+     * Set table comment
+     * @param string table comment
+     */
+    public function setComment($comment)
+    {
+        if ($this->_setComment($comment))
+        {
+            $this->_comment = $comment;
+        }
+        $this->_commentFetched = true;
+    }
+
+    /**
+     * DBMS specific method to fetch table comment
+     * @return string table comment
+     */
+    abstract protected function _fetchComment();
+
+    /**
+     * DBMS specific method to set table comment
+     * @param string table comment
+     * @return bool TRUE if a comment can be set on the table
+     */
+    abstract protected function _setComment($comment);
 
     /**
      * Return database interface
@@ -430,7 +481,7 @@ EOT
     {
         $data = array(
             'name' => $this->_name,
-            'comment' => $this->_comment,
+            'comment' => $this->getComment(),
         );
         foreach ($this->_columns as $name => $column) {
             if ($assoc) {

@@ -49,6 +49,23 @@ class Nada_Table_Mysql extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    protected function _fetchComment()
+    {
+        $result = $this->_database->query(
+            'SHOW TABLE STATUS LIKE ?',
+            $this->_name
+        );
+        return $result[0]['comment'];
+    }
+
+    /** {@inheritdoc} */
+    protected function _setComment($comment)
+    {
+        $this->alter('COMMENT = ' . $this->_database->prepareValue($comment, Nada::DATATYPE_VARCHAR));
+        return true;
+    }
+
+    /** {@inheritdoc} */
     protected function _renameColumn($column, $name)
     {
         $this->alter(

@@ -61,6 +61,18 @@ class Nada_Table_Sqlite extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    protected function _fetchComment()
+    {
+        return null;
+    }
+
+    /** {@inheritdoc} */
+    protected function _setComment($comment)
+    {
+        return false;
+    }
+
+    /** {@inheritdoc} */
     public function dropColumn($name)
     {
         // Reimplentation due to missing DROP COLUMN support

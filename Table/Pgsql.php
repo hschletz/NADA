@@ -44,6 +44,29 @@ class Nada_Table_Pgsql extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    protected function _fetchComment()
+    {
+        $result = $this->_database->query(
+            "SELECT OBJ_DESCRIPTION(CAST(? AS REGCLASS), 'pg_class') AS comment",
+            $this->_name
+        );
+        return $result[0]['comment'];
+    }
+
+    /** {@inheritdoc} */
+    protected function _setComment($comment)
+    {
+        $this->_database->exec(
+            sprintf(
+                'COMMENT ON TABLE %s IS %s',
+                $this->_database->prepareIdentifier($this->_name),
+                $this->_database->prepareValue($comment, Nada::DATATYPE_VARCHAR)
+            )
+        );
+        return true;
+    }
+
+    /** {@inheritdoc} */
     public function addColumnObject($column)
     {
         $newColumn = parent::addColumnObject($column);
