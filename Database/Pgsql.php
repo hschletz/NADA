@@ -104,6 +104,7 @@ class Nada_Database_Pgsql extends Nada_Database
             $comment = $column->getComment();
             if ($comment) {
                 $column->setTable($table);
+                $column->setComment(null); // Cached value is invalid at this stage, reset it
                 $column->setComment($comment);
             }
         }

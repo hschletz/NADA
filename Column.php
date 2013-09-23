@@ -393,9 +393,11 @@ abstract class Nada_Column
      **/
     public function setComment($comment)
     {
-        $this->_comment = $comment;
-        if ($this->_table) {
-            $this->_setComment($comment);
+        if ($this->_comment != $comment) {
+            $this->_comment = $comment;
+            if ($this->_table) {
+                $this->_setComment($comment);
+            }
         }
     }
 

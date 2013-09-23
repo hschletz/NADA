@@ -159,11 +159,10 @@ abstract class Nada_Table
      */
     public function setComment($comment)
     {
-        if ($this->_setComment($comment))
+        if ($comment != $this->getComment() and $this->_setComment($comment))
         {
             $this->_comment = $comment;
         }
-        $this->_commentFetched = true;
     }
 
     /**
