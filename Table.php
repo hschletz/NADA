@@ -553,8 +553,10 @@ EOT
                 $data['columns'][] = $column->toArray();
             }
         }
-        foreach ($this->_primaryKey as $name => $column) {
-            $data['primary_key'][] = $column->getName();
+        if (!empty($this->_primaryKey)) {
+            foreach ($this->_primaryKey as $name => $column) {
+                $data['primary_key'][] = $column->getName();
+            }
         }
         foreach ($this->getIndexes() as $name => $index) {
             if ($assoc) {
