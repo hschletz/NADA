@@ -82,6 +82,15 @@ abstract class Nada_Table
     protected $_primaryKey;
 
     /**
+     * This table's indexes
+     *
+     * This is an associative array populated by _fetchIndexes().
+     * The index name is the key, and the value is a Nada_Index object.
+     * @var array
+     */
+    protected $_indexes = array();
+
+    /**
      * Default set of columns to query from information_schema.columns
      *
      * Subclasses can extend this with DBMS-specific columns.
@@ -462,6 +471,59 @@ EOT
     }
 
     /**
+     * Create an index
+     *
+     * The presence of an existing index with the same name or column set is not checked.
+     *
+     * @param string $name Index name
+     * @param mixed Column name or array of column names
+     * @param bool $unique Create unique index, default: false
+     */
+    public function createIndex($name, $columns, $unique=false)
+    {
+        if (!is_array($columns)) {
+            $columns = array($columns);
+        }
+        foreach ($columns as &$column) {
+            $column = $this->_database->prepareIdentifier($column);
+        }
+        $this->_database->exec(
+            sprintf(
+                'CREATE %s INDEX %s ON %s (%s)',
+                $unique ? 'UNIQUE' : '',
+                $this->_database->prepareIdentifier($name),
+                $this->_database->prepareIdentifier($this->_name),
+                implode(', ', $columns)
+            )
+        );
+        // Reset index cache to force re-read by next getIndexes() invokation
+        $this->_indexes = array();
+    }
+
+    /**
+     * Get all indexes for this table
+     *
+     * Implicit indexes, as for the primary key, are not included in the result.
+     *
+     * @return \Nada_Index[]
+     */
+    public function getIndexes()
+    {
+        if (empty($this->_indexes)) {
+            $this->_fetchIndexes();
+        }
+        return $this->_indexes;
+    }
+
+    /**
+     * Fetch index definitions
+     *
+     * This is to be implemented by a subclass. The method must add all relevant
+     * indexes to $_indexes.
+     */
+    abstract protected function _fetchIndexes();
+
+    /**
      * Export table data to an associative array
      *
      * The returned array has the following elements:
@@ -470,6 +532,8 @@ EOT
      * - **columns**: array of columns (numeric or associative, depending on
      *   $assoc). See Nada_Column::toArray() for a description of keys.
      * - **primary_key**: array of column names for primary key
+     * - **indexes**: array of indexes (numeric or associative, depending on
+     *   $assoc). See Nada_Index::toArray() for a description of keys.
      * - **mysql**: (MySQL only) array with MySQL-specific data:
      *   - **engine**: table engine
      *
@@ -491,6 +555,13 @@ EOT
         }
         foreach ($this->_primaryKey as $name => $column) {
             $data['primary_key'][] = $column->getName();
+        }
+        foreach ($this->getIndexes() as $name => $index) {
+            if ($assoc) {
+                $data['indexes'][$name] = $index->toArray();
+            } else {
+                $data['indexes'][] = $index->toArray();
+            }
         }
         return $data;
     }

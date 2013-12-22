@@ -79,6 +79,26 @@ class Nada_Table_Mysql extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    protected function _fetchIndexes()
+    {
+        $columns = $this->_database->query(
+            'SELECT index_name, column_name, non_unique FROM information_schema.statistics ' .
+            'WHERE table_schema = ? AND table_name = ? AND index_name != \'PRIMARY\' ORDER BY seq_in_index',
+            array($this->_database->getName(), $this->_name)
+        );
+        // Group the result set by index name, aggregate columns
+        $indexes = array();
+        foreach ($columns as $column) {
+            $indexes[$column['index_name']]['columns'][] = $column['column_name'];
+            $indexes[$column['index_name']]['unique'] = !$column['non_unique']; // Same for every row in the index
+        }
+        // Create index objects
+        foreach ($indexes as $name => $index) {
+            $this->_indexes[$name] = new Nada_Index($name, $index['columns'], $index['unique']);
+        }
+    }
+
+    /** {@inheritdoc} */
     public function toArray($assoc=false)
     {
         $data = parent::toArray($assoc);

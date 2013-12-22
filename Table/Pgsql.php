@@ -88,4 +88,39 @@ class Nada_Table_Pgsql extends Nada_Table
             $this->_database->prepareIdentifier($name)
         );
     }
+
+    /** {@inheritdoc} */
+    protected function _fetchIndexes()
+    {
+        // Get all indexes for this table
+        $indexes = $this->_database->query(
+            'SELECT c.relname, i.indisunique, i.indkey ' .
+            'FROM pg_index i JOIN pg_class c ON c.oid = i.indexrelid ' .
+            'WHERE i.indrelid = CAST(? AS regclass) AND i.indisprimary = false',
+            $this->_name
+        );
+        foreach ($indexes as $index) {
+            // 'indkey' contains space-separated list of ordinal column positions.
+            // Extract names and positions for relevant columns.
+            $columns = $this->_database->query(
+                'SELECT column_name, ordinal_position FROM information_schema.columns ' .
+                'WHERE table_catalog = ? AND table_name = ? ' .
+                'AND ordinal_position IN(' . strtr($index['indkey'], ' ', ',') . ')',
+                array($this->_database->getName(), $this->_name)
+            );
+            $positions = array();
+            foreach ($columns as $column) {
+                $positions[$column['ordinal_position']] = $column['column_name'];
+            }
+
+            // Rearrange columns in the original order.
+            $columnNames = array();
+            foreach (explode(' ', $index['indkey']) as $position) {
+                $columnNames[] = $positions[$position];
+            }
+
+            // Create index object.
+            $this->_indexes[$index['relname']] = new Nada_Index($index['relname'], $columnNames, $index['indisunique']);
+        }
+    }
 }

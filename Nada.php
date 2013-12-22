@@ -129,6 +129,7 @@ class Nada
         self::_requireOnce("Table/$class.php");
         self::_requireOnce('Column.php');
         self::_requireOnce("Column/$class.php");
+        self::_requireOnce('Index.php');
 
         // Create and return matching Nada_Database object
         $class = "Nada_Database_$class";
