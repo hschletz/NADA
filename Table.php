@@ -524,6 +524,26 @@ EOT
     abstract protected function _fetchIndexes();
 
     /**
+     * Check for presence of index with given properties, ignoring index name
+     *
+     * @param mixed $columns Column name or array of column names
+     * @param bool $unique Unique index, default: false
+     * @return bool
+     */
+    public function hasIndex($columns, $unique=false)
+    {
+        if (!is_array($columns)) {
+            $columns = array($columns);
+        }
+        foreach ($this->getIndexes() as $index) {
+            if ($index->isUnique() == $unique and $index->getColumns() == $columns) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Export table data to an associative array
      *
      * The returned array has the following elements:
