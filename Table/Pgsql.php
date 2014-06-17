@@ -69,11 +69,14 @@ class Nada_Table_Pgsql extends Nada_Table
     /** {@inheritdoc} */
     public function addColumnObject($column)
     {
+        // PostgreSQL creates columns without comment. Adjust $column so that
+        // setComment() knows that it must still be added.
+        $comment = $column->getComment();
+        $column->setComment(null);
         $newColumn = parent::addColumnObject($column);
-
-        // The created column has no comment yet. Add it if necessary.
-        if ($column->getComment()) {
-            $newColumn->setComment($column->getComment());
+        if ($comment) {
+            $newColumn->setComment($comment);
+            $column->setComment($comment);
         }
         return $newColumn;
     }
