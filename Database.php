@@ -686,6 +686,10 @@ abstract class Nada_Database
      * This is a wrapper aroung createColumn() which gets column data from an
      * associative array.
      *
+     * The "name", "type" and "length" elements must always be present. The
+     * "notnull" and "autoincrement" elements default to FALSE if not given. The
+     * "default" and "comment" elements default to NULL.
+     *
      * @param array $data column data: name, type, length, notnull, default, autoincrement, comment
      * @return Nada_Column Temporary column object
      */
@@ -695,10 +699,10 @@ abstract class Nada_Database
             $data['name'],
             $data['type'],
             $data['length'],
-            $data['notnull'],
-            $data['default'],
-            $data['autoincrement'],
-            $data['comment']
+            !empty($data['notnull']),
+            @$data['default'],
+            !empty($data['autoincrement']),
+            @$data['comment']
         );
     }
 
