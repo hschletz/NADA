@@ -682,8 +682,8 @@ abstract class Nada_Database
 
     /**
      * Construct a new column with data from an array
-     * 
-     * This is a wrapper aroung createColumn() which gets column data from an
+     *
+     * This is a wrapper around createColumn() which gets column data from an
      * associative array.
      *
      * The "name", "type" and "length" elements must always be present. The
