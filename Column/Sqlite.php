@@ -86,11 +86,14 @@ class Nada_Column_Sqlite extends Nada_Column
     /** {@inheritdoc} */
     protected function _parseAutoIncrement($data)
     {
-        // TODO: Don't set autoincrement if this is part of a multicolumn pk
         if (!$this->_datatype) {
             $this->_parseDatatype($data);
         }
-        $this->_autoIncrement = ($data['pk'] and $this->_datatype == Nada::DATATYPE_INTEGER);
+        $this->_autoIncrement = (
+            $data['pk'] and
+            $data['pkColumnCount'] == 1 and
+            $this->_datatype == Nada::DATATYPE_INTEGER
+        );
     }
 
     /** {@inheritdoc} */

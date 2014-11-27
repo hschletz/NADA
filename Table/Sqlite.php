@@ -40,8 +40,15 @@ class Nada_Table_Sqlite extends Nada_Table
     {
         // Reimplemented because information_schema is not available
         $columns = $this->_database->query('PRAGMA table_info(' . $this->_database->prepareIdentifier($this->_name) . ')');
+        $pkColumnCount = 0;
+        foreach ($columns as $column) {
+            if ($column['pk']) {
+                $pkColumnCount++;
+            }
+        }
         foreach ($columns as $column) {
             $column['name'] = strtolower($column['name']);
+            $column['pkColumnCount'] = $pkColumnCount;
             $object = Nada_Column::factory($this->_database);
             $object->constructFromTable($this, $column);
             $this->_columns[$column['name']] = $object;
