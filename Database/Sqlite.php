@@ -107,7 +107,7 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null)
+    public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
             case Nada::DATATYPE_INTEGER:
@@ -137,7 +137,7 @@ class Nada_Database_Sqlite extends Nada_Database
             case Nada::DATATYPE_FLOAT:
                 return 'REAL';
             default:
-                return parent::getNativeDatatype($type, null); // SQLite does not honor $length
+                return parent::getNativeDatatype($type, null, $cast); // SQLite does not honor $length
         }
     }
 

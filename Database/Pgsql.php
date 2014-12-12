@@ -79,7 +79,7 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null)
+    public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
             case Nada::DATATYPE_CLOB:
@@ -87,7 +87,7 @@ class Nada_Database_Pgsql extends Nada_Database
             case Nada::DATATYPE_BLOB:
                 return 'BYTEA';
             default:
-                return parent::getNativeDatatype($type, $length);
+                return parent::getNativeDatatype($type, $length, $cast);
         }
     }
 

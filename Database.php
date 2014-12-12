@@ -616,11 +616,12 @@ abstract class Nada_Database
      * Get DBMS-specific datatype for abstract NADA datatype
      * @param string $type One of the NADA::DATATYPE_* constants
      * @param mixed $length Optional length modifier (default provided for some datatypes)
+     * @param bool $cast The result is used for a typecast operation. Some DBMS require different specifiers for casts.
      * @return string SQL fragment representing the datatype
      * @throws DomainException if the datatype is not supported for the current DBMS
      * @throws InvalidArgumentException if $length is invalid
      **/
-    public function getNativeDatatype($type, $length=null)
+    public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
             case Nada::DATATYPE_INTEGER:

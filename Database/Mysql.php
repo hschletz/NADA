@@ -120,28 +120,57 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null)
+    public function getNativeDatatype($type, $length=null, $cast=false)
     {
-        switch ($type) {
-            case Nada::DATATYPE_INTEGER:
-                if ($length == 8) {
-                    return 'TINYINT';
-                }
-                return parent::getNativeDatatype($type, $length);
-            case Nada::DATATYPE_TIMESTAMP:
-                return 'DATETIME';
-            case Nada::DATATYPE_BOOL:
-                if (in_array(Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
-                    return 'TINYINT';
-                } else {
-                    throw new DomainException('BOOL not supported by MySQL and not emulated');
-                }
-            case Nada::DATATYPE_CLOB:
-                return 'LONGTEXT';
-            case Nada::DATATYPE_BLOB:
-                return 'LONGBLOB';
-            default:
-                return parent::getNativeDatatype($type, $length);
+        if ($cast) {
+            switch ($type) {
+                case Nada::DATATYPE_INTEGER:
+                    return 'SIGNED';
+                case Nada::DATATYPE_VARCHAR:
+                    if ($length === null) {
+                        return 'CHAR';
+                    } elseif (ctype_digit((string) $length)) {
+                        return "CHAR($length)";
+                    } else {
+                        throw new InvalidArgumentException('Invalid length: ' . $length);
+                    }
+                case Nada::DATATYPE_TIMESTAMP:
+                    return 'DATETIME';
+                case Nada::DATATYPE_BOOL:
+                    throw new DomainException('Values cannot be cast to BOOL');
+                case Nada::DATATYPE_CLOB:
+                    return 'CHAR';
+                case Nada::DATATYPE_BLOB:
+                    return 'BINARY';
+                case Nada::DATATYPE_DECIMAL:
+                    return str_replace('NUMERIC', 'DECIMAL', parent::getNativeDatatype($type, $length, $cast));
+                case Nada::DATATYPE_FLOAT:
+                    return 'DECIMAL';
+                default:
+                    return parent::getNativeDatatype($type, $length, $cast);
+            }
+        } else {
+            switch ($type) {
+                case Nada::DATATYPE_INTEGER:
+                    if ($length == 8) {
+                        return 'TINYINT';
+                    }
+                    return parent::getNativeDatatype($type, $length, $cast);
+                case Nada::DATATYPE_TIMESTAMP:
+                    return 'DATETIME';
+                case Nada::DATATYPE_BOOL:
+                    if (in_array(Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
+                        return 'TINYINT';
+                    } else {
+                        throw new DomainException('BOOL not supported by MySQL and not emulated');
+                    }
+                case Nada::DATATYPE_CLOB:
+                    return 'LONGTEXT';
+                case Nada::DATATYPE_BLOB:
+                    return 'LONGBLOB';
+                default:
+                    return parent::getNativeDatatype($type, $length, $cast);
+            }
         }
     }
 }
