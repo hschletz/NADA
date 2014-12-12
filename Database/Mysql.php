@@ -123,6 +123,11 @@ class Nada_Database_Mysql extends Nada_Database
     public function getNativeDatatype($type, $length=null)
     {
         switch ($type) {
+            case Nada::DATATYPE_INTEGER:
+                if ($length == 8) {
+                    return 'TINYINT';
+                }
+                return parent::getNativeDatatype($type, $length);
             case Nada::DATATYPE_TIMESTAMP:
                 return 'DATETIME';
             case Nada::DATATYPE_BOOL:
