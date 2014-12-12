@@ -94,6 +94,19 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function getViewNames()
+    {
+        $names = $this->query(
+            "SELECT name FROM sqlite_master WHERE type='view'"
+        );
+        // Flatten array
+        foreach ($names as &$name) {
+            $name = $name['name'];
+        }
+        return $names;
+    }
+
+    /** {@inheritdoc} */
     public function getNativeDatatype($type, $length=null)
     {
         switch ($type) {

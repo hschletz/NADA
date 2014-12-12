@@ -557,6 +557,30 @@ abstract class Nada_Database
     }
 
     /**
+     * Return list of all view names
+     *
+     * The default implementation queries information_schema. This can be
+     * overridden where information_schema is not available.
+     *
+     * @return array
+     */
+    public function getViewNames()
+    {
+        $names = $this->query(
+            'SELECT table_name FROM information_schema.tables WHERE table_schema=? AND table_type=?',
+            array(
+                $this->getTableSchema(),
+                'VIEW'
+            )
+        );
+        // Flatten array
+        foreach ($names as &$name) {
+            $name = $name['table_name'];
+        }
+        return $names;
+    }
+
+    /**
      * Clear cache
      *
      * NADA caches the database structure internally. The structure manipulation
@@ -814,5 +838,18 @@ abstract class Nada_Database
     {
         $this->exec('DROP TABLE ' . $this->prepareIdentifier($name));
         $this->clearCache($name);
+    }
+
+    /**
+     * Create a view
+     *
+     * For portability, views should be used read-only.
+     *
+     * @param string $name View name
+     * @param string $query SQL query defining the view
+     */
+    public function createView($name, $query)
+    {
+        $this->exec('CREATE VIEW ' . $this->prepareIdentifier($name) . ' AS ' . $query);
     }
 }

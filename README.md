@@ -19,7 +19,8 @@ abstraction layers which often just provide a unified interface to a database
 connection. In contrast, NADA supplies a unified interface to some SQL
 operations which would otherwise require DBMS-specific workarounds in the code:
 
-- Querying and altering the database structure (tables, columns, datatypes)
+- Querying and altering the database structure (tables, columns, datatypes,
+  views)
 - Generating SQL code fragments for non-portable functions
 - Setting compatibility flags to force predictable, standards-compliant behavior
 
