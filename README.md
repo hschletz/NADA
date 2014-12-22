@@ -103,8 +103,6 @@ There are currently some limitations with SQLite:
   primary keys are preserved, but other attributes (constraints etc.) are not.
   This applies to all columns of the same table, not just the altered one.
 
-- Primary keys over multiple columns may lead to incorrect behavior.
-
 
 More documentation
 ------------------
