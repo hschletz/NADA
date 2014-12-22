@@ -98,10 +98,10 @@ Caveats
 
 There are currently some limitations with SQLite:
 
-- SQLite does not support altering and dropping columns directly. Instead,
-  NADA's methods re-create the table with the altered structure. Data and
-  primary keys are preserved, but other attributes (constraints etc.) are not.
-  This applies to all columns of the same table, not just the altered one.
+- SQLite does not support altering and dropping columns and primary keys
+  directly. Instead, NADA's methods re-create the table with the altered
+  structure. Data and primary keys are preserved, but other attributes
+  (constraints etc.) are not. This applies to all columns of the same table.
 
 
 More documentation

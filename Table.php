@@ -325,6 +325,18 @@ EOT
     }
 
     /**
+     * Set primary key
+     *
+     * Altering a primary key is a critical operation that should be done with
+     * care and avoided if possible. The content of the new PK's columns is not
+     * checked - if it does not meet the requirement for a PK, this operation
+     * will fail.
+     *
+     * @param string|string[] $columns PK column(s)
+     */
+    abstract public function setPrimaryKey($columns);
+
+    /**
      * Compose and execute an ALTER TABLE statement
      *
      * This method simply appends the given operation to an "ALTER TABLE name "

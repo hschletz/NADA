@@ -189,6 +189,58 @@ class Nada_Table_Sqlite extends Nada_Table
     }
 
     /**
+     * {@inheritdoc}
+     *
+     * There is no direct way to alter a PK. This method does it indirectly:
+     *
+     * 1. The table is renamed to a unique temporary name.
+     * 2. A new table with the original name and structure and altered PK is created.
+     * 3. Data is copied to the new table.
+     * 4. The old table is dropped.
+     *
+     * NOTE: All other constraints are lost for every column in this table.
+     */
+    public function setPrimaryKey($columns)
+    {
+        // Start exclusive operations
+        $savepoint = uniqid(__FUNCTION__);
+        $this->_database->exec('SAVEPOINT ' . $savepoint);
+        $this->_database->exec('PRAGMA locking_mode = EXCLUSIVE');
+
+        $tmpTableName = $this->_renameToTmp();
+
+        // Create table with new column specifications
+        $this->_database->clearCache($this->_name);
+        $this->_database->createTable($this->_name, $this->_columns, $columns);
+
+        // Copy data from old table
+        $columnNames = array_keys($this->_columns);
+        foreach ($columnNames as &$column) {
+            $column = $this->_database->prepareIdentifier($column);
+        }
+        unset($column);
+        $columnNames = implode(', ', $columnNames);
+        $tableName = $this->_database->prepareIdentifier($this->_name);
+        $this->_database->exec(
+            "INSERT INTO $tableName ($columnNames) SELECT $columnNames FROM $tmpTableName"
+        );
+
+        // Clean up
+        $this->_database->exec("DROP TABLE $tmpTableName");
+        $this->_database->exec('PRAGMA locking_mode = NORMAL');
+        $this->_database->exec('RELEASE ' . $savepoint);
+
+        // Rebuild stored PK
+        if (!is_array($columns)) {
+            $columns = array($columns);
+        }
+        $this->_primaryKey = array();
+        foreach ($columns as $column) {
+            $this->_primaryKey[$column] = $this->_columns[$column];
+        }
+    }
+
+    /**
      * Rename table to a unique temporary name
      *
      * @return string New table name

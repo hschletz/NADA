@@ -93,6 +93,34 @@ class Nada_Table_Pgsql extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    public function setPrimaryKey($columns)
+    {
+        if (!is_array($columns)) {
+            $columns = array($columns);
+        }
+        foreach ($columns as &$column) {
+            $column = $this->_database->prepareIdentifier($column);
+        }
+        unset ($column);
+
+        $oldPk = $this->_database->query(
+            'SELECT indexrelid::regclass::text FROM pg_index ' .
+            ' WHERE indrelid = CAST(? AS regclass) AND indisprimary = true',
+            $this->_name
+        );
+        if ($oldPk) {
+            $this->alter('DROP CONSTRAINT ' . $this->_database->quoteIdentifier($oldPk[0]['indexrelid']));
+        }
+        $this->alter(sprintf('ADD PRIMARY KEY(%s)', implode(', ', $columns)));
+
+        // Rebuild stored PK
+        $this->_primaryKey = array();
+        foreach ($columns as $column) {
+            $this->_primaryKey[$column] = $this->_columns[$column];
+        }
+    }
+
+    /** {@inheritdoc} */
     protected function _fetchIndexes()
     {
         // Get all indexes for this table

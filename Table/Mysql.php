@@ -79,6 +79,32 @@ class Nada_Table_Mysql extends Nada_Table
     }
 
     /** {@inheritdoc} */
+    public function setPrimaryKey($columns)
+    {
+        if (!is_array($columns)) {
+            $columns = array($columns);
+        }
+        foreach ($columns as &$column) {
+            $column = $this->_database->prepareIdentifier($column);
+        }
+        unset ($column);
+
+        $this->alter(
+            sprintf(
+                '%sADD PRIMARY KEY(%s)',
+                $this->_primaryKey ? 'DROP PRIMARY KEY, ' : '',
+                implode(', ', $columns)
+            )
+        );
+
+        // Rebuild stored PK
+        $this->_primaryKey = array();
+        foreach ($columns as $column) {
+            $this->_primaryKey[$column] = $this->_columns[$column];
+        }
+    }
+
+    /** {@inheritdoc} */
     protected function _fetchIndexes()
     {
         $columns = $this->_database->query(
