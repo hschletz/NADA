@@ -129,35 +129,28 @@ class Nada_Table_Sqlite extends Nada_Table
         // Preserve PK
         // TODO preserve other constraints
         $pkColumns = array();
-        foreach ($this->_primaryKey as $column) {
-            if ($name == $column->getName()) {
-                if ($attrib === null) {
-                    // Skip column about to be deleted
-                    continue;
-                } elseif ($attrib == 'name') {
-                    // Use new column name for PK
-                    $pkColumns[] = $value;
-                    continue;
+        if ($this->_primaryKey) {
+            foreach ($this->_primaryKey as $column) {
+                if ($name == $column->getName()) {
+                    if ($attrib === null) {
+                        // Skip column about to be deleted
+                        continue;
+                    } elseif ($attrib == 'name') {
+                        // Use new column name for PK
+                        $pkColumns[] = $value;
+                        continue;
+                    }
                 }
+                $pkColumns[] = $column->getName();
             }
-            $pkColumns[] = $column->getName();
         }
 
-        // Create savepoint instead of starting a transaction because calling
-        // code might already have started a transaction.
-        $this->_database->exec('SAVEPOINT ' . __FUNCTION__);
+        // Start exclusive operations
+        $savepoint = uniqid(__FUNCTION__);
+        $this->_database->exec('SAVEPOINT ' . $savepoint);
+        $this->_database->exec('PRAGMA locking_mode = EXCLUSIVE');
 
-        // Rename table to a unique temporary name
-        $tmpTableName = $this->_name;
-        $tableNames = $this->_database->getTableNames();
-        do {
-            $tmpTableName .= '_bak';
-        } while (in_array($tmpTableName, $tableNames));
-        // Use quoteIdentifier() instead of prepareIdentifier() because the
-        // temporary name is not identified as a keyword.
-        $tmpTableName = $this->_database->quoteIdentifier($tmpTableName);
-        $tableName = $this->_database->prepareIdentifier($this->_name);
-        $this->_database->exec("ALTER TABLE $tableName RENAME TO $tmpTableName");
+        $tmpTableName = $this->_renameToTmp();
 
         // Create table with new column specifications
         $this->_database->clearCache($this->_name);
@@ -178,21 +171,40 @@ class Nada_Table_Sqlite extends Nada_Table
         }
         $columnsOld = implode (', ', $columnsOld);
         $columnsNew = implode (', ', $columnsNew);
+        $tableName = $this->_database->prepareIdentifier($this->_name);
         $this->_database->exec(
             "INSERT INTO $tableName ($columnsNew) SELECT $columnsOld FROM $tmpTableName"
         );
 
-        // Drop old table
+        // Clean up
         $this->_database->exec("DROP TABLE $tmpTableName");
-
-        // Release savepoint
-        $this->_database->exec('RELEASE ' . __FUNCTION__);
+        $this->_database->exec('PRAGMA locking_mode = NORMAL');
+        $this->_database->exec('RELEASE ' . $savepoint);
 
         // Update column cache (update keys as well in case of renamed columns)
         $this->_columns = array();
         foreach ($newColumns as $column) {
             $this->_columns[$column->getName()] = $column;
         }
+    }
+
+    /**
+     * Rename table to a unique temporary name
+     *
+     * @return string New table name
+     */
+    protected function _renameToTmp()
+    {
+        $tmpTableName = $this->_name;
+        $tableNames = $this->_database->getTableNames();
+        do {
+            $tmpTableName .= '_bak';
+        } while (in_array($tmpTableName, $tableNames));
+        // Use quoteIdentifier() instead of prepareIdentifier() because the
+        // temporary name is not identified as a keyword.
+        $tmpTableName = $this->_database->quoteIdentifier($tmpTableName);
+        $this->alter("RENAME TO $tmpTableName");
+        return $tmpTableName;
     }
 
     /** {@inheritdoc} */
