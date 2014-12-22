@@ -125,9 +125,8 @@ class Nada_Table_Pgsql extends Nada_Table
     {
         // Get all indexes for this table
         $indexes = $this->_database->query(
-            'SELECT c.relname, i.indisunique, i.indkey ' .
-            'FROM pg_index i JOIN pg_class c ON c.oid = i.indexrelid ' .
-            'WHERE i.indrelid = CAST(? AS regclass) AND i.indisprimary = false',
+            'SELECT indexrelid::regclass::text, indisunique, indkey FROM pg_index ' .
+            'WHERE indrelid = CAST(? AS regclass) AND indisprimary = false',
             $this->_name
         );
         foreach ($indexes as $index) {
@@ -151,7 +150,11 @@ class Nada_Table_Pgsql extends Nada_Table
             }
 
             // Create index object.
-            $this->_indexes[$index['relname']] = new Nada_Index($index['relname'], $columnNames, $index['indisunique']);
+            $this->_indexes[$index['indexrelid']] = new Nada_Index(
+                $index['indexrelid'],
+                $columnNames,
+                $index['indisunique']
+            );
         }
     }
 }
