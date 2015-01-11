@@ -385,6 +385,29 @@ abstract class Nada_Column
     abstract protected function _setDatatype();
 
     /**
+     * Set/remove a NOT NULL constraint
+     *
+     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
+     * the operation will be performed on the database.
+     *
+     * @param bool $notNull
+     */
+    public function setNotNull($notNull)
+    {
+        if ($this->_notnull != $notNull) {
+            $this->_notnull = (bool) $notNull;
+            if ($this->_table) {
+                $this->_setNotNull();
+            }
+        }
+    }
+
+    /**
+     * DBMS-specific implementation for setting a column's NOT NULL constraint
+     **/
+    abstract protected function _setNotNull();
+
+    /**
      * Set Column comment
      *
      * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),

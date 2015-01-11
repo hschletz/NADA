@@ -179,6 +179,18 @@ class Nada_Column_Pgsql extends Nada_Column
     }
 
     /** {@inheritdoc} */
+    protected function _setNotNull()
+    {
+        $this->_table->alter(
+            sprintf(
+                'ALTER COLUMN %s %s NOT NULL',
+                $this->_database->prepareIdentifier($this->_name),
+                $this->_notnull ? 'SET' : 'DROP'
+            )
+        );
+    }
+
+    /** {@inheritdoc} */
     protected function _setComment()
     {
         $this->_database->exec(

@@ -181,6 +181,12 @@ class Nada_Column_Mysql extends Nada_Column
     }
 
     /** {@inheritdoc} */
+    protected function _setNotNull()
+    {
+        $this->_modify();
+    }
+
+    /** {@inheritdoc} */
     protected function _setComment()
     {
         $this->_modify();
