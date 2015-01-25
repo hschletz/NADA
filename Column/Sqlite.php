@@ -51,10 +51,16 @@ class Nada_Column_Sqlite extends Nada_Column
         $type = strtoupper($data['type']);
         if (strpos($type, 'INT') !== false) {
             $this->_datatype = Nada::DATATYPE_INTEGER;
-        } elseif (preg_match('/(CHAR|CLOB|TEXT)/', $type)) {
-            // CLOB matches SQLite's behavior closer than VARCHAR because there
-            // is no length constraint.
-            $this->_datatype = Nada::DATATYPE_CLOB;
+        } elseif (preg_match('/(CHAR|CLOB|TEXT)(\((\d+)\))?/', $type, $matches)) {
+            // Although SQLite ignores a length specification, it is preserved
+            // in the column definition. If a length is given, the type is
+            // interpreted as VARCHAR(length), otherwise as CLOB.
+            if (isset($matches[3])) {
+                $this->_datatype = Nada::DATATYPE_VARCHAR;
+                $this->_length = (integer) $matches[3];
+            } else {
+                $this->_datatype = Nada::DATATYPE_CLOB;
+            }
         } elseif (strpos($type, 'BLOB') !== false) {
             $this->_datatype = Nada::DATATYPE_BLOB;
         } elseif (preg_match('/(REAL|FLOA|DOUB)/', $type)) {

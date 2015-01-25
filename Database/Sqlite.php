@@ -112,7 +112,6 @@ class Nada_Database_Sqlite extends Nada_Database
         switch ($type) {
             case Nada::DATATYPE_INTEGER:
                 return 'INTEGER';
-            case Nada::DATATYPE_VARCHAR:
             case Nada::DATATYPE_CLOB:
                 return 'TEXT';
             case Nada::DATATYPE_TIMESTAMP:
@@ -137,7 +136,9 @@ class Nada_Database_Sqlite extends Nada_Database
             case Nada::DATATYPE_FLOAT:
                 return 'REAL';
             default:
-                return parent::getNativeDatatype($type, null, $cast); // SQLite does not honor $length
+                // SQLite ignores $length, but stores it with the column
+                // definition where it can later be reconstructed.
+                return parent::getNativeDatatype($type, $length, $cast);
         }
     }
 
