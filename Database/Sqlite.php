@@ -49,22 +49,6 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function timestampFormatIso()
-    {
-        // SQLite's date and time functions don't use timezone offsets.
-        // They support microseconds.
-        return 'yyyy-MM-ddTHH:mm:ss.S';
-    }
-
-    /** {@inheritdoc} */
-    public function timestampFormatPhp()
-    {
-        // SQLite's date and time functions don't use timezone offsets.
-        // They support microseconds.
-        return 'Y-m-d\TH:i:s.u';
-    }
-
-    /** {@inheritdoc} */
     public function getName()
     {
         // Return full path to the main database file

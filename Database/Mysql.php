@@ -64,22 +64,6 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function timestampFormatIso()
-    {
-        // MySQL would accept a timezone, but ignore it and issue a warning.
-        // Return format without timezone to avoid the warning.
-        return 'yyyy-MM-ddTHH:mm:ss';
-    }
-
-    /** {@inheritdoc} */
-    public function timestampFormatPhp()
-    {
-        // MySQL would accept a timezone, but ignore it and issue a warning.
-        // Return format without timezone to avoid the warning.
-        return 'Y-m-d\TH:i:s';
-    }
-
-    /** {@inheritdoc} */
     protected function _quoteIdentifier($identifier)
     {
         // Use backtick that works independently of ANSI_QUOTES setting

@@ -260,6 +260,8 @@ abstract class Nada_Database
      * understood by the underlying DBMS. It returns only the format
      * specification, not a formatted timestamp.
      *
+     * The format string does not contain a timezone specifier.
+     *
      * The retuned string uses ISO 8601 format specifiers which are not
      * understood by PHP's builtin functions. Use {@link timestampFormatPhp()}
      * for those functions. This method is for code that understands the ISO
@@ -278,7 +280,7 @@ abstract class Nada_Database
     {
         // Default implementation yields full ISO 8601 timestamp, like
         // 2011-10-17T17:19:38+02:00. Override if necessary.
-        return 'yyyy-MM-ddTHH:mm:ssZZZZ';
+        return 'yyyy-MM-dd HH:mm:ss';
     }
 
     /**
@@ -288,6 +290,8 @@ abstract class Nada_Database
      * suitable formatting function, will yield a date string that will be
      * understood by the underlying DBMS. It returns only the format
      * specification, not a formatted timestamp.
+     *
+     * The format string does not contain a timezone specifier.
      *
      * The retuned string uses PHP-style specifiers which are understood by
      * PHP's builtin functions. Use {@link timestampFormatIso()} for functions
@@ -306,7 +310,7 @@ abstract class Nada_Database
     {
         // Default implementation yields full ISO 8601 timestamp, like
         // 2011-10-17T17:19:38+02:00. Override if necessary.
-        return 'Y-m-d\TH:i:sP';
+        return 'Y-m-d H:i:s';
     }
 
     /**

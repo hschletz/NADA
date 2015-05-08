@@ -64,6 +64,20 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function timestampFormatIso()
+    {
+        // append microseconds to default format string
+        return 'yyyy-MM-dd HH:mm:ss.S';
+    }
+
+    /** {@inheritdoc} */
+    public function timestampFormatPhp()
+    {
+        // append microseconds to default format string
+        return 'Y-m-d H:i:s.u';
+    }
+
+    /** {@inheritdoc} */
     public function setStrictMode()
     {
         // Force standard compliant escaping of single quotes ('', not \')
