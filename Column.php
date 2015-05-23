@@ -417,7 +417,14 @@ abstract class Nada_Column
      */
     public function setDefault($default)
     {
-        if ($this->_default !== $default) {
+        // Since SQL types cannot be completely mapped to PHP types, a loose
+        // comparision is required, but changes to/from NULL must be taken into
+        // account.
+        if (
+            $this->_default === null and $default !== null or
+            $this->_default !== null and $default === null or
+            $this->_default != $default
+        ) {
             $this->_default = $default;
             if ($this->_table) {
                 $this->_setDefault();
