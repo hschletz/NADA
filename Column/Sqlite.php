@@ -139,6 +139,12 @@ class Nada_Column_Sqlite extends Nada_Column
     }
 
     /** {@inheritdoc} */
+    protected function _setDefault()
+    {
+        $this->_table->alterColumn($this->_name, 'default', $this->_default);
+    }
+
+    /** {@inheritdoc} */
     protected function _setNotNull()
     {
         $this->_table->alterColumn($this->_name, 'notnull', $this->_notnull);

@@ -408,6 +408,44 @@ abstract class Nada_Column
     abstract protected function _setNotNull();
 
     /**
+     * Set/remove default value
+     *
+     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
+     * the operation will be performed on the database.
+     *
+     * @param mixed $default
+     */
+    public function setDefault($default)
+    {
+        if ($this->_default !== $default) {
+            $this->_default = $default;
+            if ($this->_table) {
+                $this->_setDefault();
+            }
+        }
+    }
+
+    /**
+     * DBMS-specific implementation for setting a column's default value
+     **/
+    protected function _setDefault()
+    {
+        if ($this->_default === null) {
+            $this->_table->alter(
+                sprintf('ALTER COLUMN %s DROP DEFAULT', $this->_database->prepareIdentifier($this->_name))
+            );
+        } else {
+            $this->_table->alter(
+                sprintf(
+                    'ALTER COLUMN %s SET DEFAULT %s',
+                    $this->_database->prepareIdentifier($this->_name),
+                    $this->_database->prepareValue($this->_default, $this->_datatype)
+                )
+            );
+        }
+    }
+
+    /**
      * Set Column comment
      *
      * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
