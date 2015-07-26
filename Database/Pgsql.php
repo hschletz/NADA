@@ -64,20 +64,6 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
-    public function timestampFormatIso()
-    {
-        // append microseconds to default format string
-        return 'yyyy-MM-dd HH:mm:ss.S';
-    }
-
-    /** {@inheritdoc} */
-    public function timestampFormatPhp()
-    {
-        // append microseconds to default format string
-        return 'Y-m-d H:i:s.u';
-    }
-
-    /** {@inheritdoc} */
     public function setStrictMode()
     {
         // Force standard compliant escaping of single quotes ('', not \')
@@ -96,6 +82,8 @@ class Nada_Database_Pgsql extends Nada_Database
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
+            case NADA::DATATYPE_TIMESTAMP:
+                return 'TIMESTAMP(0)';
             case Nada::DATATYPE_CLOB:
                 return 'TEXT';
             case Nada::DATATYPE_BLOB:
