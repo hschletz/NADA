@@ -49,6 +49,12 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function booleanLiteral($value)
+    {
+        return $value ? '1' : '0';
+    }
+
+    /** {@inheritdoc} */
     public function getName()
     {
         // Return full path to the main database file

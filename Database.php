@@ -253,6 +253,21 @@ abstract class Nada_Database
     }
 
     /**
+     * Return a boolean literal
+     *
+     * Returns a string that can be inserted into an SQL statement to represent
+     * a boolean literal. The default implementation provides "TRUE" and
+     * "FALSE".
+     *
+     * @param bool $value
+     * @return string
+     */
+    public function booleanLiteral($value)
+    {
+        return $value ? 'TRUE' : 'FALSE';
+    }
+
+    /**
      * Return an ISO style format string with a DBMS-recognized timestamp format
      *
      * This method returns a timestamp format string that, when passed to a
