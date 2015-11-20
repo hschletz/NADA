@@ -64,6 +64,31 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function convertTimestampColumns()
+    {
+        $columns = $this->query(
+            'SELECT table_name, column_name FROM information_schema.columns WHERE data_type = ? AND table_schema = ?',
+            array('timestamp', $this->_tableSchema)
+        );
+        if ($columns) {
+            $emulatedDatatypes = $this->emulatedDatatypes; // preserve
+            if (!in_array(Nada::DATATYPE_TIMESTAMP, $emulatedDatatypes)) {
+                // Emulate datatype temporarily to allow manipulation
+                $this->emulatedDatatypes[] = Nada::DATATYPE_TIMESTAMP;
+            }
+            foreach ($columns as $column) {
+                $column = $this->getTable($column['table_name'])->getColumn(strtolower($column['column_name']));
+                if ($column->getDefault() == 'CURRENT_TIMESTAMP') {
+                    $column->setDefault(null);
+                }
+                $column->setDatatype(Nada::DATATYPE_TIMESTAMP);
+            }
+            $this->emulatedDatatypes = $emulatedDatatypes; // restore
+        }
+        return count($columns);
+    }
+
+    /** {@inheritdoc} */
     protected function _quoteIdentifier($identifier)
     {
         // Use backtick that works independently of ANSI_QUOTES setting

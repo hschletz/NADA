@@ -329,6 +329,23 @@ abstract class Nada_Database
     }
 
     /**
+     * Convert timestamp columns
+     *
+     * Converts all timestamp columns in a way that allows for maximum
+     * portability. In particular, portable timestamps don't support fractional
+     * seconds or time zones. Some implementations like MySQL's TIMESTAMP
+     * datatype (as opposed to the DATETIME type) expose nonstandard behavior
+     * which is removed as well.
+     *
+     * @return integer number of converted columns
+     */
+    public function convertTimestampColumns()
+    {
+        // DBMS-specific actions provided by subclass
+        return 0;
+    }
+
+    /**
      * Prepare an identifier (table/column name etc.) for insertion into an SQL statement
      *
      * Inserting identifiers from external sources into an SQL statement is

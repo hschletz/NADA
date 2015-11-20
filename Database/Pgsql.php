@@ -64,6 +64,22 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function convertTimestampColumns()
+    {
+        $columns = $this->query(
+            'SELECT table_name, column_name FROM information_schema.columns ' .
+            'WHERE datetime_precision != 0 AND table_schema = ? AND data_type IN(?, ?)',
+            array($this->_tableSchema, 'timestamp with time zone', 'timestamp without time zone')
+        );
+        foreach ($columns as $column) {
+            $this->getTable($column['table_name'])
+                 ->getColumn($column['column_name'])
+                 ->setDatatype(Nada::DATATYPE_TIMESTAMP);
+        }
+        return count($columns);
+    }
+
+    /** {@inheritdoc} */
     public function setStrictMode()
     {
         // Force standard compliant escaping of single quotes ('', not \')
