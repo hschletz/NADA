@@ -115,7 +115,7 @@ class Nada_Table_Mysql extends Nada_Table
         // Group the result set by index name, aggregate columns
         $indexes = array();
         foreach ($columns as $column) {
-            $indexes[$column['index_name']]['columns'][] = $column['column_name'];
+            $indexes[$column['index_name']]['columns'][] = strtolower($column['column_name']);
             $indexes[$column['index_name']]['unique'] = !$column['non_unique']; // Same for every row in the index
         }
         // Create index objects
