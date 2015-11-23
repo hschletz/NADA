@@ -55,6 +55,15 @@ class Nada_Database_Sqlite extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function setTimezone($timezone = null)
+    {
+        // UTC is supported by default. Other values are invalid.
+        if ($timezone !== null) {
+            throw new \LogicException('Non-default timezone not supported for SQLite');
+        }
+    }
+
+    /** {@inheritdoc} */
     public function getName()
     {
         // Return full path to the main database file

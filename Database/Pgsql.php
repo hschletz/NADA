@@ -64,6 +64,15 @@ class Nada_Database_Pgsql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function setTimezone($timezone = null)
+    {
+        if ($timezone === null) {
+            $timezone = 'UTC';
+        }
+        $this->exec('SET timezone TO ' . $this->prepareValue($timezone, \Nada::DATATYPE_VARCHAR));
+    }
+
+    /** {@inheritdoc} */
     public function convertTimestampColumns()
     {
         $columns = $this->query(

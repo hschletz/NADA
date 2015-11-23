@@ -268,6 +268,25 @@ abstract class Nada_Database
     }
 
     /**
+     * Set timezone for the current connection
+     * 
+     * The timezone affects the presentation of timestamp values, like the
+     * result of CURRENT_TIMESTAMP. Timestamp columns are typically not affected
+     * and they hold the value that was originally assigned.
+     *
+     * The optional argument can set a particular timezone in a DBMS-specific
+     * format. Leaving the argument at NULL is a portable way to set the
+     * timezone to UTC. This is strongly recommended.
+     *
+     * @param string $timezone
+     * @throws \LogicException if the requested operation is not implemented.
+     */
+    public function setTimezone($timezone = null)
+    {
+        throw new \LogicException('setTimezone() not implemented');
+    }
+
+    /**
      * Return an ISO style format string with a DBMS-recognized timestamp format
      *
      * This method returns a timestamp format string that, when passed to a

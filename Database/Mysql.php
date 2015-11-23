@@ -64,6 +64,15 @@ class Nada_Database_Mysql extends Nada_Database
     }
 
     /** {@inheritdoc} */
+    public function setTimezone($timezone = null)
+    {
+        if ($timezone === null) {
+            $timezone = '+00:00';
+        }
+        $this->exec('SET time_zone = ' . $this->prepareValue($timezone, \Nada::DATATYPE_VARCHAR));
+    }
+
+    /** {@inheritdoc} */
     public function convertTimestampColumns()
     {
         $columns = $this->query(
