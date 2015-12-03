@@ -45,15 +45,27 @@ NADA is released under a revised BSD license. You can find the full license in
 the LICENSE file in the same directory that contains this file.
 
 
+Installation
+------------
+
+NADA can be installed via composer. Just add it to your project's composer.json:
+
+    {
+        "require": {
+            "hschletz/nada": "dev-master"
+        }
+    }
+
+The Nada class will be available via the composer-generated autoloader. If you
+don't install via composer, your code has to include Nada.php manually.
+
+
 Usage
 -----
 
-The NADA directory does not need to be in the include path. Once the script
-Nada.php is loaded, the factory method will find and include all required files.
-
 Example for PDO:
 
-    require_once 'path/to/NADA/Nada.php';
+    require_once 'path/to/NADA/Nada.php'; // only if not installed by composer
     $pdo = new PDO($dsn, $user, $password);
     $nada_database = Nada::factory($pdo);
 
