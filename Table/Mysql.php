@@ -123,7 +123,7 @@ class Mysql extends AbstractTable
         }
         // Create index objects
         foreach ($indexes as $name => $index) {
-            $this->_indexes[$name] = new \Nada_Index($name, $index['columns'], $index['unique']);
+            $this->_indexes[$name] = new \Nada\Index($name, $index['columns'], $index['unique']);
         }
     }
 

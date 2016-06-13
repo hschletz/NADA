@@ -89,7 +89,7 @@ abstract class AbstractTable
      * This table's indexes
      *
      * This is an associative array populated by _fetchIndexes().
-     * The index name is the key, and the value is a Nada_Index object.
+     * The index name is the key, and the value is a \Nada\Index object.
      * @var array
      */
     protected $_indexes = array();
@@ -513,7 +513,7 @@ EOT
      *
      * Implicit indexes, as for the primary key, are not included in the result.
      *
-     * @return \Nada_Index[]
+     * @return \Nada\Index[]
      */
     public function getIndexes()
     {
@@ -562,7 +562,7 @@ EOT
      *   of keys.
      * - **primary_key**: array of column names for primary key
      * - **indexes**: array of indexes (numeric or associative, depending on
-     *   $assoc). See Nada_Index::toArray() for a description of keys.
+     *   $assoc). See \Nada\Index::toArray() for a description of keys.
      * - **mysql**: (MySQL only) array with MySQL-specific data:
      *   - **engine**: table engine
      *

@@ -293,7 +293,7 @@ class Sqlite extends AbstractTable
             }
             // Ordering of result set is undocumented. Sort manually to preserve order of columns.
             ksort($columns);
-            $this->_indexes[$name] = new \Nada_Index($name, $columns, $unique[$name]);
+            $this->_indexes[$name] = new \Nada\Index($name, $columns, $unique[$name]);
         }
     }
 }

@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada;
+
 /**
  * Index class
  *
@@ -35,7 +38,7 @@
  * @package NADA
  * @api
  */
-class Nada_Index
+class Index
 {
     /**
      * Index name

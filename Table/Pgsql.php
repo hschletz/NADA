@@ -153,7 +153,7 @@ class Pgsql extends AbstractTable
             }
 
             // Create index object.
-            $this->_indexes[$index['indexrelid']] = new \Nada_Index(
+            $this->_indexes[$index['indexrelid']] = new \Nada\Index(
                 $index['indexrelid'],
                 $columnNames,
                 $index['indisunique']
