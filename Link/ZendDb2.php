@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Link;
+
 /**
  * Link to Zend\Db\Adapter\Adapter
  *
@@ -34,7 +37,7 @@
  * @package NADA
  * @internal
  */
-class Nada_Link_ZendDb2 extends Nada_Link
+class ZendDb2 extends AbstractLink
 {
 
     /** {@inheritdoc} */
@@ -48,7 +51,7 @@ class Nada_Link_ZendDb2 extends Nada_Link
             case 'Sqlite':
                 return 'Sqlite';
             default:
-                throw new UnexpectedValueException('Unsupported DBMS type');
+                throw new \UnexpectedValueException('Unsupported DBMS type');
         }
     }
 

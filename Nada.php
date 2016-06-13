@@ -116,10 +116,10 @@ class Nada
             throw new InvalidArgumentException('Unsupported link type');
         }
 
-        // Create matching Nada_Link object
-        self::_requireOnce('Link.php');
+        // Create matching link object
+        self::_requireOnce('Link/AbstractLink.php');
         self::_requireOnce("Link/$class.php");
-        $class = "Nada_Link_$class";
+        $class = "Nada\Link\\$class";
         $link = new $class($link);
 
         // Load matching classes

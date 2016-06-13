@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Link;
+
 /**
  * Link to MDB2 based classes
  *
@@ -34,7 +37,7 @@
  * @package NADA
  * @internal
  */
-class Nada_Link_Mdb2 extends Nada_Link
+class Mdb2 extends AbstractLink
 {
 
     /** {@inheritdoc} */
@@ -46,25 +49,25 @@ class Nada_Link_Mdb2 extends Nada_Link
             case 'pgsql':
                 return 'Pgsql';
             default:
-                throw new UnexpectedValueException('Unsupported DBMS type');
+                throw new \UnexpectedValueException('Unsupported DBMS type');
         }
     }
 
     /** {@inheritdoc} */
     public function query($statement, $params)
     {
-        $statement = $this->_link->prepare($statement, null, MDB2_PREPARE_RESULT);
-        if (PEAR::isError($statement)) {
-            throw new RuntimeException($statement->getMessage());
+        $statement = $this->_link->prepare($statement, null, \MDB2_PREPARE_RESULT);
+        if (\PEAR::isError($statement)) {
+            throw new \RuntimeException($statement->getMessage());
         }
         $result = $statement->execute($params);
-        if (PEAR::isError($result)) {
-            throw new RuntimeException($result->getMessage());
+        if (\PEAR::isError($result)) {
+            throw new \RuntimeException($result->getMessage());
         }
 
         // Don't use fetchAll() because keys must be turned lowercase
         $rowset = array();
-        while ($row = $result->fetchRow(MDB2_FETCHMODE_ASSOC)) {
+        while ($row = $result->fetchRow(\MDB2_FETCHMODE_ASSOC)) {
             foreach ($row as $column => $value) {
                 $output[strtolower($column)] = $value;
             }
@@ -76,13 +79,13 @@ class Nada_Link_Mdb2 extends Nada_Link
     /** {@inheritdoc} */
     public function exec($statement, $params)
     {
-        $statement = $this->_link->prepare($statement, null, MDB2_PREPARE_MANIP);
-        if (PEAR::isError($statement)) {
-            throw new RuntimeException($statement->getMessage());
+        $statement = $this->_link->prepare($statement, null, \MDB2_PREPARE_MANIP);
+        if (\PEAR::isError($statement)) {
+            throw new \RuntimeException($statement->getMessage());
         }
         $result = $statement->execute($params);
-        if (PEAR::isError($result)) {
-            throw new RuntimeException($result->getMessage());
+        if (\PEAR::isError($result)) {
+            throw new \RuntimeException($result->getMessage());
         }
         return $result;
     }

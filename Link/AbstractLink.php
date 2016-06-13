@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Link;
+
 /**
  * Abstract link class
  *
@@ -34,14 +37,14 @@
  * database access methods. It is not intended to be used directly in an
  * application, but only internally within NADA methods.
  *
- * To add support for a particular database access method, derive a class from
- * Nada_Link and place it in the Link/ directory. Implement all methods that are
- * declared abstract in this class. Additionally, add detection for the link
- * type in {@link Nada::factory()}.
+ * To add support for a particular database access method, derive a class and
+ * implement all methods that are declared abstract in this class. Additionally,
+ * add detection for the link type in \Nada::factory().
+ *
  * @package NADA
  * @internal
  */
-abstract class Nada_Link
+abstract class AbstractLink
 {
     /**
      * Database link

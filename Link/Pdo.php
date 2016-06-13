@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Link;
+
 /**
  * Link to PDO based classes
  *
@@ -34,13 +37,13 @@
  * @package NADA
  * @internal
  */
-class Nada_Link_Pdo extends Nada_Link
+class Pdo extends AbstractLink
 {
 
     /** {@inheritdoc} */
     public function getDbmsSuffix()
     {
-        switch ($this->_link->getAttribute(PDO::ATTR_DRIVER_NAME)) {
+        switch ($this->_link->getAttribute(\PDO::ATTR_DRIVER_NAME)) {
             case 'mysql':
                 return 'Mysql';
             case 'pgsql':
@@ -48,7 +51,7 @@ class Nada_Link_Pdo extends Nada_Link
             case 'sqlite':
                 return 'Sqlite';
             default:
-                throw new UnexpectedValueException('Unsupported DBMS type');
+                throw new \UnexpectedValueException('Unsupported DBMS type');
         }
     }
 
@@ -66,7 +69,7 @@ class Nada_Link_Pdo extends Nada_Link
 
         // Don't use fetchAll() because keys must be turned lowercase
         $rowset = array();
-        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
             foreach ($row as $column => $value) {
                 $output[strtolower($column)] = $value;
             }
@@ -93,7 +96,7 @@ class Nada_Link_Pdo extends Nada_Link
     /** {@inheritdoc} */
     public function quoteValue($value, $datatype)
     {
-        return $this->_link->quote((string)$value, PDO::PARAM_STR);
+        return $this->_link->quote((string)$value, \PDO::PARAM_STR);
     }
 
     /**
@@ -104,7 +107,7 @@ class Nada_Link_Pdo extends Nada_Link
     protected function _throw($object)
     {
         $error = $object->errorInfo();
-        throw new RuntimeException(
+        throw new \RuntimeException(
             sprintf(
                 'PDO operation returned SQLSTATE %s: Error %s (%s)',
                 $error[0],

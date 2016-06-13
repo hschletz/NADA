@@ -42,8 +42,8 @@ namespace Nada\Database;
  *
  * To add support for a particular DBMS, derive a class and override any method
  * if the default implementation is not suitable. Additionally, add detection
- * for the DBMS in all \Nada_Link derived classes for those database abstraction
- * layers that support this DBMS.
+ * for the DBMS in all \Nada\Link\AbstractLink derived classes for those
+ * database abstraction layers that support this DBMS.
  *
  * @package NADA
  * @api
@@ -52,7 +52,7 @@ abstract class AbstractDatabase
 {
     /**
      * Database link
-     * @var Nada_Link
+     * @var \Nada\Link\AbstractLink
      */
     protected $_link;
 
@@ -129,7 +129,7 @@ abstract class AbstractDatabase
 
     /**
      * Constructor
-     * @param Nada_Link Database link
+     * @param \Nada\Link\AbstractLink Database link
      */
     function __construct($link)
     {

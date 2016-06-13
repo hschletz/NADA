@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Link;
+
 /**
  * Link to Zend_Db_Adapter based classes
  *
@@ -34,22 +37,22 @@
  * @package NADA
  * @internal
  */
-class Nada_Link_ZendDb extends Nada_Link
+class ZendDb extends AbstractLink
 {
 
     /** {@inheritdoc} */
     public function getDbmsSuffix()
     {
-        if ($this->_link instanceof Zend_Db_Adapter_Pdo_Mysql) {
+        if ($this->_link instanceof \Zend_Db_Adapter_Pdo_Mysql) {
             return 'Mysql';
-        } elseif ($this->_link instanceof Zend_Db_Adapter_Mysqli) {
+        } elseif ($this->_link instanceof \Zend_Db_Adapter_Mysqli) {
             return 'Mysql';
-        } elseif ($this->_link instanceof Zend_Db_Adapter_Pdo_Pgsql) {
+        } elseif ($this->_link instanceof \Zend_Db_Adapter_Pdo_Pgsql) {
             return 'Pgsql';
-        } elseif ($this->_link instanceof Zend_Db_Adapter_Pdo_Sqlite) {
+        } elseif ($this->_link instanceof \Zend_Db_Adapter_Pdo_Sqlite) {
             return 'Sqlite';
         } else {
-            throw new UnexpectedValueException('Unsupported DBMS type');
+            throw new \UnexpectedValueException('Unsupported DBMS type');
         }
     }
 
@@ -60,7 +63,7 @@ class Nada_Link_ZendDb extends Nada_Link
 
         // Don't use fetchAll() because keys must be turned lowercase
         $rowset = array();
-        while ($row = $statement->fetch(Zend_Db::FETCH_ASSOC)) {
+        while ($row = $statement->fetch(\Zend_Db::FETCH_ASSOC)) {
             foreach ($row as $column => $value) {
                 $output[strtolower($column)] = $value;
             }
