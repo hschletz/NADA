@@ -66,7 +66,7 @@ abstract class Nada_Table
      * This table's columns
      *
      * This is an associative array populated by {@link _fetchColumns()}.
-     * The column name is the key, and the value is a Nada_Column derived class.
+     * The column name is the key, and the value is a \Nada\Column\AbstractColumn derived object.
      * @var array
      */
     protected $_columns;
@@ -77,7 +77,7 @@ abstract class Nada_Table
      * This is always an array, even for single column primary keys. The columns
      * are arranged in the correct order.
      *
-     * @var array[Nada_Column]
+     * @var \Nada\Column\AbstractColumn[]
      */
     protected $_primaryKey;
 
@@ -263,7 +263,7 @@ EOT
     /**
      * Return a single column
      * @param $name Column name
-     * @return Nada_Column Column interface
+     * @return \Nada\Column\AbstractColumn Column interface
      */
     public function getColumn($name)
     {
@@ -273,7 +273,7 @@ EOT
 
     /**
      * Return all columns
-     * @return array Array of Nada_Column objects with column names as keys
+     * @return array Array of \Nada\Column\AbstractColumn objects with column names as keys
      */
     public function getColumns()
     {
@@ -317,7 +317,7 @@ EOT
     /**
      * Return primary key
      *
-     * @return array[Nada_Column]
+     * @return \Nada\Column\AbstractColumn[]
      */
     public function getPrimaryKey()
     {
@@ -364,7 +364,7 @@ EOT
      * @param mixed $default Default value (DEFAULT: NULL)
      * @param bool $autoIncrement Auto increment property (default: FALSE)
      * @param string $comment Column comment (default: NULL)
-     * @return Nada_Column object describing the generated column
+     * @return \Nada\Column\AbstractColumn object describing the generated column
      **/
     public final function addColumn(
         $name,
@@ -391,9 +391,10 @@ EOT
 
 
     /**
-     * Add a column using a Nada_Column object
-     * @param Nada_Column Column object
-     * @return Nada_Column object describing the generated column
+     * Add a column using a column object
+     *
+     * @param \Nada\Column\AbstractColumn Column object
+     * @return \Nada\Column\AbstractColumn object describing the generated column
      **/
     public function addColumnObject($column)
     {
@@ -429,7 +430,8 @@ EOT
     /**
      * Internal method to rename a column. Applications must not use this - the
      * column's setName() method is the correct way to rename a column.
-     * @param Nada_Column $column Column object
+     *
+     * @param \Nada\Column\AbstractColumn $column Column object
      * @param string $name New name
      * @internal
      **/
@@ -449,7 +451,8 @@ EOT
 
     /**
      * DBMS-specific implementation for renaming a column
-     * @param Nada_Column $column Column object
+     *
+     * @param \Nada\Column\AbstractColumn $column Column object
      * @param string $name New name
      **/
     abstract protected function _renameColumn($column, $name);
@@ -562,7 +565,8 @@ EOT
      *
      * - **name**: the table name
      * - **columns**: array of columns (numeric or associative, depending on
-     *   $assoc). See Nada_Column::toArray() for a description of keys.
+     *   $assoc). See \Nada\Column\AbstractColumn::toArray() for a description
+     *   of keys.
      * - **primary_key**: array of column names for primary key
      * - **indexes**: array of indexes (numeric or associative, depending on
      *   $assoc). See Nada_Index::toArray() for a description of keys.

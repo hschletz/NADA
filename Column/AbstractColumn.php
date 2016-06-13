@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Column;
+
 /**
  * Abstract column class
  *
@@ -36,7 +39,7 @@
  * @package NADA
  * @api
  */
-abstract class Nada_Column
+abstract class AbstractColumn
 {
     /**
      * Database link
@@ -205,7 +208,7 @@ abstract class Nada_Column
                 $this->_notnull = true;
                 break;
             default:
-                throw new UnexpectedValueException('Invalid yes/no type: ' . $data['is_nullable']);
+                throw new \UnexpectedValueException('Invalid yes/no type: ' . $data['is_nullable']);
         }
     }
 
@@ -337,7 +340,7 @@ abstract class Nada_Column
     public function setName($name)
     {
         if (strlen($name) == 0) {
-            throw new InvalidArgumentException('Column name must not be empty');
+            throw new \InvalidArgumentException('Column name must not be empty');
         }
         if ($this->_table) {
             // Call the table method before the property gets updated because the

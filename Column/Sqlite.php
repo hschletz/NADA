@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Column;
+
 /**
  * Column class for SQLite
  *
  * This class overrides methods with SQLite-specific implementations.
  * @package NADA
  */
-class Nada_Column_Sqlite extends Nada_Column
+class Sqlite extends AbstractColumn
 {
     /** {@inheritdoc} */
     protected function _parseName($data)
@@ -50,21 +53,21 @@ class Nada_Column_Sqlite extends Nada_Column
         // http://www.sqlite.org/datatype3.html#affname
         $type = strtoupper($data['type']);
         if (strpos($type, 'INT') !== false) {
-            $this->_datatype = Nada::DATATYPE_INTEGER;
+            $this->_datatype = \Nada::DATATYPE_INTEGER;
         } elseif (preg_match('/(CHAR|CLOB|TEXT).*?(\((\d+)\))?$/', $type, $matches)) {
             // Although SQLite ignores a length specification, it is preserved
             // in the column definition. If a length is given, the type is
             // interpreted as VARCHAR(length), otherwise as CLOB.
             if (isset($matches[3])) {
-                $this->_datatype = Nada::DATATYPE_VARCHAR;
+                $this->_datatype = \Nada::DATATYPE_VARCHAR;
                 $this->_length = (integer) $matches[3];
             } else {
-                $this->_datatype = Nada::DATATYPE_CLOB;
+                $this->_datatype = \Nada::DATATYPE_CLOB;
             }
         } elseif (strpos($type, 'BLOB') !== false) {
-            $this->_datatype = Nada::DATATYPE_BLOB;
+            $this->_datatype = \Nada::DATATYPE_BLOB;
         } elseif (preg_match('/(REAL|FLOA|DOUB)/', $type)) {
-            $this->_datatype = Nada::DATATYPE_FLOAT;
+            $this->_datatype = \Nada::DATATYPE_FLOAT;
         } else {
             UnexpectedValueException('Unrecognized SQLite Datatype: ' . $data['type']);
         }
@@ -98,7 +101,7 @@ class Nada_Column_Sqlite extends Nada_Column
         $this->_autoIncrement = (
             $data['pk'] and
             $data['pkColumnCount'] == 1 and
-            $this->_datatype == Nada::DATATYPE_INTEGER
+            $this->_datatype == \Nada::DATATYPE_INTEGER
         );
     }
 

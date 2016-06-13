@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Column;
+
 /**
  * Column class for MySQL
  *
  * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
-class Nada_Column_Mysql extends Nada_Column
+class Mysql extends AbstractColumn
 {
 
     /** {@inheritdoc} */
@@ -41,66 +44,66 @@ class Nada_Column_Mysql extends Nada_Column
     {
         switch ($data['data_type']) {
             case 'int':
-                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_datatype = \Nada::DATATYPE_INTEGER;
                 $this->_length = 32;
                 break;
             case 'varchar':
-                $this->_datatype = Nada::DATATYPE_VARCHAR;
+                $this->_datatype = \Nada::DATATYPE_VARCHAR;
                 $this->_length = $data['character_maximum_length'];
                 break;
             case 'datetime':
-                $this->_datatype = Nada::DATATYPE_TIMESTAMP;
+                $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
                 break;
             case 'date':
-                $this->_datatype = Nada::DATATYPE_DATE;
+                $this->_datatype = \Nada::DATATYPE_DATE;
                 break;
             case 'tinytext':
             case 'text':
             case 'mediumtext':
             case 'longtext':
-                $this->_datatype = Nada::DATATYPE_CLOB;
+                $this->_datatype = \Nada::DATATYPE_CLOB;
                 break;
             case 'tinyblob':
             case 'blob':
             case 'mediumblob':
             case 'longblob':
-                $this->_datatype = Nada::DATATYPE_BLOB;
+                $this->_datatype = \Nada::DATATYPE_BLOB;
                 break;
             case 'tinyint':
-                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_datatype = \Nada::DATATYPE_INTEGER;
                 $this->_length = 8;
                 break;
             case 'smallint':
-                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_datatype = \Nada::DATATYPE_INTEGER;
                 $this->_length = 16;
                 break;
             case 'bigint'://
-                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_datatype = \Nada::DATATYPE_INTEGER;
                 $this->_length = 64;
                 break;
             case 'decimal'://
-                $this->_datatype = Nada::DATATYPE_DECIMAL;
+                $this->_datatype = \Nada::DATATYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
             case 'float':
-                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_datatype = \Nada::DATATYPE_FLOAT;
                 $this->_length = 24;
                 break;
             case 'double':
-                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_datatype = \Nada::DATATYPE_FLOAT;
                 $this->_length = 53;
                 break;
             case 'timestamp':
-                if (in_array(Nada::DATATYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
-                    $this->_datatype = Nada::DATATYPE_TIMESTAMP;
+                if (in_array(\Nada::DATATYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
+                    $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
                 } else {
-                    throw new UnexpectedValueException(
+                    throw new \UnexpectedValueException(
                         'Enable emulation for Nada::DATATYPE_TIMESTAMP to accept MySQL timestamp datatype.'
                     );
                 }
                 break;
             default:
-                throw new UnexpectedValueException('Unknown MySQL Datatype: ' . $data['data_type']);
+                throw new \UnexpectedValueException('Unknown MySQL Datatype: ' . $data['data_type']);
         }
     }
 
@@ -143,18 +146,18 @@ class Nada_Column_Mysql extends Nada_Column
         }
 
         if ($this->_autoIncrement) {
-            if ($this->_datatype != Nada::DATATYPE_INTEGER and $this->_datatype != Nada::DATATYPE_FLOAT) {
-                throw new DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
+            if ($this->_datatype != \Nada::DATATYPE_INTEGER and $this->_datatype != \Nada::DATATYPE_FLOAT) {
+                throw new \DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
             }
             if ($this->_default !== null and $this->_default !== 0) {
-                throw new DomainException('Invalid default for autoincrement column: ' . $this->_default);
+                throw new \DomainException('Invalid default for autoincrement column: ' . $this->_default);
             }
             $sql .= ' AUTO_INCREMENT';
         }
 
         if ($this->_comment !== null) {
             $sql .= ' COMMENT ';
-            $sql .= $this->_database->prepareValue($this->_comment, Nada::DATATYPE_VARCHAR);
+            $sql .= $this->_database->prepareValue($this->_comment, \Nada::DATATYPE_VARCHAR);
         }
 
         return $sql;

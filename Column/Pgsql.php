@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Column;
+
 /**
  * Column class for PostgreSQL
  *
  * This class overrides methods with PostgreSQL-specific implementations.
  * @package NADA
  */
-class Nada_Column_Pgsql extends Nada_Column
+class Pgsql extends AbstractColumn
 {
 
     /** {@inheritdoc} */
@@ -43,39 +46,39 @@ class Nada_Column_Pgsql extends Nada_Column
             case 'integer':
             case 'smallint':
             case 'bigint':
-                $this->_datatype = Nada::DATATYPE_INTEGER;
+                $this->_datatype = \Nada::DATATYPE_INTEGER;
                 $this->_length = $data['numeric_precision'];
                 break;
             case 'character varying':
-                $this->_datatype = Nada::DATATYPE_VARCHAR;
+                $this->_datatype = \Nada::DATATYPE_VARCHAR;
                 $this->_length = $data['character_maximum_length'];
                 break;
             case 'timestamp without time zone':
-                $this->_datatype = Nada::DATATYPE_TIMESTAMP;
+                $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
                 break;
             case 'date':
-                $this->_datatype = Nada::DATATYPE_DATE;
+                $this->_datatype = \Nada::DATATYPE_DATE;
                 break;
             case 'boolean':
-                $this->_datatype = Nada::DATATYPE_BOOL;
+                $this->_datatype = \Nada::DATATYPE_BOOL;
                 break;
             case 'text':
-                $this->_datatype = Nada::DATATYPE_CLOB;
+                $this->_datatype = \Nada::DATATYPE_CLOB;
                 break;
             case 'bytea':
-                $this->_datatype = Nada::DATATYPE_BLOB;
+                $this->_datatype = \Nada::DATATYPE_BLOB;
                 break;
             case 'numeric':
-                $this->_datatype = Nada::DATATYPE_DECIMAL;
+                $this->_datatype = \Nada::DATATYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
             case 'double precision':
             case 'real':
-                $this->_datatype = Nada::DATATYPE_FLOAT;
+                $this->_datatype = \Nada::DATATYPE_FLOAT;
                 $this->_length = $data['numeric_precision'];
                 break;
             default:
-                throw new UnexpectedValueException('Unknown PostgreSQL Datatype: ' . $data['data_type']);
+                throw new \UnexpectedValueException('Unknown PostgreSQL Datatype: ' . $data['data_type']);
         }
     }
 
@@ -136,18 +139,18 @@ class Nada_Column_Pgsql extends Nada_Column
     public function getDefinition()
     {
         if ($this->_autoIncrement) {
-            if ($this->_datatype != Nada::DATATYPE_INTEGER) {
-                throw new DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
+            if ($this->_datatype != \Nada::DATATYPE_INTEGER) {
+                throw new \DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
             }
             if ($this->_default !== null) {
-                throw new DomainException('Invalid default for autoincrement column: ' . $this->_default);
+                throw new \DomainException('Invalid default for autoincrement column: ' . $this->_default);
             }
             if ($this->_length == '32' or $this->_length === null) {
                 $sql = 'SERIAL';
             } elseif ($this->_length == '64') {
                 $sql = 'BIGSERIAL';
             } else {
-                throw new DomainException('Invalid length for autoincrement: ' . $this->_length);
+                throw new \DomainException('Invalid length for autoincrement: ' . $this->_length);
             }
         } else {
             $sql = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
@@ -199,7 +202,7 @@ class Nada_Column_Pgsql extends Nada_Column
             '.' .
             $this->_database->prepareIdentifier($this->_name) .
             ' IS ' .
-            $this->_database->prepareValue($this->_comment, Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($this->_comment, \Nada::DATATYPE_VARCHAR)
         );
     }
 }

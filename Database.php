@@ -731,11 +731,11 @@ abstract class Nada_Database
     /**
      * Create empty column object
      *
-     * @return Nada_Column DBMS-specific subclass
+     * @return \Nada\Column\AbstractColumn DBMS-specific subclass
      */
     public function createColumnObject()
     {
-        $class = 'Nada_Column_' . $this->getDbmsSuffix();
+        $class = 'Nada\Column\\' . $this->getDbmsSuffix();
         return new $class;
     }
 
@@ -754,7 +754,7 @@ abstract class Nada_Database
      * @param mixed $default Default value (default NULL)
      * @param bool $autoIncrement Auto increment property (default FALSE)
      * @param string $comment Column comment (default: NULL)
-     * @return Nada_Column Temporary column object
+     * @return \Nada\Column\AbstractColumn Temporary column object
      **/
     public function createColumn(
         $name,
@@ -782,7 +782,7 @@ abstract class Nada_Database
      * "default" and "comment" elements default to NULL.
      *
      * @param array $data column data: name, type, length, notnull, default, autoincrement, comment
-     * @return Nada_Column Temporary column object
+     * @return \Nada\Column\AbstractColumn Temporary column object
      */
     public function createColumnFromArray(array $data)
     {
@@ -813,7 +813,7 @@ abstract class Nada_Database
      * key.
      *
      * @param string $name Table name
-     * @param array $columns Array of Nada_Column objects, created via createColumn(), or associative arrays
+     * @param array $columns Array of column objects, created via createColumn(), or associative arrays
      * @param string|array $primaryKey Primary key (column name or aray of column names)
      * @return Nada_Table A representation of the created table
      * @throws InvalidArgumentException if $columns is empty or constraints are violated

@@ -127,7 +127,7 @@ class Nada
         self::_requireOnce("Database/$class.php");
         self::_requireOnce('Table.php');
         self::_requireOnce("Table/$class.php");
-        self::_requireOnce('Column.php');
+        self::_requireOnce('Column/AbstractColumn.php');
         self::_requireOnce("Column/$class.php");
         self::_requireOnce('Index.php');
 
