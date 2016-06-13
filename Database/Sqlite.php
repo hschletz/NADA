@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Database;
+
 /**
  * Interface class for SQLite
  *
  * This class overrides methods with SQLite-specific implementations.
  * @package NADA
  */
-class Nada_Database_Sqlite extends Nada_Database
+class Sqlite extends AbstractDatabase
 {
     /** {@inheritdoc} */
     public function isSqlite()
@@ -73,7 +76,7 @@ class Nada_Database_Sqlite extends Nada_Database
                 return $database['file'];
             }
         }
-        throw new LogicException('No entry found by getName()');
+        throw new \LogicException('No entry found by getName()');
     }
 
     /** {@inheritdoc} */
@@ -109,30 +112,30 @@ class Nada_Database_Sqlite extends Nada_Database
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case Nada::DATATYPE_INTEGER:
+            case \Nada::DATATYPE_INTEGER:
                 return 'INTEGER';
-            case Nada::DATATYPE_CLOB:
+            case \Nada::DATATYPE_CLOB:
                 return 'TEXT';
-            case Nada::DATATYPE_TIMESTAMP:
-            case Nada::DATATYPE_DATE:
+            case \Nada::DATATYPE_TIMESTAMP:
+            case \Nada::DATATYPE_DATE:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'TEXT';
                 } else {
-                    throw new DomainException(strtoupper($type) . ' not supported by SQLite and not emulated');
+                    throw new \DomainException(strtoupper($type) . ' not supported by SQLite and not emulated');
                 }
-            case Nada::DATATYPE_BOOL:
+            case \Nada::DATATYPE_BOOL:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'INTEGER';
                 } else {
-                    throw new DomainException('BOOL not supported by SQLite and not emulated');
+                    throw new \DomainException('BOOL not supported by SQLite and not emulated');
                 }
-            case Nada::DATATYPE_DECIMAL:
+            case \Nada::DATATYPE_DECIMAL:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'REAL';
                 } else {
-                    throw new DomainException('DECIMAL not supported by SQLite and not emulated');
+                    throw new \DomainException('DECIMAL not supported by SQLite and not emulated');
                 }
-            case Nada::DATATYPE_FLOAT:
+            case \Nada::DATATYPE_FLOAT:
                 return 'REAL';
             default:
                 // SQLite ignores $length, but stores it with the column

@@ -44,7 +44,7 @@ abstract class AbstractColumn
 {
     /**
      * Database link
-     * @var Nada_Database
+     * @var \Nada\Database\AbstractDatabase
      */
     protected $_database;
 
@@ -119,8 +119,9 @@ abstract class AbstractColumn
     }
 
     /**
-     * Internal method to set up the object from Nada_Database::createColumn()
-     * @param Nada_Database $database
+     * Internal method to set up the object from \Nada\Database\AbstractDatabase::createColumn()
+     *
+     * @param \Nada\Database\AbstractDatabase $database
      * @param string $name
      * @param string $type
      * @param mixed $length
@@ -262,7 +263,7 @@ abstract class AbstractColumn
     /**
      * Get table object which this instance is linked to
      *
-     * @return \Nada\Table\AbstractTable Parent table or NULL for objects created via Nada_Database::createColumn()
+     * @return \Nada\Table\AbstractTable Parent table or NULL for objects created via AbstractDatabase::createColumn()
      */
     public function getTable()
     {
@@ -339,8 +340,10 @@ abstract class AbstractColumn
     /**
      * Change the column's name
      *
-     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
-     * the operation will be performed on the database.
+     * If this instance is linked to a table, i.e. not created via
+     * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
+     * performed on the database.
+     *
      * @param string $name New name
      * @throws InvalidArgumentException if name is empty
      **/
@@ -361,8 +364,10 @@ abstract class AbstractColumn
     /**
      * Set the column's datatype and/or length
      *
-     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
-     * the operation will be performed on the database.
+     * If this instance is linked to a table, i.e. not created via
+     * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
+     * performed on the database.
+     *
      * Note that the database operation may fail if the column contains data that cannot be cast
      * to the new datatype.
      * @param string $datatype New datatype
@@ -385,8 +390,9 @@ abstract class AbstractColumn
     /**
      * Set/remove a NOT NULL constraint
      *
-     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
-     * the operation will be performed on the database.
+     * If this instance is linked to a table, i.e. not created via
+     * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
+     * performed on the database.
      *
      * @param bool $notNull
      */
@@ -408,8 +414,9 @@ abstract class AbstractColumn
     /**
      * Set/remove default value
      *
-     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
-     * the operation will be performed on the database.
+     * If this instance is linked to a table, i.e. not created via
+     * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
+     * performed on the database.
      *
      * @param mixed $default
      */
@@ -453,8 +460,10 @@ abstract class AbstractColumn
     /**
      * Set Column comment
      *
-     * If this instance is linked to a table, i.e. not created via Nada_Database::createColumn(),
-     * the operation will be performed on the database.
+     * If this instance is linked to a table, i.e. not created via
+     * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
+     * performed on the database.
+     *
      * @param string $comment Comment (use NULL to remove comment)
      **/
     public function setComment($comment)

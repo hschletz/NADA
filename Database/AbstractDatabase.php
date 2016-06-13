@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Database;
+
 /**
  * Database application interface class
  *
@@ -37,15 +40,15 @@
  * Objects should not be instantiated directly, but through
  * {@link Nada::factory()}.
  *
- * To add support for a particular DBMS, derive a class from Nada_Dbms and place
- * it in the Dbms/ directory. Override any method if the default implementation
- * from this class is not suitable. Additionally, add detection for the DBMS in
- * all {@link Nada_Link} derived classes for those database abstraction layers
- * that support this DBMS.
+ * To add support for a particular DBMS, derive a class and override any method
+ * if the default implementation is not suitable. Additionally, add detection
+ * for the DBMS in all \Nada_Link derived classes for those database abstraction
+ * layers that support this DBMS.
+ *
  * @package NADA
  * @api
  */
-abstract class Nada_Database
+abstract class AbstractDatabase
 {
     /**
      * Database link
@@ -418,7 +421,7 @@ abstract class Nada_Database
             if ($this->quoteInvalidCharacters) {
                 return $this->quoteIdentifier($identifier);
             } else {
-                throw new RuntimeException('Invalid characters in identifier: ' . $identifier);
+                throw new \RuntimeException('Invalid characters in identifier: ' . $identifier);
             }
         }
 
@@ -467,34 +470,34 @@ abstract class Nada_Database
             return 'NULL';
         }
         switch ($datatype) {
-            case Nada::DATATYPE_INTEGER:
+            case \Nada::DATATYPE_INTEGER:
                 // Filter explicitly because some DBAL silently convert/truncate to integer
                 $filtered = filter_var($value, FILTER_VALIDATE_INT);
                 if ($filtered === false) {
-                    throw new InvalidArgumentException('Not an integer: '. $value);
+                    throw new \InvalidArgumentException('Not an integer: '. $value);
                 }
                 return $filtered; // No quotes necessary
-            case Nada::DATATYPE_FLOAT:
-            case Nada::DATATYPE_DECIMAL:
+            case \Nada::DATATYPE_FLOAT:
+            case \Nada::DATATYPE_DECIMAL:
                 // Filter explicitly because some DBAL silently convert/truncate to float
                 $filtered = filter_var($value, FILTER_VALIDATE_FLOAT);
                 if ($filtered === false) {
-                    throw new InvalidArgumentException('Not a number: '. $value);
+                    throw new \InvalidArgumentException('Not a number: '. $value);
                 }
                 return $filtered; // No quotes necessary
-            case Nada::DATATYPE_BOOL:
+            case \Nada::DATATYPE_BOOL:
                 if (is_bool($value)) { // filter_var() does not work with real booleans
                     $filtered = $value;
                 } else {
                     $filtered = filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
                 }
                 if ($filtered === null) {
-                    throw new InvalidArgumentException('Not a boolean: ' . $value);
+                    throw new \InvalidArgumentException('Not a boolean: ' . $value);
                 }
                 return (integer)$filtered; // Convert to 0/1 for compatibility with emulated booleans
-            case Nada::DATATYPE_BLOB:
+            case \Nada::DATATYPE_BLOB:
                 // Handled differently across DBMS and abstraction layers - refuse by default.
-                throw new InvalidArgumentException('Cannot prepare BLOB values');
+                throw new \InvalidArgumentException('Cannot prepare BLOB values');
             default:
                 return $this->_link->quoteValue($value, $datatype);
         }
@@ -556,7 +559,7 @@ abstract class Nada_Database
     public function getTable($name)
     {
         if ($name != strtolower($name)) {
-            throw new DomainException('Table name must be lowercase: ' . $name);
+            throw new \DomainException('Table name must be lowercase: ' . $name);
         }
 
         if (!isset($this->_tables[$name])) {
@@ -681,9 +684,9 @@ abstract class Nada_Database
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case Nada::DATATYPE_INTEGER:
+            case \Nada::DATATYPE_INTEGER:
                 if ($length === null) {
-                    $length = Nada::DEFAULT_LENGTH_INTEGER;
+                    $length = \Nada::DEFAULT_LENGTH_INTEGER;
                 }
                 switch ($length) {
                     case 16:
@@ -693,40 +696,40 @@ abstract class Nada_Database
                     case 64:
                         return 'BIGINT';
                     default:
-                        throw new DomainException("Invalid length for type $type: $length");
+                        throw new \DomainException("Invalid length for type $type: $length");
                 }
-            case Nada::DATATYPE_VARCHAR:
+            case \Nada::DATATYPE_VARCHAR:
                 if (!ctype_digit((string)$length) or $length < 1) {
-                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                    throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 return "VARCHAR($length)";
-            case Nada::DATATYPE_TIMESTAMP:
+            case \Nada::DATATYPE_TIMESTAMP:
                 return 'TIMESTAMP';
-            case Nada::DATATYPE_DATE:
+            case \Nada::DATATYPE_DATE:
                 return 'DATE';
-            case Nada::DATATYPE_BOOL:
+            case \Nada::DATATYPE_BOOL:
                 return 'BOOLEAN';
-            case Nada::DATATYPE_BLOB:
+            case \Nada::DATATYPE_BLOB:
                 return 'BLOB';
-            case Nada::DATATYPE_DECIMAL:
+            case \Nada::DATATYPE_DECIMAL:
                 if (!preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
-                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                    throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 $precision = (integer)$components[1];
                 $scale = (integer)$components[2];
                 if ($precision < $scale) {
-                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                    throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 return "NUMERIC($precision,$scale)";
-            case Nada::DATATYPE_FLOAT:
+            case \Nada::DATATYPE_FLOAT:
                 if ($length === null) {
-                    $length = Nada::DEFAULT_LENGTH_FLOAT;
+                    $length = \Nada::DEFAULT_LENGTH_FLOAT;
                 } elseif (!ctype_digit((string)$length) or $length < 1) {
-                    throw new InvalidArgumentException('Invalid length: ' . $length);
+                    throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 return "FLOAT($length)";
             default:
-                throw new DomainException('Unsupported datatype: ' . $type);
+                throw new \DomainException('Unsupported datatype: ' . $type);
         }
     }
 
@@ -825,10 +828,10 @@ abstract class Nada_Database
     {
         $name = strtolower($name);
         if (strpos($name, 'sqlite_') === 0) {
-            throw new InvalidArgumentException('Created table name must not begin with sqlite_');
+            throw new \InvalidArgumentException('Created table name must not begin with sqlite_');
         }
         if (empty($columns)) {
-            throw new InvalidArgumentException('No columns specified for new table');
+            throw new \InvalidArgumentException('No columns specified for new table');
         }
         if ($primaryKey !== null and !is_array($primaryKey)) {
             $primaryKey = array($primaryKey);
@@ -846,7 +849,7 @@ abstract class Nada_Database
         }
         unset($column);
         if ($numAutoIncrement > 1) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'More than 1 autoincrement field specified, given: ' . $numAutoIncrement
             );
         }
@@ -854,14 +857,14 @@ abstract class Nada_Database
             if ($primaryKey === null) {
                 $primaryKey = array($autoPk);
             } elseif (count($primaryKey) != 1 or $autoPk != $primaryKey[0]) {
-                throw new InvalidArgumentException('Invalid primary key: ' . implode(',', $primaryKey));
+                throw new \InvalidArgumentException('Invalid primary key: ' . implode(',', $primaryKey));
             }
         }
         if (!$primaryKey) {
-            throw new InvalidArgumentException('Missing primary key for table ' . $name);
+            throw new \InvalidArgumentException('Missing primary key for table ' . $name);
         }
         if (in_array($name, $this->getTableNames())) {
-            throw new RuntimeException('Table already exists: ' . $name);
+            throw new \RuntimeException('Table already exists: ' . $name);
         }
 
         $colspecs = array();

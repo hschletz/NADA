@@ -35,7 +35,8 @@ namespace Nada\Table;
  *
  * This is the base class for providing a unified interface to database tables.
  * It is not intended to be instantiated directly, but through one of the
- * {@link Nada_Database} methods.
+ * Nada\Database\AbstractDatabase methods.
+ *
  * @package NADA
  * @api
  */
@@ -43,7 +44,7 @@ abstract class AbstractTable
 {
     /**
      * Database link
-     * @var Nada_Database
+     * @var \Nada\Database\AbstractDatabase
      */
     protected $_database;
 
@@ -113,7 +114,8 @@ abstract class AbstractTable
 
     /**
      * Constructor
-     * @param Nada_Database $database Database interface
+     *
+     * @param \Nada\Database\AbstractDatabase $database Database interface
      * @param string $name Table name
      * @throws RuntimeException if table does not exist
      */
@@ -178,7 +180,8 @@ abstract class AbstractTable
 
     /**
      * Return database interface
-     * @return Nada_Database Database interface
+     *
+     * @return \Nada\Database\AbstractDatabase Database interface
      */
     public function getDatabase()
     {
@@ -190,9 +193,9 @@ abstract class AbstractTable
      *
      * Invoked by the constructor, the default implementation queries
      * information_schema.columns for all columns belonging to this table. To
-     * make this functional, subclasses must set {@link Nada_Database::$_tableSchema}
-     * and, if necessary, extend {@link $_informationSchemaColumns} with
-     * DBMS-specific columns.
+     * make this functional, subclasses must set
+     * \Nada\Database\AbstractDatabase::$_tableSchema and, if necessary, extend
+     * $_informationSchemaColumns with DBMS-specific columns.
      */
     protected function _fetchColumns()
     {
@@ -218,7 +221,8 @@ abstract class AbstractTable
      *
      * Invoked by the constructor, the default implementation queries
      * information_schema.table_constraints and information_schema.key_column_usage.
-     * To make this functional, subclasses must set Nada_Database::$_tableSchema.
+     * To make this functional, subclasses must set
+     * \Nada\Database\AbstractDatabase::$_tableSchema.
      *
      * Only primary keys are recognized for now. All other constraints are
      * ignored.

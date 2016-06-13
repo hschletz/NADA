@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Database;
+
 /**
  * Interface class for MySQL
  *
  * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
-class Nada_Database_Mysql extends Nada_Database
+class Mysql extends AbstractDatabase
 {
 
     /** {@inheritdoc} */
@@ -81,16 +84,16 @@ class Nada_Database_Mysql extends Nada_Database
         );
         if ($columns) {
             $emulatedDatatypes = $this->emulatedDatatypes; // preserve
-            if (!in_array(Nada::DATATYPE_TIMESTAMP, $emulatedDatatypes)) {
+            if (!in_array(\Nada::DATATYPE_TIMESTAMP, $emulatedDatatypes)) {
                 // Emulate datatype temporarily to allow manipulation
-                $this->emulatedDatatypes[] = Nada::DATATYPE_TIMESTAMP;
+                $this->emulatedDatatypes[] = \Nada::DATATYPE_TIMESTAMP;
             }
             foreach ($columns as $column) {
                 $column = $this->getTable($column['table_name'])->getColumn(strtolower($column['column_name']));
                 if ($column->getDefault() == 'CURRENT_TIMESTAMP') {
                     $column->setDefault(null);
                 }
-                $column->setDatatype(Nada::DATATYPE_TIMESTAMP);
+                $column->setDatatype(\Nada::DATATYPE_TIMESTAMP);
             }
             $this->emulatedDatatypes = $emulatedDatatypes; // restore
         }
@@ -142,49 +145,49 @@ class Nada_Database_Mysql extends Nada_Database
     {
         if ($cast) {
             switch ($type) {
-                case Nada::DATATYPE_INTEGER:
+                case \Nada::DATATYPE_INTEGER:
                     return 'SIGNED';
-                case Nada::DATATYPE_VARCHAR:
+                case \Nada::DATATYPE_VARCHAR:
                     if ($length === null) {
                         return 'CHAR';
                     } elseif (ctype_digit((string) $length)) {
                         return "CHAR($length)";
                     } else {
-                        throw new InvalidArgumentException('Invalid length: ' . $length);
+                        throw new \InvalidArgumentException('Invalid length: ' . $length);
                     }
-                case Nada::DATATYPE_TIMESTAMP:
+                case \Nada::DATATYPE_TIMESTAMP:
                     return 'DATETIME';
-                case Nada::DATATYPE_BOOL:
-                    throw new DomainException('Values cannot be cast to BOOL');
-                case Nada::DATATYPE_CLOB:
+                case \Nada::DATATYPE_BOOL:
+                    throw new \DomainException('Values cannot be cast to BOOL');
+                case \Nada::DATATYPE_CLOB:
                     return 'CHAR';
-                case Nada::DATATYPE_BLOB:
+                case \Nada::DATATYPE_BLOB:
                     return 'BINARY';
-                case Nada::DATATYPE_DECIMAL:
+                case \Nada::DATATYPE_DECIMAL:
                     return str_replace('NUMERIC', 'DECIMAL', parent::getNativeDatatype($type, $length, $cast));
-                case Nada::DATATYPE_FLOAT:
+                case \Nada::DATATYPE_FLOAT:
                     return 'DECIMAL';
                 default:
                     return parent::getNativeDatatype($type, $length, $cast);
             }
         } else {
             switch ($type) {
-                case Nada::DATATYPE_INTEGER:
+                case \Nada::DATATYPE_INTEGER:
                     if ($length == 8) {
                         return 'TINYINT';
                     }
                     return parent::getNativeDatatype($type, $length, $cast);
-                case Nada::DATATYPE_TIMESTAMP:
+                case \Nada::DATATYPE_TIMESTAMP:
                     return 'DATETIME';
-                case Nada::DATATYPE_BOOL:
-                    if (in_array(Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
+                case \Nada::DATATYPE_BOOL:
+                    if (in_array(\Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
                         return 'TINYINT';
                     } else {
-                        throw new DomainException('BOOL not supported by MySQL and not emulated');
+                        throw new \DomainException('BOOL not supported by MySQL and not emulated');
                     }
-                case Nada::DATATYPE_CLOB:
+                case \Nada::DATATYPE_CLOB:
                     return 'LONGTEXT';
-                case Nada::DATATYPE_BLOB:
+                case \Nada::DATATYPE_BLOB:
                     return 'LONGBLOB';
                 default:
                     return parent::getNativeDatatype($type, $length, $cast);

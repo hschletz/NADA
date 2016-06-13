@@ -32,7 +32,7 @@
  *
  * This is the base class for providing a unified interface to different
  * database access methods. It is not intended to be used directly in an
- * application, but only internally within {@link Nada_Database} methods.
+ * application, but only internally within NADA methods.
  *
  * To add support for a particular database access method, derive a class from
  * Nada_Link and place it in the Link/ directory. Implement all methods that are
@@ -63,10 +63,10 @@ abstract class Nada_Link
      *
      * Implementations should detect all DBMS types supported by both NADA and
      * the database abstraction layer. The returned suffix is appended to the
-     * base class name (like Nada_Database_Suffix) and to determine the file name of
-     * the script that defines this class (like Database/Suffix.php). Because the
-     * result is used to construct a path, implementations MUST take care that
-     * it does not resolve into something evil.
+     * base class namespace. Because the result is used to construct a class
+     * name, implementations MUST take care that it does not resolve into
+     * something evil.
+     *
      * @return string DBMS suffix
      * @throws UnexpectedValueException if no supported DBMS is detected
      */

@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Database;
+
 /**
  * Interface class for PostgreSQL
  *
  * This class overrides methods with PostgreSQL-specific implementations.
  * @package NADA
  */
-class Nada_Database_Pgsql extends Nada_Database
+class Pgsql extends AbstractDatabase
 {
 
     /** {@inheritdoc} */
@@ -83,7 +86,7 @@ class Nada_Database_Pgsql extends Nada_Database
         foreach ($columns as $column) {
             $this->getTable($column['table_name'])
                  ->getColumn($column['column_name'])
-                 ->setDatatype(Nada::DATATYPE_TIMESTAMP);
+                 ->setDatatype(\Nada::DATATYPE_TIMESTAMP);
         }
         return count($columns);
     }
@@ -107,11 +110,11 @@ class Nada_Database_Pgsql extends Nada_Database
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case NADA::DATATYPE_TIMESTAMP:
+            case \Nada::DATATYPE_TIMESTAMP:
                 return 'TIMESTAMP(0)';
-            case Nada::DATATYPE_CLOB:
+            case \Nada::DATATYPE_CLOB:
                 return 'TEXT';
-            case Nada::DATATYPE_BLOB:
+            case \Nada::DATATYPE_BLOB:
                 return 'BYTEA';
             default:
                 return parent::getNativeDatatype($type, $length, $cast);
