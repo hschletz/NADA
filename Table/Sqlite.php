@@ -49,7 +49,7 @@ class Nada_Table_Sqlite extends Nada_Table
         foreach ($columns as $column) {
             $column['name'] = strtolower($column['name']);
             $column['pkColumnCount'] = $pkColumnCount;
-            $object = Nada_Column::factory($this->_database);
+            $object = $this->_database->createColumnObject();
             $object->constructFromTable($this, $column);
             $this->_columns[$column['name']] = $object;
 

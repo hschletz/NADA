@@ -93,18 +93,6 @@ abstract class Nada_Column
     protected $_comment;
 
     /**
-     * Internal factory method
-     * @param Nada_Database database object
-     * @return Nada_Column DBMS-specific subclass
-     * @internal
-     */
-    public static function factory($database)
-    {
-        $class = 'Nada_Column_' . $database->getDbmsSuffix();
-        return new $class;
-    }
-
-    /**
      * Internal method to set up the object from within a Nada_Table object
      *
      * The column data can be of any type and is passed to the _parse*()

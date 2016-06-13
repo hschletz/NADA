@@ -729,6 +729,17 @@ abstract class Nada_Database
     }
 
     /**
+     * Create empty column object
+     *
+     * @return Nada_Column DBMS-specific subclass
+     */
+    public function createColumnObject()
+    {
+        $class = 'Nada_Column_' . $this->getDbmsSuffix();
+        return new $class;
+    }
+
+    /**
      * Construct a new column
      *
      * Input is not validated at this point, i.e. this method always succeeds.
@@ -755,7 +766,7 @@ abstract class Nada_Database
         $comment=null
     )
     {
-        $column = Nada_Column::factory($this);
+        $column = $this->createColumnObject();
         $column->constructNew($this, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
         return $column;
     }

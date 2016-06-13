@@ -218,7 +218,7 @@ abstract class Nada_Table
         );
         foreach ($columns as $column) {
             $column['column_name'] = strtolower($column['column_name']);
-            $object = Nada_Column::factory($this->_database);
+            $object = $this->_database->createColumnObject();
             $object->constructFromTable($this, $column);
             $this->_columns[$column['column_name']] = $object;
         }
