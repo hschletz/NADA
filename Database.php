@@ -560,7 +560,8 @@ abstract class Nada_Database
         }
 
         if (!isset($this->_tables[$name])) {
-            $this->_tables[$name] = Nada_Table::factory($this, $name);
+            $class = 'Nada_Table_' . $this->getDbmsSuffix();
+            $this->_tables[$name] = new $class($this, $name);
         }
         return $this->_tables[$name];
     }

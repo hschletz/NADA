@@ -127,20 +127,6 @@ abstract class Nada_Table
     }
 
     /**
-     * Factory method
-     *
-     * This should be preferred over direct instantiation.
-     * @param Nada_Database $database Database interface
-     * @param string $name Table name. An exception is thrown if the table does not exist.
-     * @return NADA_Table DBMS-specific subclass
-     */
-    public static function factory($database, $name)
-    {
-        $class = 'Nada_Table_' . $database->getDbmsSuffix();
-        return new $class($database, $name);
-    }
-
-    /**
      * Return table name
      * @return string table name
      */
