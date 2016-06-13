@@ -125,7 +125,7 @@ class Nada
         $class = $link->getDbmsSuffix();
         self::_requireOnce('Database.php');
         self::_requireOnce("Database/$class.php");
-        self::_requireOnce('Table.php');
+        self::_requireOnce('Table/AbstractTable.php');
         self::_requireOnce("Table/$class.php");
         self::_requireOnce('Column/AbstractColumn.php');
         self::_requireOnce("Column/$class.php");

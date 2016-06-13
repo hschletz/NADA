@@ -27,6 +27,9 @@
  *
  * @package NADA
  */
+
+namespace Nada\Table;
+
 /**
  * Abstract table class
  *
@@ -36,7 +39,7 @@
  * @package NADA
  * @api
  */
-abstract class Nada_Table
+abstract class AbstractTable
 {
     /**
      * Database link
@@ -121,7 +124,7 @@ abstract class Nada_Table
 
         $this->_fetchColumns();
         if (empty($this->_columns)) {
-            throw new RuntimeException('Table does not exist: ' . $name);
+            throw new \RuntimeException('Table does not exist: ' . $name);
         }
         $this->_fetchConstraints();
     }
@@ -275,11 +278,11 @@ EOT
     public function requireColumn($name)
     {
         if ($name != strtolower($name)) {
-            throw new DomainException('Column name must be lowercase: ' . $name);
+            throw new \DomainException('Column name must be lowercase: ' . $name);
         }
 
         if (!isset($this->_columns[$name])) {
-            throw new RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
+            throw new \RuntimeException('Undefined column: ' . $this->_name . '.' . $name);
         }
     }
 
@@ -292,11 +295,11 @@ EOT
     public function forbidColumn($name)
     {
         if ($name != strtolower($name)) {
-            throw new DomainException('Column name must be lowercase: ' . $name);
+            throw new \DomainException('Column name must be lowercase: ' . $name);
         }
 
         if (isset($this->_columns[$name])) {
-            throw new RuntimeException('Already defined column: ' . $this->_name . '.' . $name);
+            throw new \RuntimeException('Already defined column: ' . $this->_name . '.' . $name);
         }
     }
 

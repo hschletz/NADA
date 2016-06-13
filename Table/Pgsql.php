@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Table;
+
 /**
  * Table class for PostgreSQL
  *
  * This class overrides methods with PostgreSQL-specific implementations.
  * @package NADA
  */
-class Nada_Table_Pgsql extends Nada_Table
+class Pgsql extends AbstractTable
 {
 
     /** {@inheritdoc} */
@@ -60,7 +63,7 @@ class Nada_Table_Pgsql extends Nada_Table
             sprintf(
                 'COMMENT ON TABLE %s IS %s',
                 $this->_database->prepareIdentifier($this->_name),
-                $this->_database->prepareValue($comment, Nada::DATATYPE_VARCHAR)
+                $this->_database->prepareValue($comment, \Nada::DATATYPE_VARCHAR)
             )
         );
         return true;
@@ -150,7 +153,7 @@ class Nada_Table_Pgsql extends Nada_Table
             }
 
             // Create index object.
-            $this->_indexes[$index['indexrelid']] = new Nada_Index(
+            $this->_indexes[$index['indexrelid']] = new \Nada_Index(
                 $index['indexrelid'],
                 $columnNames,
                 $index['indisunique']

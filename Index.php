@@ -30,7 +30,7 @@
 /**
  * Index class
  *
- * Instances should not be constructed directly. Always call Nada_Table::getIndexes().
+ * Instances should not be constructed directly. Always call \Nada\Table\AbstractTable::getIndexes().
  *
  * @package NADA
  * @api

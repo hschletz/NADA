@@ -35,7 +35,8 @@ namespace Nada\Column;
  *
  * This is the base class for providing a unified interface to database columns.
  * It is not intended to be instantiated directly, but through one of the
- * {@link Nada_Table} methods.
+ * \Nada\Table\AbstractTable methods.
+ *
  * @package NADA
  * @api
  */
@@ -49,7 +50,7 @@ abstract class AbstractColumn
 
     /**
      * Table that this column belongs to
-     * @var Nada_Table
+     * @var \Nada\Table\AbstractTable
      */
     protected $_table;
 
@@ -96,11 +97,12 @@ abstract class AbstractColumn
     protected $_comment;
 
     /**
-     * Internal method to set up the object from within a Nada_Table object
+     * Internal method to set up the object from within a \Nada\Table\AbstractTable object
      *
      * The column data can be of any type and is passed to the _parse*()
      * methods.
-     * @param Nada_Table $table Table that this column belongs to
+     *
+     * @param \Nada\Table\AbstractTable $table Table that this column belongs to
      * @param mixed $data Column data
      * @internal
      */
@@ -142,7 +144,8 @@ abstract class AbstractColumn
 
     /**
      * Internal method to link this instance to a table object
-     * @param Nada_Table $table Table object
+     *
+     * @param \Nada\Table\AbstractTable $table Table object
      * @internal
      **/
     public function setTable($table)
@@ -185,7 +188,8 @@ abstract class AbstractColumn
      *
      * Since this part is DBMS-specific, no default implementation exists.
      * Implementations can expect an array with information_schema compatible
-     * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
+     * keys unless fetchColumns() generates something else.
+     *
      * @param mixed $data Column data
      * @throws UnexpectedValueException if datatype is not recognized.
      */
@@ -229,7 +233,8 @@ abstract class AbstractColumn
      *
      * Since this part is DBMS-specific, no default implementation exists.
      * Implementations can expect an array with information_schema compatible
-     * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
+     * keys unless fetchColumns() generates something else.
+     *
      * @param mixed $data Column data
      */
     abstract protected function _parseAutoIncrement($data);
@@ -239,7 +244,8 @@ abstract class AbstractColumn
      *
      * Since this part is DBMS-specific, no default implementation exists.
      * Implementations can expect an array with information_schema compatible
-     * keys unless Nada_Table_NNN::_fetchColumns() generates something else.
+     * keys unless fetchColumns() generates something else.
+     *
      * @param mixed $data Column data
      */
     abstract protected function _parseComment($data);
@@ -255,7 +261,8 @@ abstract class AbstractColumn
 
     /**
      * Get table object which this instance is linked to
-     * @return Nada_Table Parent table or NULL if this object was created via Nada_Database::createColumn()
+     *
+     * @return \Nada\Table\AbstractTable Parent table or NULL for objects created via Nada_Database::createColumn()
      */
     public function getTable()
     {

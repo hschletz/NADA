@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Table;
+
 /**
  * Table class for SQLite
  *
  * This class overrides methods with SQLite-specific implementations.
  * @package NADA
  */
-class Nada_Table_Sqlite extends Nada_Table
+class Sqlite extends AbstractTable
 {
     /** {@inheritdoc} */
     protected function _fetchColumns()
@@ -290,7 +293,7 @@ class Nada_Table_Sqlite extends Nada_Table
             }
             // Ordering of result set is undocumented. Sort manually to preserve order of columns.
             ksort($columns);
-            $this->_indexes[$name] = new Nada_Index($name, $columns, $unique[$name]);
+            $this->_indexes[$name] = new \Nada_Index($name, $columns, $unique[$name]);
         }
     }
 }

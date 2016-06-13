@@ -27,13 +27,16 @@
  *
  * @package NADA
  */
+
+namespace Nada\Table;
+
 /**
  * Table class for MySQL
  *
  * This class overrides methods with MySQL-specific implementations.
  * @package NADA
  */
-class Nada_Table_Mysql extends Nada_Table
+class Mysql extends AbstractTable
 {
     /**
      * Table engine, managed by getEngine()/setEngine()
@@ -61,7 +64,7 @@ class Nada_Table_Mysql extends Nada_Table
     /** {@inheritdoc} */
     protected function _setComment($comment)
     {
-        $this->alter('COMMENT = ' . $this->_database->prepareValue($comment, Nada::DATATYPE_VARCHAR));
+        $this->alter('COMMENT = ' . $this->_database->prepareValue($comment, \Nada::DATATYPE_VARCHAR));
         return true;
     }
 
@@ -120,7 +123,7 @@ class Nada_Table_Mysql extends Nada_Table
         }
         // Create index objects
         foreach ($indexes as $name => $index) {
-            $this->_indexes[$name] = new Nada_Index($name, $index['columns'], $index['unique']);
+            $this->_indexes[$name] = new \Nada_Index($name, $index['columns'], $index['unique']);
         }
     }
 
@@ -143,7 +146,7 @@ class Nada_Table_Mysql extends Nada_Table
             'ALTER TABLE ' .
             $this->_database->prepareIdentifier($this->_name) .
             ' CONVERT TO CHARACTER SET ' .
-            $this->_database->prepareValue($charset, Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($charset, \Nada::DATATYPE_VARCHAR)
         );
     }
 
@@ -172,12 +175,12 @@ class Nada_Table_Mysql extends Nada_Table
             'ALTER TABLE ' .
             $this->_database->prepareIdentifier($this->_name) .
             ' ENGINE = ' .
-            $this->_database->prepareValue($engine, Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($engine, \Nada::DATATYPE_VARCHAR)
         );
         // MySQL ignores invalid engine names. Check explicitly.
         // The getEngine() also implicitly updates $_engine.
         if (strcasecmp($this->getEngine(), $engine) != 0) {
-            throw new RuntimeException('Unsupported table engine: ' . $engine);
+            throw new \RuntimeException('Unsupported table engine: ' . $engine);
         }
     }
 }

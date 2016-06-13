@@ -550,7 +550,7 @@ abstract class Nada_Database
      * database objects (columns etc.). The result is cached internally, so that
      * subsequent calls won't hurt performance.
      * @param string $name Table name (lowercase). An exception gets thrown if the name does not exist.
-     * @return Nada_Table Table object
+     * @return \Nada\Table\AbstractTable Table object
      * @throws DomainException if $name is not lowercase
      */
     public function getTable($name)
@@ -560,7 +560,7 @@ abstract class Nada_Database
         }
 
         if (!isset($this->_tables[$name])) {
-            $class = 'Nada_Table_' . $this->getDbmsSuffix();
+            $class = 'Nada\Table\\' . $this->getDbmsSuffix();
             $this->_tables[$name] = new $class($this, $name);
         }
         return $this->_tables[$name];
@@ -570,7 +570,8 @@ abstract class Nada_Database
      * Return all tables
      *
      * The result is cached internally, so that subsequent calls won't hurt performance.
-     * @return array Array with table names as keys and {@link Nada_Table} objects as values
+     *
+     * @return array Array with table names as keys and \Nada\Table\AbstractTable objects as values
      */
     public function getTables()
     {
@@ -816,7 +817,7 @@ abstract class Nada_Database
      * @param string $name Table name
      * @param array $columns Array of column objects, created via createColumn(), or associative arrays
      * @param string|array $primaryKey Primary key (column name or aray of column names)
-     * @return Nada_Table A representation of the created table
+     * @return \Nada\Table\AbstractTable A representation of the created table
      * @throws InvalidArgumentException if $columns is empty or constraints are violated
      * @throws RuntimeException if the table already exists
      */
