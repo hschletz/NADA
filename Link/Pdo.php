@@ -102,7 +102,7 @@ class Pdo extends AbstractLink
     /**
      * Throw exception with information from PDO's errorInfo()
      * @param object PDO object that caused the error
-     * @throws RuntimeException
+     * @throws \RuntimeException
      */
     protected function _throw($object)
     {

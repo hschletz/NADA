@@ -247,7 +247,7 @@ abstract class AbstractColumn
      * keys unless fetchColumns() generates something else.
      *
      * @param mixed $data Column data
-     * @throws UnexpectedValueException if datatype is not recognized.
+     * @throws \UnexpectedValueException if datatype is not recognized.
      */
     abstract protected function _parseDatatype($data);
 
@@ -388,7 +388,7 @@ abstract class AbstractColumn
      * The name is not part of the description. The return value is a DBMS-
      * specific pece of SQL like "VARCHAR(30) NOT NULL DEFAULT 'foo'".
      * @return string
-     * @throws DomainException if Column properties are invalid
+     * @throws \DomainException if Column properties are invalid
      **/
     abstract public function getDefinition();
 
@@ -400,7 +400,7 @@ abstract class AbstractColumn
      * performed on the database.
      *
      * @param string $name New name
-     * @throws InvalidArgumentException if name is empty
+     * @throws \InvalidArgumentException if name is empty
      **/
     public function setName($name)
     {

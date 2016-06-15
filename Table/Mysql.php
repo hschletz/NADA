@@ -169,7 +169,7 @@ class Mysql extends AbstractTable
     /**
      * Set table engine
      * @param string $engine New table engine (MyISAM, InnoDB etc.)
-     * @throws RuntimeException if $engine is not recognized by the server
+     * @throws \RuntimeException if $engine is not recognized by the server
      **/
     public function setEngine($engine)
     {

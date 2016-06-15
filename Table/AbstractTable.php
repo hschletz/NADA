@@ -117,7 +117,7 @@ abstract class AbstractTable
      *
      * @param \Nada\Database\AbstractDatabase $database Database interface
      * @param string $name Table name
-     * @throws RuntimeException if table does not exist
+     * @throws \RuntimeException if table does not exist
      */
     function __construct($database, $name)
     {
@@ -276,8 +276,8 @@ EOT
     /**
      * Force presence of column
      * @param string $name Column name to check for, must be lowercase
-     * @throws RuntimeException if column does not exist
-     * @throws DomainException if $name is not lowercase
+     * @throws \RuntimeException if column does not exist
+     * @throws \DomainException if $name is not lowercase
      */
     public function requireColumn($name)
     {
@@ -293,8 +293,8 @@ EOT
     /**
      * Force Absence of column
      * @param string $name Column name to check for, must be lowercase
-     * @throws RuntimeException if column exists
-     * @throws DomainException if $name is not lowercase
+     * @throws \RuntimeException if column exists
+     * @throws \DomainException if $name is not lowercase
      */
     public function forbidColumn($name)
     {

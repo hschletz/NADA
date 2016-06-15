@@ -71,7 +71,7 @@ abstract class AbstractLink
      * something evil.
      *
      * @return string DBMS suffix
-     * @throws UnexpectedValueException if no supported DBMS is detected
+     * @throws \UnexpectedValueException if no supported DBMS is detected
      */
     abstract public function getDbmsSuffix();
 
@@ -89,7 +89,7 @@ abstract class AbstractLink
      * @param string $statement SQL statement with optional placeholders
      * @param array $params Values to substitute for placeholders
      * @return array Array of all rows
-     * @throws Exception if execution fails
+     * @throws \Exception if execution fails
      */
     abstract public function query($statement, $params);
 
@@ -106,7 +106,7 @@ abstract class AbstractLink
      * @param string $statement SQL statement with optional placeholders
      * @param array $params Values to substitute for placeholders
      * @return integer Number of affected rows
-     * @throws Exception if execution fails
+     * @throws \Exception if execution fails
      */
     abstract public function exec($statement, $params);
 

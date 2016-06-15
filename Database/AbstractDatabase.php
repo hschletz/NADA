@@ -411,7 +411,7 @@ abstract class AbstractDatabase
      * input before using it as an identifier.
      * @param string $identifier Identifier to check
      * @return string Identifier, quoted and escaped if necessary
-     * @throws RuntimeException if identifier is invalid and not quoted.
+     * @throws \RuntimeException if identifier is invalid and not quoted.
      */
     public function prepareIdentifier($identifier)
     {
@@ -556,7 +556,7 @@ abstract class AbstractDatabase
      * subsequent calls won't hurt performance.
      * @param string $name Table name (lowercase). An exception gets thrown if the name does not exist.
      * @return \Nada\Table\AbstractTable Table object
-     * @throws DomainException if $name is not lowercase
+     * @throws \DomainException if $name is not lowercase
      */
     public function getTable($name)
     {
@@ -680,8 +680,8 @@ abstract class AbstractDatabase
      * @param mixed $length Optional length modifier (default provided for some datatypes)
      * @param bool $cast The result is used for a typecast operation. Some DBMS require different specifiers for casts.
      * @return string SQL fragment representing the datatype
-     * @throws DomainException if the datatype is not supported for the current DBMS
-     * @throws InvalidArgumentException if $length is invalid
+     * @throws \DomainException if the datatype is not supported for the current DBMS
+     * @throws \InvalidArgumentException if $length is invalid
      **/
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
@@ -823,8 +823,8 @@ abstract class AbstractDatabase
      * @param array $columns Array of column objects, created via createColumn(), or associative arrays
      * @param string|array $primaryKey Primary key (column name or aray of column names)
      * @return \Nada\Table\AbstractTable A representation of the created table
-     * @throws InvalidArgumentException if $columns is empty or constraints are violated
-     * @throws RuntimeException if the table already exists
+     * @throws \InvalidArgumentException if $columns is empty or constraints are violated
+     * @throws \RuntimeException if the table already exists
      */
     public function createTable($name, array $columns, $primaryKey=null)
     {
