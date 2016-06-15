@@ -43,6 +43,61 @@ namespace Nada\Column;
 abstract class AbstractColumn
 {
     /**
+     * Constant for INTEGER datatypes. Length is denoted in bits.
+     */
+    const TYPE_INTEGER = 'integer';
+
+    /**
+     * Constant for VARCHAR datatypes. Length is denoted in characters, not bytes.
+     */
+    const TYPE_VARCHAR = 'varchar';
+
+    /**
+     * Constant for TIMESTAMP datatypes (without timezone treatment)
+     */
+    const TYPE_TIMESTAMP = 'timestamp';
+
+    /**
+     * Constant for DATE datatypes
+     */
+    const TYPE_DATE = 'date';
+
+    /**
+     * Constant for BOOL datatypes (not available for all DBMS, emulated if necessary and enabled)
+     */
+    const TYPE_BOOL = 'bool';
+
+    /**
+     * Constant for CLOB datatypes. Length is only available for some DBMS. Don't rely on it.
+     */
+    const TYPE_CLOB = 'clob';
+
+    /**
+     * Constant for BLOB datatypes. Length is only available for some DBMS. Don't rely on it.
+     */
+    const TYPE_BLOB = 'blob';
+
+    /**
+     * Constant for DECIMAL/NUMERIC datatypes. Length consists of precision and scale, like '7,4'.
+     */
+    const TYPE_DECIMAL = 'decimal';
+
+    /**
+     * Constant for FLOAT datatypes. Length denotes precision, typically 24 for single 53 for double.
+     */
+    const TYPE_FLOAT = 'float';
+
+    /**
+     * Default length for integers if no length is explicitly specified
+     **/
+    const DEFAULT_LENGTH_INTEGER = 32;
+
+    /**
+     * Default length for floats if no length is explicitly specified
+     **/
+    const DEFAULT_LENGTH_FLOAT = 53; // Double precision
+
+    /**
      * Database link
      * @var \Nada\Database\AbstractDatabase
      */

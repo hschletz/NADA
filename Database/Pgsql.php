@@ -30,6 +30,8 @@
 
 namespace Nada\Database;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Interface class for PostgreSQL
  *
@@ -72,7 +74,7 @@ class Pgsql extends AbstractDatabase
         if ($timezone === null) {
             $timezone = 'UTC';
         }
-        $this->exec('SET timezone TO ' . $this->prepareValue($timezone, \Nada::DATATYPE_VARCHAR));
+        $this->exec('SET timezone TO ' . $this->prepareValue($timezone, Column::TYPE_VARCHAR));
     }
 
     /** {@inheritdoc} */
@@ -86,7 +88,7 @@ class Pgsql extends AbstractDatabase
         foreach ($columns as $column) {
             $this->getTable($column['table_name'])
                  ->getColumn($column['column_name'])
-                 ->setDatatype(\Nada::DATATYPE_TIMESTAMP);
+                 ->setDatatype(Column::TYPE_TIMESTAMP);
         }
         return count($columns);
     }
@@ -110,11 +112,11 @@ class Pgsql extends AbstractDatabase
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case \Nada::DATATYPE_TIMESTAMP:
+            case Column::TYPE_TIMESTAMP:
                 return 'TIMESTAMP(0)';
-            case \Nada::DATATYPE_CLOB:
+            case Column::TYPE_CLOB:
                 return 'TEXT';
-            case \Nada::DATATYPE_BLOB:
+            case Column::TYPE_BLOB:
                 return 'BYTEA';
             default:
                 return parent::getNativeDatatype($type, $length, $cast);

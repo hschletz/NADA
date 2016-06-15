@@ -63,7 +63,7 @@ class Pgsql extends AbstractTable
             sprintf(
                 'COMMENT ON TABLE %s IS %s',
                 $this->_database->prepareIdentifier($this->_name),
-                $this->_database->prepareValue($comment, \Nada::DATATYPE_VARCHAR)
+                $this->_database->prepareValue($comment, \Nada\Column\AbstractColumn::TYPE_VARCHAR)
             )
         );
         return true;

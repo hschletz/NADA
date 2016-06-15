@@ -30,6 +30,8 @@
 
 namespace Nada\Database;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Interface class for MySQL
  *
@@ -72,7 +74,7 @@ class Mysql extends AbstractDatabase
         if ($timezone === null) {
             $timezone = '+00:00';
         }
-        $this->exec('SET time_zone = ' . $this->prepareValue($timezone, \Nada::DATATYPE_VARCHAR));
+        $this->exec('SET time_zone = ' . $this->prepareValue($timezone, Column::TYPE_VARCHAR));
     }
 
     /** {@inheritdoc} */
@@ -84,16 +86,16 @@ class Mysql extends AbstractDatabase
         );
         if ($columns) {
             $emulatedDatatypes = $this->emulatedDatatypes; // preserve
-            if (!in_array(\Nada::DATATYPE_TIMESTAMP, $emulatedDatatypes)) {
+            if (!in_array(Column::TYPE_TIMESTAMP, $emulatedDatatypes)) {
                 // Emulate datatype temporarily to allow manipulation
-                $this->emulatedDatatypes[] = \Nada::DATATYPE_TIMESTAMP;
+                $this->emulatedDatatypes[] = Column::TYPE_TIMESTAMP;
             }
             foreach ($columns as $column) {
                 $column = $this->getTable($column['table_name'])->getColumn(strtolower($column['column_name']));
                 if ($column->getDefault() == 'CURRENT_TIMESTAMP') {
                     $column->setDefault(null);
                 }
-                $column->setDatatype(\Nada::DATATYPE_TIMESTAMP);
+                $column->setDatatype(Column::TYPE_TIMESTAMP);
             }
             $this->emulatedDatatypes = $emulatedDatatypes; // restore
         }
@@ -145,9 +147,9 @@ class Mysql extends AbstractDatabase
     {
         if ($cast) {
             switch ($type) {
-                case \Nada::DATATYPE_INTEGER:
+                case Column::TYPE_INTEGER:
                     return 'SIGNED';
-                case \Nada::DATATYPE_VARCHAR:
+                case Column::TYPE_VARCHAR:
                     if ($length === null) {
                         return 'CHAR';
                     } elseif (ctype_digit((string) $length)) {
@@ -155,39 +157,39 @@ class Mysql extends AbstractDatabase
                     } else {
                         throw new \InvalidArgumentException('Invalid length: ' . $length);
                     }
-                case \Nada::DATATYPE_TIMESTAMP:
+                case Column::TYPE_TIMESTAMP:
                     return 'DATETIME';
-                case \Nada::DATATYPE_BOOL:
+                case Column::TYPE_BOOL:
                     throw new \DomainException('Values cannot be cast to BOOL');
-                case \Nada::DATATYPE_CLOB:
+                case Column::TYPE_CLOB:
                     return 'CHAR';
-                case \Nada::DATATYPE_BLOB:
+                case Column::TYPE_BLOB:
                     return 'BINARY';
-                case \Nada::DATATYPE_DECIMAL:
+                case Column::TYPE_DECIMAL:
                     return str_replace('NUMERIC', 'DECIMAL', parent::getNativeDatatype($type, $length, $cast));
-                case \Nada::DATATYPE_FLOAT:
+                case Column::TYPE_FLOAT:
                     return 'DECIMAL';
                 default:
                     return parent::getNativeDatatype($type, $length, $cast);
             }
         } else {
             switch ($type) {
-                case \Nada::DATATYPE_INTEGER:
+                case Column::TYPE_INTEGER:
                     if ($length == 8) {
                         return 'TINYINT';
                     }
                     return parent::getNativeDatatype($type, $length, $cast);
-                case \Nada::DATATYPE_TIMESTAMP:
+                case Column::TYPE_TIMESTAMP:
                     return 'DATETIME';
-                case \Nada::DATATYPE_BOOL:
-                    if (in_array(\Nada::DATATYPE_BOOL, $this->emulatedDatatypes)) {
+                case Column::TYPE_BOOL:
+                    if (in_array(Column::TYPE_BOOL, $this->emulatedDatatypes)) {
                         return 'TINYINT';
                     } else {
                         throw new \DomainException('BOOL not supported by MySQL and not emulated');
                     }
-                case \Nada::DATATYPE_CLOB:
+                case Column::TYPE_CLOB:
                     return 'LONGTEXT';
-                case \Nada::DATATYPE_BLOB:
+                case Column::TYPE_BLOB:
                     return 'LONGBLOB';
                 default:
                     return parent::getNativeDatatype($type, $length, $cast);

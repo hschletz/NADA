@@ -30,6 +30,8 @@
 
 namespace Nada\Database;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Database application interface class
  *
@@ -121,7 +123,7 @@ abstract class AbstractDatabase
      * (like 42) and not allow otherwise valid input (TRUE/FALSE). For that
      * reason, no emulation happens by default and must be explicitly enabled:
      *
-     *     $nada->emulatedDatatypes = array(Nada::DATATYPE_BOOL);
+     *     $database->emulatedDatatypes = array(\Nada\Column\AbstractColumn::TYPE_BOOL);
      *
      * @var array
      */
@@ -470,22 +472,22 @@ abstract class AbstractDatabase
             return 'NULL';
         }
         switch ($datatype) {
-            case \Nada::DATATYPE_INTEGER:
+            case Column::TYPE_INTEGER:
                 // Filter explicitly because some DBAL silently convert/truncate to integer
                 $filtered = filter_var($value, FILTER_VALIDATE_INT);
                 if ($filtered === false) {
                     throw new \InvalidArgumentException('Not an integer: '. $value);
                 }
                 return $filtered; // No quotes necessary
-            case \Nada::DATATYPE_FLOAT:
-            case \Nada::DATATYPE_DECIMAL:
+            case Column::TYPE_FLOAT:
+            case Column::TYPE_DECIMAL:
                 // Filter explicitly because some DBAL silently convert/truncate to float
                 $filtered = filter_var($value, FILTER_VALIDATE_FLOAT);
                 if ($filtered === false) {
                     throw new \InvalidArgumentException('Not a number: '. $value);
                 }
                 return $filtered; // No quotes necessary
-            case \Nada::DATATYPE_BOOL:
+            case Column::TYPE_BOOL:
                 if (is_bool($value)) { // filter_var() does not work with real booleans
                     $filtered = $value;
                 } else {
@@ -495,7 +497,7 @@ abstract class AbstractDatabase
                     throw new \InvalidArgumentException('Not a boolean: ' . $value);
                 }
                 return (integer)$filtered; // Convert to 0/1 for compatibility with emulated booleans
-            case \Nada::DATATYPE_BLOB:
+            case Column::TYPE_BLOB:
                 // Handled differently across DBMS and abstraction layers - refuse by default.
                 throw new \InvalidArgumentException('Cannot prepare BLOB values');
             default:
@@ -674,7 +676,7 @@ abstract class AbstractDatabase
 
     /**
      * Get DBMS-specific datatype for abstract NADA datatype
-     * @param string $type One of the NADA::DATATYPE_* constants
+     * @param string $type One of the \Nada\Column\AbstractColumn::TYPE_* constants
      * @param mixed $length Optional length modifier (default provided for some datatypes)
      * @param bool $cast The result is used for a typecast operation. Some DBMS require different specifiers for casts.
      * @return string SQL fragment representing the datatype
@@ -684,9 +686,9 @@ abstract class AbstractDatabase
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case \Nada::DATATYPE_INTEGER:
+            case Column::TYPE_INTEGER:
                 if ($length === null) {
-                    $length = \Nada::DEFAULT_LENGTH_INTEGER;
+                    $length = Column::DEFAULT_LENGTH_INTEGER;
                 }
                 switch ($length) {
                     case 16:
@@ -698,20 +700,20 @@ abstract class AbstractDatabase
                     default:
                         throw new \DomainException("Invalid length for type $type: $length");
                 }
-            case \Nada::DATATYPE_VARCHAR:
+            case Column::TYPE_VARCHAR:
                 if (!ctype_digit((string)$length) or $length < 1) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 return "VARCHAR($length)";
-            case \Nada::DATATYPE_TIMESTAMP:
+            case Column::TYPE_TIMESTAMP:
                 return 'TIMESTAMP';
-            case \Nada::DATATYPE_DATE:
+            case Column::TYPE_DATE:
                 return 'DATE';
-            case \Nada::DATATYPE_BOOL:
+            case Column::TYPE_BOOL:
                 return 'BOOLEAN';
-            case \Nada::DATATYPE_BLOB:
+            case Column::TYPE_BLOB:
                 return 'BLOB';
-            case \Nada::DATATYPE_DECIMAL:
+            case Column::TYPE_DECIMAL:
                 if (!preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
@@ -721,9 +723,9 @@ abstract class AbstractDatabase
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 return "NUMERIC($precision,$scale)";
-            case \Nada::DATATYPE_FLOAT:
+            case Column::TYPE_FLOAT:
                 if ($length === null) {
-                    $length = \Nada::DEFAULT_LENGTH_FLOAT;
+                    $length = Column::DEFAULT_LENGTH_FLOAT;
                 } elseif (!ctype_digit((string)$length) or $length < 1) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }

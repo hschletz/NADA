@@ -30,6 +30,8 @@
 
 namespace Nada\Database;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Interface class for SQLite
  *
@@ -112,30 +114,30 @@ class Sqlite extends AbstractDatabase
     public function getNativeDatatype($type, $length=null, $cast=false)
     {
         switch ($type) {
-            case \Nada::DATATYPE_INTEGER:
+            case Column::TYPE_INTEGER:
                 return 'INTEGER';
-            case \Nada::DATATYPE_CLOB:
+            case Column::TYPE_CLOB:
                 return 'TEXT';
-            case \Nada::DATATYPE_TIMESTAMP:
-            case \Nada::DATATYPE_DATE:
+            case Column::TYPE_TIMESTAMP:
+            case Column::TYPE_DATE:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'TEXT';
                 } else {
                     throw new \DomainException(strtoupper($type) . ' not supported by SQLite and not emulated');
                 }
-            case \Nada::DATATYPE_BOOL:
+            case Column::TYPE_BOOL:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'INTEGER';
                 } else {
                     throw new \DomainException('BOOL not supported by SQLite and not emulated');
                 }
-            case \Nada::DATATYPE_DECIMAL:
+            case Column::TYPE_DECIMAL:
                 if (in_array($type, $this->emulatedDatatypes)) {
                     return 'REAL';
                 } else {
                     throw new \DomainException('DECIMAL not supported by SQLite and not emulated');
                 }
-            case \Nada::DATATYPE_FLOAT:
+            case Column::TYPE_FLOAT:
                 return 'REAL';
             default:
                 // SQLite ignores $length, but stores it with the column

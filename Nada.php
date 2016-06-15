@@ -48,52 +48,6 @@
 class Nada
 {
     /**
-     * Constant for INTEGER datatypes. Length gives the size in bits.
-     */
-    const DATATYPE_INTEGER = 'integer';
-    /**
-     * Constant for VARCHAR datatypes. Length gives the size in characters, not bytes.
-     */
-    const DATATYPE_VARCHAR = 'varchar';
-    /**
-     * Constant for TIMESTAMP datatypes (without timezone treatment)
-     */
-    const DATATYPE_TIMESTAMP = 'timestamp';
-    /**
-     * Constant for DATE datatypes
-     */
-    const DATATYPE_DATE = 'date';
-    /**
-     * Constant for BOOL datatypes (not available for all DBMS, emulated if necessary and enabled)
-     */
-    const DATATYPE_BOOL = 'bool';
-    /**
-     * Constant for CLOB datatypes. Length is only available for some DBMS. Don't rely on it.
-     */
-    const DATATYPE_CLOB = 'clob';
-    /**
-     * Constant for BLOB datatypes. Length is only available for some DBMS. Don't rely on it.
-     */
-    const DATATYPE_BLOB = 'blob';
-    /**
-     * Constant for DECIMAL/NUMERIC datatypes. Length consists of precision and scale, like '7,4'.
-     */
-    const DATATYPE_DECIMAL = 'decimal';
-    /**
-     * Constant for FLOAT datatypes. Length denotes precision, typically 24 for single 53 for double.
-     */
-    const DATATYPE_FLOAT = 'float';
-
-    /**
-     * Default length for integers if no length is explicitly specified
-     **/
-    const DEFAULT_LENGTH_INTEGER = 32;
-    /**
-     * Default length for floats if no length is explicitly specified
-     **/
-    const DEFAULT_LENGTH_FLOAT = 53; // Double precision
-
-    /**
      * Factory method to create NADA interface
      *
      * See class description for usage example.

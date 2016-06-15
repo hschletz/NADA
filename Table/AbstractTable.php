@@ -351,7 +351,7 @@ EOT
     /**
      * Add a column using parameters
      * @param string $name Column name
-     * @param string $type Datatype, one of the Nada::DATATYPE_* constants
+     * @param string $type Datatype, one of the \Nada\Column\AbstractColumn::TYPE_* constants
      * @param mixed $length Optional length specification
      * @param bool $notnull NOT NULL constraint (default: FALSE)
      * @param mixed $default Default value (DEFAULT: NULL)

@@ -44,61 +44,61 @@ class Mysql extends AbstractColumn
     {
         switch ($data['data_type']) {
             case 'int':
-                $this->_datatype = \Nada::DATATYPE_INTEGER;
+                $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 32;
                 break;
             case 'varchar':
-                $this->_datatype = \Nada::DATATYPE_VARCHAR;
+                $this->_datatype = self::TYPE_VARCHAR;
                 $this->_length = $data['character_maximum_length'];
                 break;
             case 'datetime':
-                $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
+                $this->_datatype = self::TYPE_TIMESTAMP;
                 break;
             case 'date':
-                $this->_datatype = \Nada::DATATYPE_DATE;
+                $this->_datatype = self::TYPE_DATE;
                 break;
             case 'tinytext':
             case 'text':
             case 'mediumtext':
             case 'longtext':
-                $this->_datatype = \Nada::DATATYPE_CLOB;
+                $this->_datatype = self::TYPE_CLOB;
                 break;
             case 'tinyblob':
             case 'blob':
             case 'mediumblob':
             case 'longblob':
-                $this->_datatype = \Nada::DATATYPE_BLOB;
+                $this->_datatype = self::TYPE_BLOB;
                 break;
             case 'tinyint':
-                $this->_datatype = \Nada::DATATYPE_INTEGER;
+                $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 8;
                 break;
             case 'smallint':
-                $this->_datatype = \Nada::DATATYPE_INTEGER;
+                $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 16;
                 break;
             case 'bigint'://
-                $this->_datatype = \Nada::DATATYPE_INTEGER;
+                $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 64;
                 break;
             case 'decimal'://
-                $this->_datatype = \Nada::DATATYPE_DECIMAL;
+                $this->_datatype = self::TYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
             case 'float':
-                $this->_datatype = \Nada::DATATYPE_FLOAT;
+                $this->_datatype = self::TYPE_FLOAT;
                 $this->_length = 24;
                 break;
             case 'double':
-                $this->_datatype = \Nada::DATATYPE_FLOAT;
+                $this->_datatype = self::TYPE_FLOAT;
                 $this->_length = 53;
                 break;
             case 'timestamp':
-                if (in_array(\Nada::DATATYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
-                    $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
+                if (in_array(self::TYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
+                    $this->_datatype = self::TYPE_TIMESTAMP;
                 } else {
                     throw new \UnexpectedValueException(
-                        'Enable emulation for Nada::DATATYPE_TIMESTAMP to accept MySQL timestamp datatype.'
+                        'Enable emulation for TYPE_TIMESTAMP to accept MySQL timestamp datatype.'
                     );
                 }
                 break;
@@ -146,7 +146,7 @@ class Mysql extends AbstractColumn
         }
 
         if ($this->_autoIncrement) {
-            if ($this->_datatype != \Nada::DATATYPE_INTEGER and $this->_datatype != \Nada::DATATYPE_FLOAT) {
+            if ($this->_datatype != self::TYPE_INTEGER and $this->_datatype != self::TYPE_FLOAT) {
                 throw new \DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
             }
             if ($this->_default !== null and $this->_default !== 0) {
@@ -157,7 +157,7 @@ class Mysql extends AbstractColumn
 
         if ($this->_comment !== null) {
             $sql .= ' COMMENT ';
-            $sql .= $this->_database->prepareValue($this->_comment, \Nada::DATATYPE_VARCHAR);
+            $sql .= $this->_database->prepareValue($this->_comment, self::TYPE_VARCHAR);
         }
 
         return $sql;

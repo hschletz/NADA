@@ -46,35 +46,35 @@ class Pgsql extends AbstractColumn
             case 'integer':
             case 'smallint':
             case 'bigint':
-                $this->_datatype = \Nada::DATATYPE_INTEGER;
+                $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = $data['numeric_precision'];
                 break;
             case 'character varying':
-                $this->_datatype = \Nada::DATATYPE_VARCHAR;
+                $this->_datatype = self::TYPE_VARCHAR;
                 $this->_length = $data['character_maximum_length'];
                 break;
             case 'timestamp without time zone':
-                $this->_datatype = \Nada::DATATYPE_TIMESTAMP;
+                $this->_datatype = self::TYPE_TIMESTAMP;
                 break;
             case 'date':
-                $this->_datatype = \Nada::DATATYPE_DATE;
+                $this->_datatype = self::TYPE_DATE;
                 break;
             case 'boolean':
-                $this->_datatype = \Nada::DATATYPE_BOOL;
+                $this->_datatype = self::TYPE_BOOL;
                 break;
             case 'text':
-                $this->_datatype = \Nada::DATATYPE_CLOB;
+                $this->_datatype = self::TYPE_CLOB;
                 break;
             case 'bytea':
-                $this->_datatype = \Nada::DATATYPE_BLOB;
+                $this->_datatype = self::TYPE_BLOB;
                 break;
             case 'numeric':
-                $this->_datatype = \Nada::DATATYPE_DECIMAL;
+                $this->_datatype = self::TYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
             case 'double precision':
             case 'real':
-                $this->_datatype = \Nada::DATATYPE_FLOAT;
+                $this->_datatype = self::TYPE_FLOAT;
                 $this->_length = $data['numeric_precision'];
                 break;
             default:
@@ -139,7 +139,7 @@ class Pgsql extends AbstractColumn
     public function getDefinition()
     {
         if ($this->_autoIncrement) {
-            if ($this->_datatype != \Nada::DATATYPE_INTEGER) {
+            if ($this->_datatype != self::TYPE_INTEGER) {
                 throw new \DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
             }
             if ($this->_default !== null) {
@@ -202,7 +202,7 @@ class Pgsql extends AbstractColumn
             '.' .
             $this->_database->prepareIdentifier($this->_name) .
             ' IS ' .
-            $this->_database->prepareValue($this->_comment, \Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($this->_comment, self::TYPE_VARCHAR)
         );
     }
 }

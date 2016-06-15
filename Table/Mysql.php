@@ -30,6 +30,8 @@
 
 namespace Nada\Table;
 
+use Nada\Column\AbstractColumn as Column;
+
 /**
  * Table class for MySQL
  *
@@ -64,7 +66,7 @@ class Mysql extends AbstractTable
     /** {@inheritdoc} */
     protected function _setComment($comment)
     {
-        $this->alter('COMMENT = ' . $this->_database->prepareValue($comment, \Nada::DATATYPE_VARCHAR));
+        $this->alter('COMMENT = ' . $this->_database->prepareValue($comment, Column::TYPE_VARCHAR));
         return true;
     }
 
@@ -146,7 +148,7 @@ class Mysql extends AbstractTable
             'ALTER TABLE ' .
             $this->_database->prepareIdentifier($this->_name) .
             ' CONVERT TO CHARACTER SET ' .
-            $this->_database->prepareValue($charset, \Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($charset, Column::TYPE_VARCHAR)
         );
     }
 
@@ -175,7 +177,7 @@ class Mysql extends AbstractTable
             'ALTER TABLE ' .
             $this->_database->prepareIdentifier($this->_name) .
             ' ENGINE = ' .
-            $this->_database->prepareValue($engine, \Nada::DATATYPE_VARCHAR)
+            $this->_database->prepareValue($engine, Column::TYPE_VARCHAR)
         );
         // MySQL ignores invalid engine names. Check explicitly.
         // The getEngine() also implicitly updates $_engine.
