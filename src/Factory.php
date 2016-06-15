@@ -73,32 +73,11 @@ class Factory
         }
 
         // Create matching link object
-        self::_requireOnce('Link/AbstractLink.php');
-        self::_requireOnce("Link/$class.php");
         $class = "Nada\Link\\$class";
         $link = new $class($link);
 
-        // Load matching classes
-        $class = $link->getDbmsSuffix();
-        self::_requireOnce('Database/AbstractDatabase.php');
-        self::_requireOnce("Database/$class.php");
-        self::_requireOnce('Table/AbstractTable.php');
-        self::_requireOnce("Table/$class.php");
-        self::_requireOnce('Column/AbstractColumn.php');
-        self::_requireOnce("Column/$class.php");
-        self::_requireOnce('Index.php');
-
         // Create and return matching database object
-        $class = "Nada\Database\\$class";
+        $class = 'Nada\Database\\' . $link->getDbmsSuffix();
         return new $class($link);
-    }
-
-    /**
-     * Wrapper for require_once that prepends this file's absolute path
-     * @param $path Relative path to PHP script to include
-     */
-    protected static function _requireOnce($path)
-    {
-        require_once dirname(__FILE__) . '/' . $path;
     }
 }
