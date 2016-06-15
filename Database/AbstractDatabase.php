@@ -40,7 +40,7 @@ use Nada\Column\AbstractColumn as Column;
  * workings and return values are specific to the underlying DBMS.
  *
  * Objects should not be instantiated directly, but through
- * {@link Nada::factory()}.
+ * \Nada\Factory::getDatabase().
  *
  * To add support for a particular DBMS, derive a class and override any method
  * if the default implementation is not suitable. Additionally, add detection

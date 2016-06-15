@@ -39,7 +39,7 @@ namespace Nada\Link;
  *
  * To add support for a particular database access method, derive a class and
  * implement all methods that are declared abstract in this class. Additionally,
- * add detection for the link type in \Nada::factory().
+ * add detection for the link type in \Nada\Factory::getDatabase().
  *
  * @package NADA
  * @internal

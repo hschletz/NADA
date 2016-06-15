@@ -27,16 +27,18 @@
  *
  * @package NADA
  */
+
+namespace Nada;
+
 /**
  * Factory class to create a NADA interface from a database link
  *
  * This is the method to get an interface to NADA's functionality. Connect to
- * the database as usual via PDO/Zend_Db/MDB2 and pass the database link to the
- * factory() method. Example for PDO:
+ * the database as usual and pass the database link to the getDatabase() method.
+ * Example for PDO:
  *
- *     require_once 'path/to/NADA/Nada.php'; // No need to have this in include_path
- *     $pdo = new PDO($dsn, $user, $password);
- *     $nada = Nada::factory($pdo);
+ *     $pdo = new \PDO($dsn, $user, $password);
+ *     $database = \Nada\Factory::getDatabase($pdo);
  *
  * The result is a \Nada\Database\AbstractDatabase derived object which is aware
  * of the database link it was created from and the DBMS type it connects to.
@@ -45,29 +47,29 @@
  * @package NADA
  * @api
  */
-class Nada
+class Factory
 {
     /**
-     * Factory method to create NADA interface
+     * Factory method to create database interface
      *
      * See class description for usage example.
      * @param mixed $link Database link
      * @return \Nada\Database\AbstractDatabase NADA interface
-     * @throws InvalidArgumentException if no supported DBAL is detected
+     * @throws \InvalidArgumentException if no supported DBAL is detected
      */
-    static function factory($link)
+    static function getDatabase($link)
     {
         // Determine the database abstraction layer
-        if ($link instanceof PDO) {
+        if ($link instanceof \PDO) {
             $class = 'Pdo';
         } elseif ($link instanceof \Zend\Db\Adapter\Adapter) {
             $class = 'ZendDb2';
-        } elseif ($link instanceof Zend_Db_Adapter_Abstract) {
+        } elseif ($link instanceof \Zend_Db_Adapter_Abstract) {
             $class = 'ZendDb';
-        } elseif ($link instanceof MDB2_Driver_Common) {
+        } elseif ($link instanceof \MDB2_Driver_Common) {
             $class = 'Mdb2';
         } else {
-            throw new InvalidArgumentException('Unsupported link type');
+            throw new \InvalidArgumentException('Unsupported link type');
         }
 
         // Create matching link object
