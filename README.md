@@ -34,8 +34,8 @@ involved). NADA provides a clean and lightweight solution by operating on top
 of an existing database connection object of any supported type.
 
 NADA's modular and extensible design makes it easy to add support for other DBMS
-and database abstraction layers. The files Database.php and Link.php contain
-instructions for this.
+and database abstraction layers. The files src/Database/AbstractDatabase.php and
+src/Link/AbstractLink.php contain instructions for this.
 
 
 License
@@ -57,7 +57,9 @@ NADA can be installed via composer. Just add it to your project's composer.json:
     }
 
 The Nada class will be available via the composer-generated autoloader. If you
-don't install via composer, your code has to include Nada.php manually.
+don't install via composer, your code has to implement it's own
+[PSR-4](http://www.php-fig.org/psr/psr-4/) compliant autoloader or load classes
+manually.
 
 
 Usage
@@ -65,35 +67,41 @@ Usage
 
 Example for PDO:
 
-    require_once 'path/to/NADA/Nada.php'; // only if not installed by composer
-    $pdo = new PDO($dsn, $user, $password);
-    $nada_database = Nada::factory($pdo);
+    $link = new \PDO($dsn, $user, $password);
+    $database = \Nada\Factory::getDatabase($link);
 
-The *factory()* method detects the type of abstraction layer of the passed
+The *getDatabase()* method detects the type of abstraction layer of the passed
 connection object and the DBMS type it connects to. It then sets up and returns
-an object of an appropriate subclass of *Nada_Database*, which is the main
-interface for all subsequent operations.
+an object of an appropriate subclass of *Nada\Database\AbstractDatabase*, which
+is the main interface for all subsequent operations.
 
 No extra database connection is initiated - it is up to the application to
 connect to the database as usual. NADA can safely reuse any connection. No
 changes to the connection object are made unless explicitly requested.
 
+
 Available classes
 -----------------
 
-All classes representing database objects are abstract classes, i.e. a
-DBMS-specific subclass is always used. This subclass may contain extra methods
-not available in the base class.
+Databases, tables and columns are represented by DBMS-specific subclasses of
+abstract classes:
 
-- **Nada_Database:** Base class that represents the database.
-- **Nada_Table:** Base class that represents a table.
-- **Nada_Column:** Base class that represents a column.
+- Nada\Database\AbstractDatabase
+- Nada\Table\AbstractTable
+- Nada\Column\AbsractColumn
 
-An additional base class, *Nada_Link*, provides a unified interface for database
-connections. Its subclasses are wrappers around the database connection object
-passed to the factory method. This interface is very limited and not intended
-for use by the application. It is used internally by NADA for all database
-calls. Unless you are developing for NADA itself, forget about this class.
+These subclasses may contain extra methods not available in the base class. The
+methods to retrieve these objects always return objects of the proper subclass.
+
+Indexes are represented by *Nada\Index* which does not have a subclass because
+it does not have any DBMS-specific functionality.
+
+An additional base class, *Nada\Link\AbstractLink*, provides a unified interface
+for database connections. Its subclasses are wrappers around the database
+connection object passed to the factory method. This interface is very limited
+and not intended for use by the application. It is used internally by NADA for
+all database calls. Unless you are developing for NADA itself, forget about this
+class.
 
 
 Error handling
@@ -108,12 +116,24 @@ exception.
 Caveats
 -------
 
-There are currently some limitations with SQLite:
+SQLite does not support altering and dropping columns and primary keys directly.
+Instead, NADA's methods re-create the table with the altered structure. Data and
+primary keys are preserved, but other attributes (constraints etc.) are not.
+This applies to all columns of the same table.
 
-- SQLite does not support altering and dropping columns and primary keys
-  directly. Instead, NADA's methods re-create the table with the altered
-  structure. Data and primary keys are preserved, but other attributes
-  (constraints etc.) are not. This applies to all columns of the same table.
+
+Migrating from older versions
+-----------------------------
+
+There have been significant changes to the code which require updates to
+applications that used NADA versions from before June 2016:
+
+- The code no longer takes care of class loading. Use composer (recommended) or
+  take care of class loading by yourself.
+- All classes have been renamed and moved to a namespace hierarchy.
+- The factory class and method have changed, see the usage example above.
+- The datatype constants have been renamed and moved to
+  Nada\Column\AbstractColumn.
 
 
 More documentation
@@ -122,5 +142,6 @@ More documentation
 
 More comprehensive documentation is yet to be written. Until then, refer to the
 comments within the NADA source code - all methods are extensively documented
-there. You can also use [phpDocumentor 2](http://www.phpdoc.org/) to extract and
-compile the class documentation.
+there. You can also use tools like [ApiGen](http://apigen.org) or
+[phpDocumentor](http://www.phpdoc.org/) to extract and compile the class
+documentation.
