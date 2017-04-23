@@ -52,7 +52,7 @@ NADA can be installed via composer. Just add it to your project's composer.json:
 
     {
         "require": {
-            "hschletz/nada": "dev-master"
+            "hschletz/nada": "*"
         }
     }
 
