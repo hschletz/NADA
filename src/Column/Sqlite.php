@@ -158,4 +158,43 @@ class Sqlite extends AbstractColumn
     {
         // Columnn comments are not supported by SQLite.
     }
+
+    /** {@inheritdoc} */
+    protected function _isDifferent($oldSpec, $newSpec)
+    {
+        if (array_key_exists('type', $newSpec)) {
+            $oldType = $oldSpec['type'];
+            $newType = $newSpec['type'];
+            if (
+                $oldType == self::TYPE_INTEGER and
+                $newType == self::TYPE_INTEGER and
+                array_key_exists('length', $newSpec)
+            ) {
+                // Integers always have length set to NULL.
+                $newSpec['length'] = null;
+            } elseif (
+                $oldType == self::TYPE_INTEGER and
+                $newType == self::TYPE_BOOL
+            ) {
+                // Booleans are detected as INTEGER.
+                $newSpec['type'] = self::TYPE_INTEGER;
+            } elseif (
+                $oldType == self::TYPE_CLOB and
+                ($newType == self::TYPE_TIMESTAMP or $newType == self::TYPE_DATE)
+            ) {
+                // Timestamps and dates are detected as CLOB.
+                $newSpec['type'] = self::TYPE_CLOB;
+            } elseif (
+                $oldType == self::TYPE_FLOAT and
+                $newType == self::TYPE_DECIMAL
+            ) {
+                // Decimals are detected as FLOAT.
+                $newSpec['type'] = self::TYPE_FLOAT;
+                if (array_key_exists('length', $newSpec)) {
+                    $newSpec['length'] = null;
+                }
+            }
+        }
+        return parent::_isDifferent($oldSpec, $newSpec);
+    }
 }

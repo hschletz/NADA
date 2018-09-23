@@ -535,4 +535,35 @@ abstract class AbstractColumn
      * DBMS-specific implementation for setting a column comment
      **/
     abstract protected function _setComment();
+
+    /**
+     * Compare with given specification
+     *
+     * @param mixed[] $newSpec Specification to compare with. Same keys as toArray() output.
+     * @param string[] $keys Compare only given attributes (default: compare all)
+     * @return bool
+     */
+    public function isDifferent(array $newSpec, array $keys = null)
+    {
+        $oldSpec = $this->toArray();
+        if ($keys) {
+            $keys = array_flip($keys);
+            $oldSpec = array_intersect_key($oldSpec, $keys);
+            $newSpec = array_intersect_key($newSpec, $keys);
+        }
+        return $this->_isDifferent($oldSpec, $newSpec);
+    }
+
+    /**
+     * Compare specifications
+     *
+     * DBMS may require extending this method with tweaks for emulated types.
+     *
+     * @param mixed[] $oldSpec
+     * @param mixed[] $newSpec
+     **/
+    protected function _isDifferent($oldSpec, $newSpec)
+    {
+        return $newSpec != $oldSpec;
+    }
 }

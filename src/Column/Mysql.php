@@ -194,4 +194,21 @@ class Mysql extends AbstractColumn
     {
         $this->_modify();
     }
+
+    /** {@inheritdoc} */
+    protected function _isDifferent($oldSpec, $newSpec)
+    {
+        if (
+            array_key_exists('type', $newSpec) and
+            $newSpec['type'] == self::TYPE_BOOL and
+            $oldSpec['type'] == self::TYPE_INTEGER
+        ) {
+            // Booleans are detected as 8 bit INTEGER.
+            $newSpec['type'] = self::TYPE_INTEGER;
+            if (array_key_exists('length', $newSpec)) {
+                $newSpec['length'] = 8;
+            }
+        }
+        return parent::_isDifferent($oldSpec, $newSpec);
+    }
 }
