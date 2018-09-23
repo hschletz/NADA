@@ -88,7 +88,7 @@ abstract classes:
 
 - Nada\Database\AbstractDatabase
 - Nada\Table\AbstractTable
-- Nada\Column\AbsractColumn
+- Nada\Column\AbstractColumn
 
 These subclasses may contain extra methods not available in the base class. The
 methods to retrieve these objects always return objects of the proper subclass.
