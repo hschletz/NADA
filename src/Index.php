@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada;
@@ -34,9 +32,6 @@ namespace Nada;
  * Index class
  *
  * Instances should not be constructed directly. Always call \Nada\Table\AbstractTable::getIndexes().
- *
- * @package NADA
- * @api
  */
 class Index
 {

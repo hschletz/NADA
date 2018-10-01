@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Table;
@@ -36,7 +34,6 @@ use Nada\Column\AbstractColumn as Column;
  * Table class for MySQL
  *
  * This class overrides methods with MySQL-specific implementations.
- * @package NADA
  */
 class Mysql extends AbstractTable
 {

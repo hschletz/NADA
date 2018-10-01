@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Database;
@@ -46,9 +44,6 @@ use Nada\Column\AbstractColumn as Column;
  * if the default implementation is not suitable. Additionally, add detection
  * for the DBMS in all \Nada\Link\AbstractLink derived classes for those
  * database abstraction layers that support this DBMS.
- *
- * @package NADA
- * @api
  */
 abstract class AbstractDatabase
 {
@@ -131,7 +126,7 @@ abstract class AbstractDatabase
 
     /**
      * Constructor
-     * @param \Nada\Link\AbstractLink Database link
+     * @param \Nada\Link\AbstractLink $link Database link
      */
     function __construct($link)
     {
@@ -676,7 +671,7 @@ abstract class AbstractDatabase
 
     /**
      * Get DBMS-specific datatype for abstract NADA datatype
-     * @param string $type One of the \Nada\Column\AbstractColumn::TYPE_* constants
+     * @param string $type One of \Nada\Column\AbstractColumn's TYPE_* constants
      * @param mixed $length Optional length modifier (default provided for some datatypes)
      * @param bool $cast The result is used for a typecast operation. Some DBMS require different specifiers for casts.
      * @return string SQL fragment representing the datatype

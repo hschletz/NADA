@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Table;
@@ -34,7 +32,6 @@ namespace Nada\Table;
  * Table class for SQLite
  *
  * This class overrides methods with SQLite-specific implementations.
- * @package NADA
  */
 class Sqlite extends AbstractTable
 {

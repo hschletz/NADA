@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Database;
@@ -36,7 +34,6 @@ use Nada\Column\AbstractColumn as Column;
  * Interface class for PostgreSQL
  *
  * This class overrides methods with PostgreSQL-specific implementations.
- * @package NADA
  */
 class Pgsql extends AbstractDatabase
 {

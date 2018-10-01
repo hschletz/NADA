@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Link;
@@ -34,7 +32,6 @@ namespace Nada\Link;
  * Link to Zend\Db\Adapter\Adapter
  *
  * This class overrides methods with Zend\Db specific implementations.
- * @package NADA
  * @internal
  */
 class ZendDb2 extends AbstractLink

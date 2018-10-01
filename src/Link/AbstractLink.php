@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Link;
@@ -40,9 +38,6 @@ namespace Nada\Link;
  * To add support for a particular database access method, derive a class and
  * implement all methods that are declared abstract in this class. Additionally,
  * add detection for the link type in \Nada\Factory::getDatabase().
- *
- * @package NADA
- * @internal
  */
 abstract class AbstractLink
 {
@@ -54,7 +49,7 @@ abstract class AbstractLink
 
     /**
      * Constructor
-     * @param mixed DBAL-specific link object or ressource
+     * @param mixed $link DBAL-specific link object or ressource
      */
     function __construct($link)
     {

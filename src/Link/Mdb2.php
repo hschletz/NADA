@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Link;
@@ -34,7 +32,6 @@ namespace Nada\Link;
  * Link to MDB2 based classes
  *
  * This class overrides methods with MDB2-specific implementations.
- * @package NADA
  * @internal
  */
 class Mdb2 extends AbstractLink

@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Column;
@@ -36,9 +34,6 @@ namespace Nada\Column;
  * This is the base class for providing a unified interface to database columns.
  * It is not intended to be instantiated directly, but through one of the
  * \Nada\Table\AbstractTable methods.
- *
- * @package NADA
- * @api
  */
 abstract class AbstractColumn
 {
@@ -328,8 +323,8 @@ abstract class AbstractColumn
     /**
      * Get column datatype
      *
-     * The datatype is one of the constants defined in {@link Nada}. Depending
-     * on the datatype, {@link getLength()} returns additional information.
+     * The datatype is one of the TYPE_* constants. Depending on the datatype,
+     * {@link getLength()} returns additional information.
      * @return string Abstract datatype constant
      */
     public function getDatatype()

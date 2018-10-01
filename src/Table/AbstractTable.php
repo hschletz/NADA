@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Table;
@@ -36,9 +34,6 @@ namespace Nada\Table;
  * This is the base class for providing a unified interface to database tables.
  * It is not intended to be instantiated directly, but through one of the
  * Nada\Database\AbstractDatabase methods.
- *
- * @package NADA
- * @api
  */
 abstract class AbstractTable
 {
@@ -155,7 +150,7 @@ abstract class AbstractTable
 
     /**
      * Set table comment
-     * @param string table comment
+     * @param string $comment table comment
      */
     public function setComment($comment)
     {
@@ -173,7 +168,7 @@ abstract class AbstractTable
 
     /**
      * DBMS specific method to set table comment
-     * @param string table comment
+     * @param string $comment table comment
      * @return bool TRUE if a comment can be set on the table
      */
     abstract protected function _setComment($comment);
@@ -351,7 +346,7 @@ EOT
     /**
      * Add a column using parameters
      * @param string $name Column name
-     * @param string $type Datatype, one of the \Nada\Column\AbstractColumn::TYPE_* constants
+     * @param string $type Datatype, one of \Nada\Column\AbstractColumn's TYPE_* constants
      * @param mixed $length Optional length specification
      * @param bool $notnull NOT NULL constraint (default: FALSE)
      * @param mixed $default Default value (DEFAULT: NULL)
@@ -386,7 +381,7 @@ EOT
     /**
      * Add a column using a column object
      *
-     * @param \Nada\Column\AbstractColumn Column object
+     * @param \Nada\Column\AbstractColumn $column Column object
      * @return \Nada\Column\AbstractColumn object describing the generated column
      **/
     public function addColumnObject($column)
@@ -410,7 +405,7 @@ EOT
 
     /**
      * Drop a column
-     * @param string Column name
+     * @param string $name Column name
      */
     public function dropColumn($name)
     {
@@ -484,7 +479,7 @@ EOT
      * The presence of an existing index with the same name or column set is not checked.
      *
      * @param string $name Index name
-     * @param mixed Column name or array of column names
+     * @param mixed $columns Column name or array of column names
      * @param bool $unique Create unique index, default: false
      */
     public function createIndex($name, $columns, $unique=false)

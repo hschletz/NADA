@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada\Link;
@@ -34,7 +32,6 @@ namespace Nada\Link;
  * Link to PDO based classes
  *
  * This class overrides methods with PDO-specific implementations.
- * @package NADA
  * @internal
  */
 class Pdo extends AbstractLink
@@ -101,7 +98,7 @@ class Pdo extends AbstractLink
 
     /**
      * Throw exception with information from PDO's errorInfo()
-     * @param object PDO object that caused the error
+     * @param object $object PDO object that caused the error
      * @throws \RuntimeException
      */
     protected function _throw($object)

@@ -24,8 +24,6 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- *
- * @package NADA
  */
 
 namespace Nada;
@@ -43,9 +41,6 @@ namespace Nada;
  * The result is a \Nada\Database\AbstractDatabase derived object which is aware
  * of the database link it was created from and the DBMS type it connects to.
  * All further interaction starts with this object.
- *
- * @package NADA
- * @api
  */
 class Factory
 {
