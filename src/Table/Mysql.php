@@ -178,6 +178,7 @@ class Mysql extends AbstractTable
         );
         // MySQL ignores invalid engine names. Check explicitly.
         // The getEngine() also implicitly updates $_engine.
+        $this->_engine = null; // force fetch by getEngine()
         if (strcasecmp($this->getEngine(), $engine) != 0) {
             throw new \RuntimeException('Unsupported table engine: ' . $engine);
         }
