@@ -105,6 +105,19 @@ class Mysql extends AbstractColumn
     }
 
     /** {@inheritdoc} */
+    protected function _parseDefault($data)
+    {
+        parent::_parseDefault($data);
+        if ($this->_default == 'NULL') {
+            $this->_default = null;
+        } elseif (preg_match("/^'(.*)'\$/", $this->_default, $matches)) {
+            // String with surrounding quotes whrich bust be stripped. Quote
+            // characters within the string must be unescaped.
+            $this->_default = str_replace("''", "'", $matches[1]);
+        }
+    }
+
+    /** {@inheritdoc} */
     protected function _parseAutoIncrement($data)
     {
         if ($data['extra'] == 'auto_increment') {
