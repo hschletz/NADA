@@ -88,7 +88,7 @@ class Pgsql extends AbstractColumn
         {
             parent::_parseDefault($data);
             // Extract value from typed defaults
-            if (preg_match("/^('(.*)'|NULL)::$data[data_type]$/", $this->_default, $matches)) {
+            if (preg_match("/^('(.*)'|NULL)::$data[data_type]\$/", $this->_default, $matches)) {
                 if ($matches[1] == 'NULL') {
                     $this->_default = null;
                 } else {
