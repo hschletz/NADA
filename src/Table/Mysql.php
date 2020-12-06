@@ -107,6 +107,18 @@ class Mysql extends AbstractTable
     }
 
     /** {@inheritdoc} */
+    protected function _dropIndex(string $name): void
+    {
+        $this->_database->exec(
+            sprintf(
+                'ALTER TABLE %s DROP INDEX %s',
+                $this->_database->prepareIdentifier($this->_name),
+                $this->_database->prepareIdentifier($name)
+            )
+        );
+    }
+
+    /** {@inheritdoc} */
     protected function _fetchIndexes()
     {
         $columns = $this->_database->query(

@@ -504,6 +504,25 @@ EOT
     }
 
     /**
+     * Drop an index.
+     */
+    public function dropIndex(string $name): void
+    {
+        $this->_dropIndex($name);
+
+        // Reset index cache to force re-read by next getIndexes() invokation
+        $this->_indexes = array();
+    }
+
+    /**
+     * Drop an index (internal implementation).
+     */
+    protected function _dropIndex(string $name): void
+    {
+        $this->_database->exec('DROP INDEX ' . $this->_database->prepareIdentifier($name));
+    }
+
+    /**
      * Get all indexes for this table
      *
      * Implicit indexes, as for the primary key, are not included in the result.
