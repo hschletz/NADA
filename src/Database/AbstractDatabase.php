@@ -899,6 +899,21 @@ abstract class AbstractDatabase
     }
 
     /**
+     * Rename a table.
+     */
+    public function renameTable(string $oldName, string $newName): void
+    {
+        $this->exec(
+            sprintf(
+                'ALTER TABLE %s RENAME TO %s',
+                $this->prepareIdentifier($oldName),
+                $this->prepareIdentifier($newName)
+            )
+        );
+        $this->clearCache($oldName);
+    }
+
+    /**
      * Drop a table
      *
      * @param string $name Table name
