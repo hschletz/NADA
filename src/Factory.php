@@ -59,12 +59,6 @@ class Factory
             $class = 'Pdo';
         } elseif ($link instanceof \Laminas\Db\Adapter\Adapter) {
             $class = 'LaminasDb';
-        } elseif ($link instanceof \Zend\Db\Adapter\Adapter) {
-            $class = 'ZendDb2';
-        } elseif ($link instanceof \Zend_Db_Adapter_Abstract) {
-            $class = 'ZendDb';
-        } elseif ($link instanceof \MDB2_Driver_Common) {
-            $class = 'Mdb2';
         } else {
             throw new \InvalidArgumentException('Unsupported link type');
         }
