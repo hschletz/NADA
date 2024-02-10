@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Table class for SQLite
  *
@@ -169,8 +170,8 @@ class Sqlite extends AbstractTable
                 $columnsNew[] = $this->_database->prepareIdentifier($column->getName());
             }
         }
-        $columnsOld = implode (', ', $columnsOld);
-        $columnsNew = implode (', ', $columnsNew);
+        $columnsOld = implode(', ', $columnsOld);
+        $columnsNew = implode(', ', $columnsNew);
         $tableName = $this->_database->prepareIdentifier($this->_name);
         $this->_database->exec(
             "INSERT INTO $tableName ($columnsNew) SELECT $columnsOld FROM $tmpTableName"

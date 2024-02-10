@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Database application interface class
  *
@@ -193,7 +194,7 @@ abstract class AbstractDatabase
      * @return array Array of all rows
      * @internal
      */
-    public function query($statement, $params=array())
+    public function query($statement, $params = array())
     {
         if (!is_array($params)) {
             $params = array($params);
@@ -217,7 +218,7 @@ abstract class AbstractDatabase
      * @return integer Number of affected rows
      * @internal
      */
-    public function exec($statement, $params=array())
+    public function exec($statement, $params = array())
     {
         if (!is_array($params)) {
             $params = array($params);
@@ -461,8 +462,8 @@ abstract class AbstractDatabase
      * @param string $datatype The value's datatype
      * @return string Value, processed, quoted and escaped if necessary
      */
-     public function prepareValue($value, $datatype)
-     {
+    public function prepareValue($value, $datatype)
+    {
         if ($value === null) {
             return 'NULL';
         }
@@ -471,7 +472,7 @@ abstract class AbstractDatabase
                 // Filter explicitly because some DBAL silently convert/truncate to integer
                 $filtered = filter_var($value, FILTER_VALIDATE_INT);
                 if ($filtered === false) {
-                    throw new \InvalidArgumentException('Not an integer: '. $value);
+                    throw new \InvalidArgumentException('Not an integer: ' . $value);
                 }
                 return $filtered; // No quotes necessary
             case Column::TYPE_FLOAT:
@@ -479,7 +480,7 @@ abstract class AbstractDatabase
                 // Filter explicitly because some DBAL silently convert/truncate to float
                 $filtered = filter_var($value, FILTER_VALIDATE_FLOAT);
                 if ($filtered === false) {
-                    throw new \InvalidArgumentException('Not a number: '. $value);
+                    throw new \InvalidArgumentException('Not a number: ' . $value);
                 }
                 return $filtered; // No quotes necessary
             case Column::TYPE_BOOL:
@@ -491,14 +492,14 @@ abstract class AbstractDatabase
                 if ($filtered === null) {
                     throw new \InvalidArgumentException('Not a boolean: ' . $value);
                 }
-                return (integer)$filtered; // Convert to 0/1 for compatibility with emulated booleans
+                return (int) $filtered; // Convert to 0/1 for compatibility with emulated booleans
             case Column::TYPE_BLOB:
                 // Handled differently across DBMS and abstraction layers - refuse by default.
                 throw new \InvalidArgumentException('Cannot prepare BLOB values');
             default:
                 return $this->_link->quoteValue($value, $datatype);
         }
-     }
+    }
 
     /**
      * Set strict and more standards compliant behavior on database connection
@@ -647,7 +648,7 @@ abstract class AbstractDatabase
      *
      * @param string $table Optional: Flush only the given table instead of the entire cache
      **/
-    public function clearCache($table=null)
+    public function clearCache($table = null)
     {
         if ($table) {
             unset($this->_tables[$table]);
@@ -678,7 +679,7 @@ abstract class AbstractDatabase
      * @throws \DomainException if the datatype is not supported for the current DBMS
      * @throws \InvalidArgumentException if $length is invalid
      **/
-    public function getNativeDatatype($type, $length=null, $cast=false)
+    public function getNativeDatatype($type, $length = null, $cast = false)
     {
         switch ($type) {
             case Column::TYPE_INTEGER:
@@ -712,8 +713,8 @@ abstract class AbstractDatabase
                 if (!preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
-                $precision = (integer)$components[1];
-                $scale = (integer)$components[2];
+                $precision = (int) $components[1];
+                $scale = (int) $components[2];
                 if ($precision < $scale) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
@@ -761,13 +762,12 @@ abstract class AbstractDatabase
     public function createColumn(
         $name,
         $type,
-        $length=null,
-        $notnull=false,
-        $default=null,
-        $autoIncrement=false,
-        $comment=null
-    )
-    {
+        $length = null,
+        $notnull = false,
+        $default = null,
+        $autoIncrement = false,
+        $comment = null
+    ) {
         $column = $this->createColumnObject();
         $column->constructNew($this, $name, $type, $length, $notnull, $default, $autoIncrement, $comment);
         return $column;
@@ -821,7 +821,7 @@ abstract class AbstractDatabase
      * @throws \InvalidArgumentException if $columns is empty or constraints are violated
      * @throws \RuntimeException if the table already exists
      */
-    public function createTable($name, array $columns, $primaryKey=null)
+    public function createTable($name, array $columns, $primaryKey = null)
     {
         $name = strtolower($name);
         if (strpos($name, 'sqlite_') === 0) {

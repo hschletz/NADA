@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Interface class for PostgreSQL
  *
@@ -79,13 +80,13 @@ class Pgsql extends AbstractDatabase
     {
         $columns = $this->query(
             'SELECT table_name, column_name FROM information_schema.columns ' .
-            'WHERE datetime_precision != 0 AND table_schema = ? AND data_type IN(?, ?)',
+                'WHERE datetime_precision != 0 AND table_schema = ? AND data_type IN(?, ?)',
             array($this->_tableSchema, 'timestamp with time zone', 'timestamp without time zone')
         );
         foreach ($columns as $column) {
             $this->getTable($column['table_name'])
-                 ->getColumn($column['column_name'])
-                 ->setDatatype(Column::TYPE_TIMESTAMP);
+                ->getColumn($column['column_name'])
+                ->setDatatype(Column::TYPE_TIMESTAMP);
         }
         return count($columns);
     }
@@ -106,7 +107,7 @@ class Pgsql extends AbstractDatabase
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null, $cast=false)
+    public function getNativeDatatype($type, $length = null, $cast = false)
     {
         switch ($type) {
             case Column::TYPE_TIMESTAMP:
@@ -121,7 +122,7 @@ class Pgsql extends AbstractDatabase
     }
 
     /** {@inheritdoc} */
-    public function createTable($name, array $columns, $primaryKey=null)
+    public function createTable($name, array $columns, $primaryKey = null)
     {
         $table = parent::createTable($name, $columns, $primaryKey);
 

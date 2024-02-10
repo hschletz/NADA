@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Interface class for MySQL
  *
@@ -39,7 +40,8 @@ class Mysql extends AbstractDatabase
 {
 
     /** {@inheritdoc} */
-    function __construct($link){
+    function __construct($link)
+    {
         parent::__construct($link);
         $this->_tableSchema = $this->getName();
     }
@@ -140,7 +142,7 @@ class Mysql extends AbstractDatabase
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null, $cast=false)
+    public function getNativeDatatype($type, $length = null, $cast = false)
     {
         if ($cast) {
             switch ($type) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Column class for SQLite
  *
@@ -57,7 +58,7 @@ class Sqlite extends AbstractColumn
             // interpreted as VARCHAR(length), otherwise as CLOB.
             if (isset($matches[3])) {
                 $this->_datatype = self::TYPE_VARCHAR;
-                $this->_length = (integer) $matches[3];
+                $this->_length = (int) $matches[3];
             } else {
                 $this->_datatype = self::TYPE_CLOB;
             }

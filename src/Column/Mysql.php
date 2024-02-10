@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Column class for MySQL
  *
@@ -74,11 +75,11 @@ class Mysql extends AbstractColumn
                 $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 16;
                 break;
-            case 'bigint'://
+            case 'bigint':
                 $this->_datatype = self::TYPE_INTEGER;
                 $this->_length = 64;
                 break;
-            case 'decimal'://
+            case 'decimal':
                 $this->_datatype = self::TYPE_DECIMAL;
                 $this->_length = $data['numeric_precision'] . ',' . $data['numeric_scale'];
                 break;
@@ -181,9 +182,9 @@ class Mysql extends AbstractColumn
     {
         $this->_table->alter(
             'MODIFY ' .
-            $this->_database->prepareIdentifier($this->_name) .
-            ' ' .
-            $this->getDefinition()
+                $this->_database->prepareIdentifier($this->_name) .
+                ' ' .
+                $this->getDefinition()
         );
     }
 

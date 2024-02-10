@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract table class
  *
@@ -154,8 +155,7 @@ abstract class AbstractTable
      */
     public function setComment($comment)
     {
-        if ($comment != $this->getComment() and $this->_setComment($comment))
-        {
+        if ($comment != $this->getComment() and $this->_setComment($comment)) {
             $this->_comment = $comment;
         }
     }
@@ -196,8 +196,8 @@ abstract class AbstractTable
     {
         $columns = $this->_database->query(
             'SELECT ' .
-            implode(',', $this->_informationSchemaColumns) .
-            ' FROM information_schema.columns WHERE table_schema=? AND LOWER(table_name)=? ORDER BY ordinal_position',
+                implode(',', $this->_informationSchemaColumns) .
+                ' FROM information_schema.columns WHERE table_schema=? AND LOWER(table_name)=? ORDER BY ordinal_position',
             array(
                 $this->_database->getTableSchema(),
                 $this->_name,
@@ -236,8 +236,7 @@ abstract class AbstractTable
             AND tc.table_schema = ?
             AND LOWER(tc.table_name) = ?
             ORDER BY kcu.ordinal_position
-EOT
-            ,
+EOT,
             array(
                 $this->_database->getTableSchema(),
                 $this->_name,
@@ -337,9 +336,9 @@ EOT
     {
         return $this->_database->exec(
             'ALTER TABLE ' .
-            $this->_database->prepareIdentifier($this->_name) .
-            ' ' .
-            $operation
+                $this->_database->prepareIdentifier($this->_name) .
+                ' ' .
+                $operation
         );
     }
 
@@ -357,13 +356,12 @@ EOT
     public final function addColumn(
         $name,
         $type,
-        $length=null,
-        $notnull=false,
-        $default=null,
-        $autoIncrement=false,
+        $length = null,
+        $notnull = false,
+        $default = null,
+        $autoIncrement = false,
         $comment = null
-    )
-    {
+    ) {
         return $this->addColumnObject(
             $this->_database->createColumn(
                 $name,
@@ -482,7 +480,7 @@ EOT
      * @param mixed $columns Column name or array of column names
      * @param bool $unique Create unique index, default: false
      */
-    public function createIndex($name, $columns, $unique=false)
+    public function createIndex($name, $columns, $unique = false)
     {
         if (!is_array($columns)) {
             $columns = array($columns);
@@ -552,7 +550,7 @@ EOT
      * @param bool $unique Unique index, default: false
      * @return bool
      */
-    public function hasIndex($columns, $unique=false)
+    public function hasIndex($columns, $unique = false)
     {
         if (!is_array($columns)) {
             $columns = array($columns);
@@ -583,7 +581,7 @@ EOT
      * @param bool $assoc
      * @return array
      */
-    public function toArray($assoc=false)
+    public function toArray($assoc = false)
     {
         $data = array(
             'name' => $this->_name,

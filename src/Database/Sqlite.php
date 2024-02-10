@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Interface class for SQLite
  *
@@ -108,7 +109,7 @@ class Sqlite extends AbstractDatabase
     }
 
     /** {@inheritdoc} */
-    public function getNativeDatatype($type, $length=null, $cast=false)
+    public function getNativeDatatype($type, $length = null, $cast = false)
     {
         switch ($type) {
             case Column::TYPE_INTEGER:

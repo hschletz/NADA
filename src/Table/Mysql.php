@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Table class for MySQL
  *
@@ -72,11 +73,11 @@ class Mysql extends AbstractTable
     {
         $this->alter(
             'CHANGE ' .
-            $this->_database->prepareIdentifier($column->getName()) .
-            ' ' .
-            $this->_database->prepareIdentifier($name) .
-            ' ' .
-            $column->getDefinition()
+                $this->_database->prepareIdentifier($column->getName()) .
+                ' ' .
+                $this->_database->prepareIdentifier($name) .
+                ' ' .
+                $column->getDefinition()
         );
     }
 
@@ -89,7 +90,7 @@ class Mysql extends AbstractTable
         foreach ($columns as &$column) {
             $column = $this->_database->prepareIdentifier($column);
         }
-        unset ($column);
+        unset($column);
 
         $this->alter(
             sprintf(
@@ -123,7 +124,7 @@ class Mysql extends AbstractTable
     {
         $columns = $this->_database->query(
             'SELECT index_name, column_name, non_unique FROM information_schema.statistics ' .
-            'WHERE table_schema = ? AND table_name = ? AND index_name != \'PRIMARY\' ORDER BY seq_in_index',
+                'WHERE table_schema = ? AND table_name = ? AND index_name != \'PRIMARY\' ORDER BY seq_in_index',
             array($this->_database->getName(), $this->_name)
         );
         // Group the result set by index name, aggregate columns
@@ -139,7 +140,7 @@ class Mysql extends AbstractTable
     }
 
     /** {@inheritdoc} */
-    public function toArray($assoc=false)
+    public function toArray($assoc = false)
     {
         $data = parent::toArray($assoc);
         $data['mysql']['engine'] = $this->getEngine();
@@ -155,9 +156,9 @@ class Mysql extends AbstractTable
     {
         $this->_database->exec(
             'ALTER TABLE ' .
-            $this->_database->prepareIdentifier($this->_name) .
-            ' CONVERT TO CHARACTER SET ' .
-            $this->_database->prepareValue($charset, Column::TYPE_VARCHAR)
+                $this->_database->prepareIdentifier($this->_name) .
+                ' CONVERT TO CHARACTER SET ' .
+                $this->_database->prepareValue($charset, Column::TYPE_VARCHAR)
         );
     }
 
@@ -184,9 +185,9 @@ class Mysql extends AbstractTable
     {
         $this->_database->exec(
             'ALTER TABLE ' .
-            $this->_database->prepareIdentifier($this->_name) .
-            ' ENGINE = ' .
-            $this->_database->prepareValue($engine, Column::TYPE_VARCHAR)
+                $this->_database->prepareIdentifier($this->_name) .
+                ' ENGINE = ' .
+                $this->_database->prepareValue($engine, Column::TYPE_VARCHAR)
         );
         // MySQL ignores invalid engine names. Check explicitly.
         // The getEngine() also implicitly updates $_engine.

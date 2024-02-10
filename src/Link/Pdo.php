@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Link to PDO based classes
  *

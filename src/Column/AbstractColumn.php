@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract column class
  *
@@ -423,7 +424,7 @@ abstract class AbstractColumn
      * @param string $datatype New datatype
      * @param string $length New length (default: none)
      **/
-    public function setDatatype($datatype, $length=null)
+    public function setDatatype($datatype, $length = null)
     {
         $this->_datatype = $datatype;
         $this->_length = $length;

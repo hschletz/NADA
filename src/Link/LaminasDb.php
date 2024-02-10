@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Link to Laminas\Db\Adapter\Adapter
  *

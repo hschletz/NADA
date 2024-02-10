@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Column class for PostgreSQL
  *
@@ -84,8 +85,7 @@ class Pgsql extends AbstractColumn
     {
         // Do not use the default from autoincrement columns.
         // See _isAutoIncrement() for an explanation.
-        if (!$this->_isAutoIncrement($data))
-        {
+        if (!$this->_isAutoIncrement($data)) {
             parent::_parseDefault($data);
             // Extract value from typed defaults
             if (
@@ -177,8 +177,8 @@ class Pgsql extends AbstractColumn
         $datatype = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
         $this->_database->exec(
             'ALTER TABLE ' .
-            $this->_database->prepareIdentifier($this->_table->getName()) .
-            " ALTER COLUMN $name TYPE $datatype USING CAST($name AS $datatype)"
+                $this->_database->prepareIdentifier($this->_table->getName()) .
+                " ALTER COLUMN $name TYPE $datatype USING CAST($name AS $datatype)"
         );
     }
 
@@ -199,11 +199,11 @@ class Pgsql extends AbstractColumn
     {
         $this->_database->exec(
             'COMMENT ON COLUMN ' .
-            $this->_database->prepareIdentifier($this->_table->getName()) .
-            '.' .
-            $this->_database->prepareIdentifier($this->_name) .
-            ' IS ' .
-            $this->_database->prepareValue($this->_comment, self::TYPE_VARCHAR)
+                $this->_database->prepareIdentifier($this->_table->getName()) .
+                '.' .
+                $this->_database->prepareIdentifier($this->_name) .
+                ' IS ' .
+                $this->_database->prepareValue($this->_comment, self::TYPE_VARCHAR)
         );
     }
 }

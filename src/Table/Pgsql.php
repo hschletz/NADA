@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Table class for PostgreSQL
  *
@@ -86,9 +87,9 @@ class Pgsql extends AbstractTable
     {
         $this->alter(
             'RENAME COLUMN ' .
-            $this->_database->prepareIdentifier($column->getName()) .
-            ' TO ' .
-            $this->_database->prepareIdentifier($name)
+                $this->_database->prepareIdentifier($column->getName()) .
+                ' TO ' .
+                $this->_database->prepareIdentifier($name)
         );
     }
 
@@ -101,11 +102,11 @@ class Pgsql extends AbstractTable
         foreach ($columns as &$column) {
             $column = $this->_database->prepareIdentifier($column);
         }
-        unset ($column);
+        unset($column);
 
         $oldPk = $this->_database->query(
             'SELECT indexrelid::regclass::text FROM pg_index ' .
-            ' WHERE indrelid = CAST(? AS regclass) AND indisprimary = true',
+                ' WHERE indrelid = CAST(? AS regclass) AND indisprimary = true',
             $this->_name
         );
         if ($oldPk) {
@@ -126,7 +127,7 @@ class Pgsql extends AbstractTable
         // Get all indexes for this table
         $indexes = $this->_database->query(
             'SELECT indexrelid::regclass::text, indisunique, indkey FROM pg_index ' .
-            'WHERE indrelid = CAST(? AS regclass) AND indisprimary = false',
+                'WHERE indrelid = CAST(? AS regclass) AND indisprimary = false',
             $this->_name
         );
         foreach ($indexes as $index) {
@@ -134,8 +135,8 @@ class Pgsql extends AbstractTable
             // Extract names and positions for relevant columns.
             $columns = $this->_database->query(
                 'SELECT column_name, ordinal_position FROM information_schema.columns ' .
-                'WHERE table_catalog = ? AND table_name = ? ' .
-                'AND ordinal_position IN(' . strtr($index['indkey'], ' ', ',') . ')',
+                    'WHERE table_catalog = ? AND table_name = ? ' .
+                    'AND ordinal_position IN(' . strtr($index['indkey'], ' ', ',') . ')',
                 array($this->_database->getName(), $this->_name)
             );
             $positions = array();

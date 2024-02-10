@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Factory class to create a NADA interface from a database link
  *
