@@ -111,7 +111,7 @@ class Mysql extends AbstractColumn
         parent::_parseDefault($data);
         if ($this->_default == 'NULL') {
             $this->_default = null;
-        } elseif (preg_match("/^'(.*)'\$/", $this->_default, $matches)) {
+        } elseif ($this->_default && preg_match("/^'(.*)'\$/", $this->_default, $matches)) {
             // String with surrounding quotes whrich bust be stripped. Quote
             // characters within the string must be unescaped.
             $this->_default = str_replace("''", "'", $matches[1]);
