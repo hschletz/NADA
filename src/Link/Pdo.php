@@ -97,6 +97,11 @@ class Pdo extends AbstractLink
         return $this->_link->quote((string)$value, \PDO::PARAM_STR);
     }
 
+    public function inTransaction(): bool
+    {
+        return $this->_link->inTransaction();
+    }
+
     /**
      * Throw exception with information from PDO's errorInfo()
      * @param object $object PDO object that caused the error

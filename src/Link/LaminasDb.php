@@ -29,6 +29,9 @@
 
 namespace Nada\Link;
 
+use LogicException;
+use PDO;
+
 /**
  * Link to Laminas\Db\Adapter\Adapter
  *
@@ -85,5 +88,15 @@ class LaminasDb extends AbstractLink
     public function quoteIdentifier($identifier)
     {
         return $this->_link->getPlatform()->quoteIdentifier($identifier);
+    }
+
+    public function inTransaction(): bool
+    {
+        $resource = $this->_link->getDriver()->getConnection()->getResource();
+        if ($resource instanceof PDO) {
+            return $resource->inTransaction();
+        } else {
+            throw new LogicException(__METHOD__ . '() only supports PDO drivers');
+        }
     }
 }

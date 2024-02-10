@@ -132,4 +132,9 @@ abstract class AbstractLink
     {
         return null;
     }
+
+    /**
+     * Report running transaction.
+     */
+    abstract public function inTransaction(): bool;
 }

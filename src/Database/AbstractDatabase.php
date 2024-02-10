@@ -30,6 +30,7 @@
 namespace Nada\Database;
 
 use Nada\Column\AbstractColumn as Column;
+use RuntimeException;
 
 /**
  * Database application interface class
@@ -174,6 +175,18 @@ abstract class AbstractDatabase
     }
 
     /**
+     * Return TRUE if DDL statements can safely run within a transaction.
+     *
+     * Check this if you plan to modify the database schema within a
+     * transaction. Some DBMS do not support this properly. In that case, don't
+     * start a transaction.
+     */
+    public function canUseDdlTransaction(): bool
+    {
+        return true;
+    }
+
+    /**
      * Return the version string as reported by the database server
      */
     abstract public function getServerVersion();
@@ -220,6 +233,10 @@ abstract class AbstractDatabase
      */
     public function exec($statement, $params = array())
     {
+        if (!$this->canUseDdlTransaction() && $this->_link->inTransaction()) {
+            throw new RuntimeException('Cannot issue a DDL statement within a transaction');
+        }
+
         if (!is_array($params)) {
             $params = array($params);
         }

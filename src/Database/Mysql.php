@@ -52,6 +52,15 @@ class Mysql extends AbstractDatabase
         return true;
     }
 
+    public function canUseDdlTransaction(): bool
+    {
+        // DDL statements will implicitly commit a running transaction. The link
+        // object does not know about the implicit commit and will act like the
+        // transaction was still in progress. An explicit commit will throw a
+        // "there is no active transaction" error.
+        return false;
+    }
+
     /** {@inheritdoc} */
     public function getServerVersion()
     {
