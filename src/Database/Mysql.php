@@ -2,7 +2,7 @@
 /**
  * Interface class for MySQL
  *
- * Copyright (C) 2011-2022 Holger Schletz <holger.schletz@web.de>
+ * Copyright (C) 2011-2024 Holger Schletz <holger.schletz@web.de>
  * All rights reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
