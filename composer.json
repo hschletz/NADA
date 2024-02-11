@@ -13,6 +13,11 @@
         "issues": "https://github.com/hschletz/NADA/issues"
     },
     "autoload": {
-        "psr-4": {"Nada\\": "src/"}
+        "psr-4": {
+            "Nada\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4 || ^8.0 || ^8.1 || ^8.2 || ^8.3"
     }
 }
