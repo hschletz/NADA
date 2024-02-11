@@ -6,13 +6,14 @@ About NADA
 
 NADA is a high level SQL abstraction library for PHP. It complements and
 operates on top of a conventional database abstraction layer (currently
-supported: [PDO](http://php.net/manual/en/book.pdo.php) and
-[Laminas-DB](https://docs.laminas.dev/laminas-db/)), allowing easy integration
+supported: [PDO](https://php.net/manual/en/book.pdo.php) and
+[laminas-db](https://docs.laminas.dev/laminas-db/)), allowing easy integration
 into existing applications.
 
 NADA provides SQL abstraction methods for different database backends (currently
-supported: [PostgreSQL](http://postgresql.org), [MySQL](http://mysql.org) and
-[SQLite](http://sqlite.org/)) that are not available in typical database
+supported: [PostgreSQL](https://postgresql.org),
+[MySQL](https://mysql.com)/[MariaDB](https://mariadb.org) and
+[SQLite](https://sqlite.org/)) that are not available in typical database
 abstraction layers which often just provide a unified interface to a database
 connection. In contrast, NADA supplies a unified interface to some SQL
 operations which would otherwise require DBMS-specific workarounds in the code:
@@ -48,16 +49,7 @@ Installation
 
 NADA can be installed via composer. Just add it to your project's composer.json:
 
-    {
-        "require": {
-            "hschletz/nada": "*"
-        }
-    }
-
-The Nada class will be available via the composer-generated autoloader. If you
-don't install via composer, your code has to implement it's own
-[PSR-4](http://www.php-fig.org/psr/psr-4/) compliant autoloader or load classes
-manually.
+    composer require hschletz/nada
 
 
 Usage
@@ -119,27 +111,5 @@ Instead, NADA's methods re-create the table with the altered structure. Data and
 primary keys are preserved, but other attributes (constraints etc.) are not.
 This applies to all columns of the same table.
 
-
-Migrating from older versions
------------------------------
-
-There have been significant changes to the code which require updates to
-applications that used NADA versions from before June 2016:
-
-- The code no longer takes care of class loading. Use composer (recommended) or
-  take care of class loading by yourself.
-- All classes have been renamed and moved to a namespace hierarchy.
-- The factory class and method have changed, see the usage example above.
-- The datatype constants have been renamed and moved to
-  Nada\Column\AbstractColumn.
-
-
-More documentation
-------------------
-
-
-More comprehensive documentation is yet to be written. Until then, refer to the
-comments within the NADA source code - all methods are extensively documented
-there. You can also use tools like [ApiGen](http://apigen.org) or
-[phpDocumentor](http://www.phpdoc.org/) to extract and compile the class
-documentation.
+When using laminas-db, transaction detection is only implemented for PDO
+drivers.
