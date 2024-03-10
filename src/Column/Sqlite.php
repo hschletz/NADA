@@ -29,6 +29,8 @@
 
 namespace Nada\Column;
 
+use UnexpectedValueException;
+
 /**
  * Column class for SQLite
  *
@@ -67,7 +69,7 @@ class Sqlite extends AbstractColumn
         } elseif (preg_match('/(REAL|FLOA|DOUB)/', $type)) {
             $this->_datatype = self::TYPE_FLOAT;
         } else {
-            UnexpectedValueException('Unrecognized SQLite Datatype: ' . $data['type']);
+            throw new UnexpectedValueException('Unrecognized SQLite Datatype: ' . $data['type']);
         }
     }
 
