@@ -87,7 +87,7 @@ class Sqlite extends AbstractColumn
     /** {@inheritdoc} */
     protected function _parseDefault($data)
     {
-        if ($data['dflt_value'] == 'NULL') {
+        if ($data['dflt_value'] == 'NULL' || $data['dflt_value'] === null) {
             $this->_default = null;
         } elseif (preg_match("/^'(.*)'$/", $data['dflt_value'], $matches)) {
             // Remove surrounding quotes, unescape quotes
