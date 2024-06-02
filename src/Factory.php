@@ -29,6 +29,10 @@
 
 namespace Nada;
 
+use Laminas\Db\Adapter\Adapter;
+use Nada\Database\AbstractDatabase;
+use PDO;
+
 /**
  * Factory class to create a NADA interface from a database link
  *
@@ -39,12 +43,35 @@ namespace Nada;
  *     $pdo = new \PDO($dsn, $user, $password);
  *     $database = \Nada\Factory::getDatabase($pdo);
  *
+ * Alternatively, you can instantiate and invoke the factory:
+ *
+ *     $pdo = new \PDO($dsn, $user, $password);
+ *     $factory = new \Nada\Factory();
+ *     $database = $factory($pdo);
+ *
+ * This is useful if you want to inject the factory as a dependency of another
+ * class:
+ * 
+ *     class MyClass
+ *     {
+ *         public funcion __construct(\Nada\Factory $factory, \PDO $pdo)
+ *         {
+ *              $database = $factory($pdo);
+ *              ...
+ *         }
+ *     }
+ *
  * The result is a \Nada\Database\AbstractDatabase derived object which is aware
  * of the database link it was created from and the DBMS type it connects to.
  * All further interaction starts with this object.
  */
 class Factory
 {
+    public function __invoke(PDO | Adapter $link): AbstractDatabase
+    {
+        return static::getDatabase($link);
+    }
+
     /**
      * Factory method to create database interface
      *
@@ -58,7 +85,7 @@ class Factory
         // Determine the database abstraction layer
         if ($link instanceof \PDO) {
             $class = 'Pdo';
-        } elseif ($link instanceof \Laminas\Db\Adapter\Adapter) {
+        } elseif ($link instanceof Adapter) {
             $class = 'LaminasDb';
         } else {
             throw new \InvalidArgumentException('Unsupported link type');

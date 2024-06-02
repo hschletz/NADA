@@ -65,6 +65,24 @@ connection object and the DBMS type it connects to. It then sets up and returns
 an object of an appropriate subclass of *Nada\Database\AbstractDatabase*, which
 is the main interface for all subsequent operations.
 
+Alternatively, you can instantiate and invoke the factory:
+
+    $pdo = new \PDO($dsn, $user, $password);
+    $factory = new \Nada\Factory();
+    $database = $factory($pdo);
+
+This is useful if you want to inject the factory as a dependency of another
+class:
+ 
+    class MyClass
+    {
+        public funcion __construct(\Nada\Factory $factory, \PDO $pdo)
+        {
+             $database = $factory($pdo);
+             ...
+        }
+    }
+
 No extra database connection is initiated - it is up to the application to
 connect to the database as usual. NADA can safely reuse any connection. No
 changes to the connection object are made unless explicitly requested.
