@@ -2,6 +2,7 @@
 
 namespace Nada\Column;
 
+use Nada\Table\Sqlite as SqliteTable;
 use UnexpectedValueException;
 
 /**
@@ -33,7 +34,7 @@ class Sqlite extends AbstractColumn
             // interpreted as VARCHAR(length), otherwise as CLOB.
             if (isset($matches[3])) {
                 $this->_datatype = self::TYPE_VARCHAR;
-                $this->_length = (int) $matches[3];
+                $this->_length = $matches[3];
             } else {
                 $this->_datatype = self::TYPE_CLOB;
             }
@@ -116,18 +117,21 @@ class Sqlite extends AbstractColumn
     /** {@inheritdoc} */
     protected function _setDatatype()
     {
+        assert($this->_table instanceof SqliteTable);
         $this->_table->alterColumn($this->_name, 'type', $this->_datatype);
     }
 
     /** {@inheritdoc} */
     protected function _setDefault()
     {
+        assert($this->_table instanceof SqliteTable);
         $this->_table->alterColumn($this->_name, 'default', $this->_default);
     }
 
     /** {@inheritdoc} */
     protected function _setNotNull()
     {
+        assert($this->_table instanceof SqliteTable);
         $this->_table->alterColumn($this->_name, 'notnull', $this->_notnull);
     }
 

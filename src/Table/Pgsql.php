@@ -18,7 +18,7 @@ class Pgsql extends AbstractTable
     }
 
     /** {@inheritdoc} */
-    protected function _fetchComment()
+    protected function _fetchComment(): ?string
     {
         $result = $this->_database->query(
             "SELECT OBJ_DESCRIPTION(CAST(? AS REGCLASS), 'pg_class') AS comment",

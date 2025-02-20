@@ -2,6 +2,8 @@
 
 namespace Nada\Column;
 
+use Nada\Table\AbstractTable;
+
 /**
  * Abstract column class
  *
@@ -74,9 +76,8 @@ abstract class AbstractColumn
 
     /**
      * Table that this column belongs to
-     * @var \Nada\Table\AbstractTable
      */
-    protected $_table;
+    protected ?AbstractTable $_table;
 
     /**
      * Column name
@@ -91,10 +92,9 @@ abstract class AbstractColumn
     protected $_datatype;
 
     /**
-     * Column length
-     * @var string
+     * Column length expression
      */
-    protected $_length;
+    protected ?string $_length = null;
 
     /**
      * Column NOT NULL constraint
@@ -103,10 +103,9 @@ abstract class AbstractColumn
     protected $_notnull;
 
     /**
-     * Column default
-     * @var string
+     * Column default expression
      */
-    protected $_default;
+    protected ?string $_default = null;
 
     /**
      * TRUE if this is an autoincrement field
@@ -116,9 +115,8 @@ abstract class AbstractColumn
 
     /**
      * Column comment
-     * @var string
      */
-    protected $_comment;
+    protected ?string $_comment = null;
 
     /**
      * Internal method to set up the object from within a \Nada\Table\AbstractTable object
@@ -402,7 +400,7 @@ abstract class AbstractColumn
         $this->_datatype = $datatype;
         $this->_length = $length;
         if ($this->_table) {
-            $this->_setDatatype($datatype, $length);
+            $this->_setDatatype();
         }
     }
 
@@ -488,14 +486,14 @@ abstract class AbstractColumn
      * \Nada\Database\AbstractDatabase::createColumn(), the operation will be
      * performed on the database.
      *
-     * @param string $comment Comment (use NULL to remove comment)
+     * @param ?string $comment Comment (use NULL to remove comment)
      **/
-    public function setComment($comment)
+    public function setComment(?string $comment)
     {
         if ($this->_comment != $comment) {
             $this->_comment = $comment;
             if ($this->_table) {
-                $this->_setComment($comment);
+                $this->_setComment();
             }
         }
     }

@@ -464,7 +464,7 @@ abstract class AbstractDatabase
                 if ($filtered === false) {
                     throw new \InvalidArgumentException('Not an integer: ' . $value);
                 }
-                return $filtered; // No quotes necessary
+                return (string) $filtered; // No quotes necessary
             case Column::TYPE_FLOAT:
             case Column::TYPE_DECIMAL:
                 // Filter explicitly because some DBAL silently convert/truncate to float
@@ -472,7 +472,7 @@ abstract class AbstractDatabase
                 if ($filtered === false) {
                     throw new \InvalidArgumentException('Not a number: ' . $value);
                 }
-                return $filtered; // No quotes necessary
+                return (string) $filtered; // No quotes necessary
             case Column::TYPE_BOOL:
                 if (is_bool($value)) { // filter_var() does not work with real booleans
                     $filtered = $value;
@@ -482,7 +482,7 @@ abstract class AbstractDatabase
                 if ($filtered === null) {
                     throw new \InvalidArgumentException('Not a boolean: ' . $value);
                 }
-                return (int) $filtered; // Convert to 0/1 for compatibility with emulated booleans
+                return (string) (int) $filtered; // Convert to 0/1 for compatibility with emulated booleans
             case Column::TYPE_BLOB:
                 // Handled differently across DBMS and abstraction layers - refuse by default.
                 throw new \InvalidArgumentException('Cannot prepare BLOB values');

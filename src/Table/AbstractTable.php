@@ -137,7 +137,7 @@ abstract class AbstractTable
      * DBMS specific method to fetch table comment
      * @return string table comment
      */
-    abstract protected function _fetchComment();
+    abstract protected function _fetchComment(): ?string;
 
     /**
      * DBMS specific method to set table comment
@@ -423,9 +423,9 @@ EOT,
      * throm the renameColumn() and dropColumn() implementation.
      *
      * @param string $oldColumnName Column name before renaming/dropping
-     * @param string $newColumnName Column name after renaming, NULL for dropped column
+     * @param ?string $newColumnName Column name after renaming, NULL for dropped column
      */
-    protected function _updateConstraints($oldColumnName, $newColumnName)
+    protected function _updateConstraints($oldColumnName, ?string $newColumnName)
     {
         $columnIndex = null;
         foreach ($this->_primaryKey as $index => $column) {

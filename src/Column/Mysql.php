@@ -16,7 +16,7 @@ class Mysql extends AbstractColumn
         switch ($data['data_type']) {
             case 'int':
                 $this->_datatype = self::TYPE_INTEGER;
-                $this->_length = 32;
+                $this->_length = '32';
                 break;
             case 'varchar':
                 $this->_datatype = self::TYPE_VARCHAR;
@@ -42,15 +42,15 @@ class Mysql extends AbstractColumn
                 break;
             case 'tinyint':
                 $this->_datatype = self::TYPE_INTEGER;
-                $this->_length = 8;
+                $this->_length = '8';
                 break;
             case 'smallint':
                 $this->_datatype = self::TYPE_INTEGER;
-                $this->_length = 16;
+                $this->_length = '16';
                 break;
             case 'bigint':
                 $this->_datatype = self::TYPE_INTEGER;
-                $this->_length = 64;
+                $this->_length = '64';
                 break;
             case 'decimal':
                 $this->_datatype = self::TYPE_DECIMAL;
@@ -58,11 +58,11 @@ class Mysql extends AbstractColumn
                 break;
             case 'float':
                 $this->_datatype = self::TYPE_FLOAT;
-                $this->_length = 24;
+                $this->_length = '24';
                 break;
             case 'double':
                 $this->_datatype = self::TYPE_FLOAT;
-                $this->_length = 53;
+                $this->_length = '53';
                 break;
             case 'timestamp':
                 if (in_array(self::TYPE_TIMESTAMP, $this->_database->emulatedDatatypes)) {
@@ -133,7 +133,7 @@ class Mysql extends AbstractColumn
             if ($this->_datatype != self::TYPE_INTEGER and $this->_datatype != self::TYPE_FLOAT) {
                 throw new \DomainException('Invalid datatype for autoincrement: ' . $this->_datatype);
             }
-            if ($this->_default !== null and $this->_default !== 0) {
+            if ($this->_default !== null and $this->_default !== '0') {
                 throw new \DomainException('Invalid default for autoincrement column: ' . $this->_default);
             }
             $sql .= ' AUTO_INCREMENT';

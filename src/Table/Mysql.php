@@ -25,7 +25,7 @@ class Mysql extends AbstractTable
     }
 
     /** {@inheritdoc} */
-    protected function _fetchComment()
+    protected function _fetchComment(): ?string
     {
         $result = $this->_database->query(
             'SHOW TABLE STATUS LIKE ?',

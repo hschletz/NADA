@@ -41,6 +41,7 @@ class Pdo extends AbstractLink
         // Don't use fetchAll() because keys must be turned lowercase
         $rowset = array();
         while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+            $output = [];
             foreach ($row as $column => $value) {
                 $output[strtolower($column)] = $value;
             }

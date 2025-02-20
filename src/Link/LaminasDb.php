@@ -37,6 +37,7 @@ class LaminasDb extends AbstractLink
         // Don't use toArray() because keys must be turned lowercase
         $rowset = [];
         foreach ($result as $row) {
+            $output = [];
             foreach ($row as $column => $value) {
                 $output[strtolower($column)] = $value;
             }
@@ -58,7 +59,7 @@ class LaminasDb extends AbstractLink
     }
 
     /** {@inheritdoc} */
-    public function quoteIdentifier($identifier)
+    public function quoteIdentifier($identifier): ?string
     {
         return $this->_link->getPlatform()->quoteIdentifier($identifier);
     }

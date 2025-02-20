@@ -42,7 +42,7 @@ class Sqlite extends AbstractTable
     }
 
     /** {@inheritdoc} */
-    protected function _fetchComment()
+    protected function _fetchComment(): ?string
     {
         return null;
     }
@@ -82,11 +82,11 @@ class Sqlite extends AbstractTable
      * every column in this table, not just for the altered one.
      *
      * @param string $name Column to be altered
-     * @param string $attrib Attribute to be altered or NULL for dropping the column
+     * @param ?string $attrib Attribute to be altered or NULL for dropping the column
      * @param mixed $value New value for altered attibute
      * @internal
      */
-    public function alterColumn($name, $attrib, $value)
+    public function alterColumn($name, ?string $attrib, $value)
     {
         $this->requireColumn($name);
 

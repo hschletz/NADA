@@ -40,6 +40,7 @@ use PDO;
  */
 class Factory
 {
+    // @phpstan-ignore class.notFound (Adapter class is optional)
     public function __invoke(PDO | Adapter $link): AbstractDatabase
     {
         return static::getDatabase($link);
@@ -58,7 +59,7 @@ class Factory
         // Determine the database abstraction layer
         if ($link instanceof \PDO) {
             $class = 'Pdo';
-        } elseif ($link instanceof Adapter) {
+        } elseif ($link instanceof Adapter) { // @phpstan-ignore class.notFound (Adapter class is optional)
             $class = 'LaminasDb';
         } else {
             throw new \InvalidArgumentException('Unsupported link type');

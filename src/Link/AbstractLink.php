@@ -99,9 +99,8 @@ abstract class AbstractLink
      * by the database abstraction layer, if available. This may be more
      * sophisticated regarding charset handling etc.
      * @param string $identifier Identifier to quote
-     * @return string Quoted and escaped identifier or NULL if unavailable
      **/
-    public function quoteIdentifier($identifier)
+    public function quoteIdentifier($identifier): ?string
     {
         return null;
     }
