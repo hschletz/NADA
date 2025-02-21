@@ -3,6 +3,7 @@
 namespace Nada\Database;
 
 use Nada\Column\AbstractColumn as Column;
+use UnexpectedValueException;
 
 /**
  * Interface class for PostgreSQL
@@ -28,9 +29,11 @@ class Pgsql extends AbstractDatabase
         $version = $version[0]['version'];
 
         // Extract second part from version string ("PostgreSQL x.y.z on ...")
-        $startpos = strpos($version, ' ') + 1;
-        $endpos = strpos($version, ' ', $startpos);
-        return substr($version, $startpos, $endpos - $startpos);
+        if (preg_match('/^PostgreSQL ([0-9\.]+) /', $version, $matches)) {
+            return $matches[1];
+        } else {
+            throw new UnexpectedValueException('Cannot parse version string: ' . $version);
+        }
     }
 
     /** {@inheritdoc} */

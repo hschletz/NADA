@@ -51,10 +51,9 @@ class Factory
      *
      * See class description for usage example.
      * @param mixed $link Database link
-     * @return \Nada\Database\AbstractDatabase NADA interface
      * @throws \InvalidArgumentException if no supported DBAL is detected
      */
-    static function getDatabase($link)
+    static function getDatabase($link): AbstractDatabase
     {
         // Determine the database abstraction layer
         if ($link instanceof \PDO) {
@@ -70,6 +69,7 @@ class Factory
         $link = new $class($link);
 
         // Create and return matching database object
+        /** @var class-string<AbstractDatabase> */
         $class = 'Nada\Database\\' . $link->getDbmsSuffix();
         return new $class($link);
     }

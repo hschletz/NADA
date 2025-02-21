@@ -150,11 +150,18 @@ abstract class AbstractColumn
      * @param bool $notnull
      * @param mixed $default
      * @param bool $autoIncrement
-     * @param string $comment
      * @internal
      **/
-    public function constructNew($database, $name, $type, $length, $notnull, $default, $autoIncrement, $comment)
-    {
+    public function constructNew(
+        $database,
+        $name,
+        $type,
+        $length,
+        $notnull,
+        $default,
+        $autoIncrement,
+        ?string $comment
+    ) {
         $this->_database = $database;
         $this->_name = $name;
         $this->_datatype = $type;
@@ -285,9 +292,9 @@ abstract class AbstractColumn
     /**
      * Get table object which this instance is linked to
      *
-     * @return \Nada\Table\AbstractTable Parent table or NULL for objects created via AbstractDatabase::createColumn()
+     * @return ?AbstractTable Parent table or NULL for objects created via AbstractDatabase::createColumn()
      */
-    public function getTable()
+    public function getTable(): ?AbstractTable
     {
         return $this->_table;
     }
@@ -306,9 +313,8 @@ abstract class AbstractColumn
 
     /**
      * Get column length
-     * @return string Column length (depending on datatype) or NULL.
      */
-    public function getLength()
+    public function getLength(): ?string
     {
         return $this->_length;
     }
@@ -324,9 +330,8 @@ abstract class AbstractColumn
 
     /**
      * Get default value
-     * @return string Default value or NULL
      */
-    public function getDefault()
+    public function getDefault(): ?string
     {
         return $this->_default;
     }
@@ -342,9 +347,8 @@ abstract class AbstractColumn
 
     /**
      * Get column comment
-     * @return string Comment
      **/
-    public function getComment()
+    public function getComment(): ?string
     {
         return $this->_comment;
     }
@@ -464,6 +468,7 @@ abstract class AbstractColumn
      **/
     protected function _setDefault()
     {
+        assert($this->_table instanceof AbstractTable);
         if ($this->_default === null) {
             $this->_table->alter(
                 sprintf('ALTER COLUMN %s DROP DEFAULT', $this->_database->prepareIdentifier($this->_name))

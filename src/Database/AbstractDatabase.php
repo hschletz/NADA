@@ -3,6 +3,8 @@
 namespace Nada\Database;
 
 use Nada\Column\AbstractColumn as Column;
+use Nada\Column\AbstractColumn;
+use Nada\Table\AbstractTable;
 use RuntimeException;
 
 /**
@@ -551,6 +553,7 @@ abstract class AbstractDatabase
         }
 
         if (!isset($this->_tables[$name])) {
+            /** @var class-string<AbstractTable> */
             $class = 'Nada\Table\\' . $this->getDbmsSuffix();
             $this->_tables[$name] = new $class($this, $name);
         }
@@ -700,7 +703,7 @@ abstract class AbstractDatabase
             case Column::TYPE_BLOB:
                 return 'BLOB';
             case Column::TYPE_DECIMAL:
-                if (!preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
+                if ($length === null || !preg_match('/^([0-9]+),([0-9]+)$/', $length, $components)) {
                     throw new \InvalidArgumentException('Invalid length: ' . $length);
                 }
                 $precision = (int) $components[1];
@@ -728,6 +731,7 @@ abstract class AbstractDatabase
      */
     public function createColumnObject()
     {
+        /** @var class-string<AbstractColumn> */
         $class = 'Nada\Column\\' . $this->getDbmsSuffix();
         return new $class;
     }
@@ -837,7 +841,7 @@ abstract class AbstractDatabase
         unset($column);
         if ($numAutoIncrement > 1) {
             throw new \InvalidArgumentException(
-                'More than 1 autoincrement field specified, given: ' . $numAutoIncrement
+                'More than 1 autoincrement field specified, given: ' . (string) $numAutoIncrement
             );
         }
         if ($autoPk) {

@@ -2,6 +2,8 @@
 
 namespace Nada\Column;
 
+use Nada\Table\AbstractTable;
+
 /**
  * Column class for PostgreSQL
  *
@@ -146,6 +148,8 @@ class Pgsql extends AbstractColumn
     /** {@inheritdoc} */
     protected function _setDatatype()
     {
+        assert($this->_table instanceof AbstractTable);
+
         $name = $this->_database->prepareIdentifier($this->_name);
         $datatype = $this->_database->getNativeDatatype($this->_datatype, $this->_length);
         $this->_database->exec(
@@ -158,6 +162,7 @@ class Pgsql extends AbstractColumn
     /** {@inheritdoc} */
     protected function _setNotNull()
     {
+        assert($this->_table instanceof AbstractTable);
         $this->_table->alter(
             sprintf(
                 'ALTER COLUMN %s %s NOT NULL',
@@ -170,6 +175,7 @@ class Pgsql extends AbstractColumn
     /** {@inheritdoc} */
     protected function _setComment()
     {
+        assert($this->_table instanceof AbstractTable);
         $this->_database->exec(
             'COMMENT ON COLUMN ' .
                 $this->_database->prepareIdentifier($this->_table->getName()) .

@@ -25,9 +25,8 @@ abstract class AbstractTable
 
     /**
      * Table comment
-     * @var string
      */
-    protected $_comment;
+    protected ?string $_comment;
 
     /**
      * Flag indicating whether comment has already been fetched
@@ -111,9 +110,8 @@ abstract class AbstractTable
 
     /**
      * Return table comment
-     * @return string table comment
      */
-    public function getComment()
+    public function getComment(): ?string
     {
         if (!$this->_commentFetched) {
             $this->_comment = $this->_fetchComment();

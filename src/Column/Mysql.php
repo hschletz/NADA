@@ -2,6 +2,8 @@
 
 namespace Nada\Column;
 
+use Nada\Table\AbstractTable;
+
 /**
  * Column class for MySQL
  *
@@ -153,6 +155,7 @@ class Mysql extends AbstractColumn
      **/
     protected function _modify()
     {
+        assert($this->_table instanceof AbstractTable);
         $this->_table->alter(
             'MODIFY ' .
                 $this->_database->prepareIdentifier($this->_name) .

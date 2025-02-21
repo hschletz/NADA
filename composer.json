@@ -29,6 +29,7 @@
         }
     },
     "scripts": {
-        "phpstan": "phpstan"
+        "phpstan": "phpstan",
+        "psalm": "psalm"
     }
 }
