@@ -4,6 +4,7 @@ namespace Nada\Column;
 
 use Nada\Table\Sqlite as SqliteTable;
 use UnexpectedValueException;
+use UnhandledMatchError;
 
 /**
  * Column class for SQLite
@@ -42,13 +43,18 @@ class Sqlite extends AbstractColumn
             $this->_datatype = self::TYPE_BLOB;
         } elseif (preg_match('/(REAL|FLOA|DOUB)/', $type)) {
             $this->_datatype = self::TYPE_FLOAT;
-        } elseif ($type == 'DATE') {
+        } else {
             // While type affinity rules would handle any other type as numeric,
             // the type name itself is preserved and can be used for these
             // types.
-            $this->_datatype = self::TYPE_DATE;
-        } else {
-            throw new UnexpectedValueException('Unrecognized SQLite Datatype: ' . $data['type']);
+            try {
+                $this->_datatype = match ($type) {
+                    'DATE' => self::TYPE_DATE,
+                    'DATETIME' => self::TYPE_TIMESTAMP,
+                };
+            } catch (UnhandledMatchError) {
+                throw new UnexpectedValueException('Unrecognized SQLite Datatype: ' . $data['type']);
+            }
         }
     }
 
